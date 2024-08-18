@@ -3,12 +3,17 @@
 	import { mockChuchDatas } from '$lib';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Autoplay from 'embla-carousel-autoplay';
+
+	const randomSeconds = () => {
+		const randomNumber = Math.floor(Math.random() * 3);
+		return (randomNumber + 2) * 1000;
+	};
 </script>
 
 <div class="">
 	<div class="">
 		<p class="text-3xl font-semibold">Simbahang Banal</p>
-		<p class="text-xl text-muted-foreground">
+		<p class="leading-7 text-muted-foreground md:text-xl">
 			A nurturing spiritual home dedicated to cultivating a deep relationship with God and
 			empowering individuals to reach their full potential.
 		</p>
@@ -16,7 +21,7 @@
 	<Carousel.Root
 		plugins={[
 			Autoplay({
-				delay: 2000
+				delay: randomSeconds()
 			})
 		]}
 		class="flex flex-col gap-[1rem] p-[1rem]"
