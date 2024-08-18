@@ -38,15 +38,20 @@
 
 <Button onclick={() => (open = true)}>Reserve Now</Button>
 <AlertDialog.Root bind:open>
-	<AlertDialog.Content class="flex max-h-screen max-w-[800px] flex-col gap-[1rem]">
-		<AlertDialog.Header>
+	<AlertDialog.Content class="flex max-h-screen max-w-[800px] flex-col gap-[1rem] p-0">
+		<AlertDialog.Header class="p-[1rem] sm:px-[2rem] sm:pt-[2rem]">
 			<AlertDialog.Title>Create Reservation</AlertDialog.Title>
 			<AlertDialog.Description>
 				You are creating reservation for <strong>Simbahang Banal</strong>
 			</AlertDialog.Description>
 		</AlertDialog.Header>
 
-		<form method="POST" action="?/reservationEvent" use:enhance class="flex flex-col gap-[1rem]">
+		<form
+			method="POST"
+			action="?/reservationEvent"
+			use:enhance
+			class="flex flex-col gap-[1rem] overflow-auto p-[1rem] sm:px-[2rem] sm:pt-0"
+		>
 			<Form.Field {form} name="eventName">
 				<Form.Control let:attrs>
 					<Form.Label>Event Name</Form.Label>
@@ -111,7 +116,7 @@
 				<Form.FieldErrors />
 			</Form.Field>
 
-			<AlertDialog.Footer>
+			<AlertDialog.Footer class="flex flex-col gap-[1rem] sm:gap-0">
 				<Button
 					variant="outline"
 					onclick={() => {
