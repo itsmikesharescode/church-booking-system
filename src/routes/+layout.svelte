@@ -4,12 +4,19 @@
 	import { Toaster } from '$lib/components/ui/sonner';
 	import '@fontsource-variable/lora';
 	import Footer from '$lib/components/gen/Footer.svelte';
+	import NormalNav from './_components/NormalNav.svelte';
+	import { initStaticRoute } from './_states/fromStaticRouteState.svelte';
+	import { initUserState } from './_states/fromUserState.svelte';
 
 	const { data, children } = $props();
+
+	initUserState();
+	initStaticRoute();
 </script>
 
 <ModeWatcher />
 <Toaster />
+<NormalNav />
 {@render children()}
 
 <style>

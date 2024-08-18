@@ -37,6 +37,7 @@
 	"dependencies": {
 		"@fontsource-variable/lora": "^5.0.19",
 		"@internationalized/date": "^3.5.5",
+		"@sveltejs/enhanced-img": "^0.3.3",
 		"bits-ui": "^0.21.13",
 		"clsx": "^2.1.1",
 		"cmdk-sv": "^0.0.18",
