@@ -3,6 +3,11 @@
 	import DarkMode from '$lib/components/gen/DarkMode.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Sheet from '$lib/components/ui/sheet';
+	import { fromUserState } from '../_states/fromUserState.svelte';
+	import { fromStaticRouteState } from '../_states/fromStaticRouteState.svelte';
+
+	const user = fromUserState();
+	const staticRoute = fromStaticRouteState();
 
 	let mobileMenu = $state(false);
 </script>
@@ -14,9 +19,9 @@
 		</div>
 
 		<div class="flex items-center gap-[0.625rem]">
-			<a href="/" class="p-[0.625rem] font-semibold">Home</a>
-			<a href="/" class="p-[0.625rem] font-semibold">Home</a>
-			<a href="/" class="p-[0.625rem] font-semibold">Home</a>
+			{#each staticRoute.getRoutes(user.getUser()) as route}
+				<a href={route.url} class="p-[0.625rem]">{route.name}</a>
+			{/each}
 		</div>
 	</div>
 

@@ -6,12 +6,27 @@
 	import Footer from '$lib/components/gen/Footer.svelte';
 	import NormalNav from './_components/NormalNav.svelte';
 	import { initStaticRoute } from './_states/fromStaticRouteState.svelte';
-	import { initUserState } from './_states/fromUserState.svelte';
+	import { fromUserState, initUserState } from './_states/fromUserState.svelte';
+	import { onMount } from 'svelte';
+	import { invalidate } from '$app/navigation';
 
 	const { data, children } = $props();
 
 	initUserState();
 	initStaticRoute();
+
+	const user = fromUserState();
+	user.setUser(data.user);
+
+	onMount(() => {
+		const { data: sub } = data.supabase.auth.onAuthStateChange((_, newSession) => {
+			if (newSession?.expires_at !== data.session?.expires_at) {
+				invalidate('supabase:auth');
+			}
+		});
+
+		return () => sub.subscription.unsubscribe();
+	});
 </script>
 
 <ModeWatcher />

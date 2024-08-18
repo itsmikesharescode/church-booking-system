@@ -1,9 +1,10 @@
+import type { User } from '@supabase/supabase-js';
 import { getContext, setContext } from 'svelte';
 
 class UserState {
-	private user = $state<unknown | null>(null);
+	private user = $state<User | null>(null);
 
-	setUser(p: unknown | null) {
+	setUser(p: User | null) {
 		this.user = p;
 	}
 
