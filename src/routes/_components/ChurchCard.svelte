@@ -1,7 +1,6 @@
 <script lang="ts">
 	import * as Carousel from '$lib/components/ui/carousel/index.js';
 	import { mockChuchDatas } from '$lib';
-	import Button from '$lib/components/ui/button/button.svelte';
 	import Autoplay from 'embla-carousel-autoplay';
 	import CreateReservation from './_operations/CreateReservation.svelte';
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
@@ -21,8 +20,8 @@
 
 <div class="">
 	<div class="">
-		<p class="text-3xl font-semibold">Simbahang Banal</p>
-		<p class="leading-7 text-muted-foreground md:text-xl">
+		<p class="text-xl font-semibold">Simbahang Banal</p>
+		<p class="leading-7 text-muted-foreground">
 			A nurturing spiritual home dedicated to cultivating a deep relationship with God and
 			empowering individuals to reach their full potential.
 		</p>
