@@ -3,6 +3,15 @@
 	import { mockChuchDatas } from '$lib';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Autoplay from 'embla-carousel-autoplay';
+	import CreateReservation from './_operations/CreateReservation.svelte';
+	import type { Infer, SuperValidated } from 'sveltekit-superforms';
+	import type { ReservationSchema } from './_operations/schema';
+
+	interface Props {
+		reservationForm: SuperValidated<Infer<ReservationSchema>>;
+	}
+
+	const { reservationForm }: Props = $props();
 
 	const randomSeconds = () => {
 		const randomNumber = Math.floor(Math.random() * 3);
@@ -42,7 +51,7 @@
 		</Carousel.Content>
 
 		<div class="flex justify-end">
-			<Button>Reserve Now</Button>
+			<CreateReservation {reservationForm} />
 		</div>
 	</Carousel.Root>
 </div>

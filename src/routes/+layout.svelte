@@ -3,6 +3,7 @@
 	import { ModeWatcher } from 'mode-watcher';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import '@fontsource-variable/lora';
+	import Footer from '$lib/components/gen/Footer.svelte';
 
 	const { data, children } = $props();
 </script>
