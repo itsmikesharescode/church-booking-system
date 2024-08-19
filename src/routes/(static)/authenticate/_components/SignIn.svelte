@@ -23,7 +23,12 @@
 
 <div class="flex min-h-screen flex-col justify-center p-[1rem]">
 	<div class="">
-		<form method="POST" use:enhance class="mx-auto flex max-w-[450px] flex-col gap-[1rem]">
+		<form
+			method="POST"
+			action="?/signInEvent"
+			use:enhance
+			class="mx-auto flex max-w-[450px] flex-col gap-[1rem]"
+		>
 			<div class="mx-auto">
 				<p class="text-center text-6xl font-bold">Sign In</p>
 				<p class="text-center leading-7 text-muted-foreground">Sign in to church booking system</p>

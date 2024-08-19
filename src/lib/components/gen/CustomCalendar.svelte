@@ -75,6 +75,7 @@
 
 <Popover.Root openFocus>
 	<Popover.Trigger asChild let:builder>
+		<input {...attrs} type="hidden" {value} />
 		<Button
 			builders={[builder]}
 			type="button"

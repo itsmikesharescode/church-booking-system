@@ -13,12 +13,12 @@ export const load: PageServerLoad = async () => {
 
 export const actions: Actions = {
 	signInEvent: async ({ locals: { supabase }, request }) => {
-		const form = await superValidate(zod(signInSchema));
+		const form = await superValidate(request, zod(signInSchema));
 
 		if (!form.valid) return fail(400, { form });
 	},
 	signUpEvent: async ({ locals: { supabase }, request }) => {
-		const form = await superValidate(zod(signUpSchema));
+		const form = await superValidate(request, zod(signUpSchema));
 
 		if (!form.valid) return fail(400, { form });
 	}
