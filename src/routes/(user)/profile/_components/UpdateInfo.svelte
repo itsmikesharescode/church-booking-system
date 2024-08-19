@@ -9,6 +9,9 @@
 	import { Loader } from 'lucide-svelte';
 	import { updateInfoSchema, type UpdateInfoShema } from '../profile-schema';
 	import CustomCalendar from '$lib/components/gen/CustomCalendar.svelte';
+	import { fromUserState } from '../../../_states/fromUserState.svelte';
+	import { z } from 'zod';
+	import type { User } from '@supabase/supabase-js';
 
 	interface Props {
 		updateInfoForm: SuperValidated<Infer<UpdateInfoShema>>;
@@ -16,21 +19,28 @@
 
 	const { updateInfoForm }: Props = $props();
 
+	const user = fromUserState();
+
 	const form = superForm(updateInfoForm, {
 		validators: zodClient(updateInfoSchema),
 		id: crypto.randomUUID(),
+		invalidateAll: false,
 		onUpdate({ result }) {
-			const { status, data } = result as Result<{ msg: string }>;
+			const { status, data } = result as Result<{ msg: string; user: User }>;
 
 			switch (status) {
 				case 200:
 					toast.success('', { description: data.msg });
+					user.setUser(data.user);
 					break;
 
 				case 401:
 					toast.error('', { description: data.msg });
 					break;
 			}
+		},
+		onUpdated() {
+			$formData = { ...(user.getUser()?.user_metadata as z.infer<typeof updateInfoSchema>) };
 		}
 	});
 
@@ -39,11 +49,15 @@
 	const selectedGender = $derived(
 		$formData.gender ? { label: $formData.gender, value: $formData.gender } : undefined
 	);
+
+	$effect(() => {
+		$formData = { ...(user.getUser()?.user_metadata as z.infer<typeof updateInfoSchema>) };
+	});
 </script>
 
 <div class="mx-auto flex max-w-[700px] flex-col justify-center p-[1rem]">
 	<div class="">
-		<form method="POST" action="?/signInEvent" use:enhance class="flex flex-col gap-[1rem]">
+		<form method="POST" action="?/updateInfoEvent" use:enhance class="flex flex-col gap-[1rem]">
 			<p class="text-xl font-semibold">Personal Information</p>
 			<div class="grid gap-[1rem] md:grid-cols-2">
 				<Form.Field {form} name="firstName">

@@ -4,6 +4,7 @@ import type { Session } from '@supabase/supabase-js';
 import { type Handle, redirect } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import jwt from 'jsonwebtoken';
+import sharp from 'sharp';
 
 const supabaseUrl = import.meta.env.VITE_SB_URL;
 const supabaseAnonKey = import.meta.env.VITE_SB_ANON_KEY;
@@ -96,7 +97,7 @@ const authGuard: Handle = async ({ event, resolve }) => {
 
 	const path = event.url.pathname;
 	// for users
-	if (user && path.startsWith('/authenticate')) {
+	if (user && path === '/authenticate') {
 		const { role } = user.user_metadata;
 		if (role === 'user') redirect(303, '/');
 	}
@@ -104,4 +105,65 @@ const authGuard: Handle = async ({ event, resolve }) => {
 	return resolve(event);
 };
 
-export const handle: Handle = sequence(supabase, authGuard);
+const workers: Handle = async ({ event, resolve }) => {
+	event.locals.avifCompress = async (file: File) => {
+		try {
+			if (!file || file.size === 0) throw new Error('Invalid file');
+
+			const buffer = Buffer.from(await file.arrayBuffer());
+
+			const processedBuffer = await sharp(buffer)
+				.resize(400, 400, { fit: 'cover', withoutEnlargement: true })
+				.avif({ quality: 80 })
+				.toBuffer();
+
+			return new File([processedBuffer], 'image.avif', { type: 'image/avif' });
+		} catch (error) {
+			return null;
+		}
+	};
+
+	event.locals.resizeImage = async (file: File) => {
+		try {
+			if (!file || file.size === 0) throw new Error('Invalid file');
+
+			const MAX_SIZE = 1 * 1024 * 1024; // 1MB in bytes
+
+			// Convert file to buffer
+			let buffer = Buffer.from(await file.arrayBuffer());
+
+			// Resize to 400x400 pixels
+			let processedBuffer = await sharp(buffer)
+				.resize(400, 400, { fit: 'cover', withoutEnlargement: true })
+				.toBuffer();
+
+			// If resized image is still larger than 1MB, try to compress it further
+			while (processedBuffer.length > MAX_SIZE) {
+				// Compress further by reducing quality (you can adjust this as needed)
+				processedBuffer = await sharp(processedBuffer)
+					.jpeg({ quality: 80 }) // Adjust quality to lower the size
+					.toBuffer();
+
+				// If quality adjustment does not work, break the loop to avoid infinite loops
+				if (processedBuffer.length <= MAX_SIZE || processedBuffer.length >= buffer.length) {
+					break;
+				}
+
+				buffer = processedBuffer;
+			}
+
+			// If the final processed buffer is still larger than 1MB, return null
+			if (processedBuffer.length > MAX_SIZE) {
+				throw new Error('Unable to reduce file size under 1MB');
+			}
+
+			return new File([processedBuffer], file.name, { type: file.type });
+		} catch (error) {
+			return null;
+		}
+	};
+
+	return resolve(event);
+};
+
+export const handle: Handle = sequence(supabase, authGuard, workers);

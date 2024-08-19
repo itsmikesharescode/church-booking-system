@@ -9,6 +9,8 @@
 	import { Loader } from 'lucide-svelte';
 	import { updatePwdSchema, type UpdatePwdSchema } from '../profile-schema';
 	import CustomCalendar from '$lib/components/gen/CustomCalendar.svelte';
+	import type { User } from '@supabase/supabase-js';
+	import { fromUserState } from '../../../_states/fromUserState.svelte';
 
 	interface Props {
 		updatePwdForm: SuperValidated<Infer<UpdatePwdSchema>>;
@@ -16,15 +18,18 @@
 
 	const { updatePwdForm }: Props = $props();
 
+	const user = fromUserState();
+
 	const form = superForm(updatePwdForm, {
 		validators: zodClient(updatePwdSchema),
 		id: crypto.randomUUID(),
 		onUpdate({ result }) {
-			const { status, data } = result as Result<{ msg: string }>;
+			const { status, data } = result as Result<{ msg: string; user: User }>;
 
 			switch (status) {
 				case 200:
 					toast.success('', { description: data.msg });
+					user.setUser(data.user);
 					break;
 
 				case 401:
@@ -39,7 +44,7 @@
 
 <div class="mx-auto flex max-w-[700px] flex-col justify-center p-[1rem]">
 	<div class="">
-		<form method="POST" action="?/signInEvent" use:enhance class="flex flex-col gap-[1rem]">
+		<form method="POST" action="?/updatePwdEvent" use:enhance class="flex flex-col gap-[1rem]">
 			<p class="text-xl font-semibold">Security Information</p>
 			<div class="grid gap-[1rem] md:grid-cols-2">
 				<Form.Field {form} name="pwd">

@@ -7,7 +7,10 @@
 	import { toast } from 'svelte-sonner';
 	import { Loader } from 'lucide-svelte';
 	import { upUpProfileSchema, type UpUpProfileSchema } from '../profile-schema';
-	import Input from '$lib/components/ui/input/input.svelte';
+	import type { User } from '@supabase/supabase-js';
+	import { fromUserState } from '../../../_states/fromUserState.svelte';
+	import { publicProfileAPI } from '$lib';
+	import { fromCachingState } from '../../../_states/fromCachingState.svelte';
 
 	interface Props {
 		upUpProfileForm: SuperValidated<Infer<UpUpProfileSchema>>;
@@ -15,15 +18,21 @@
 
 	const { upUpProfileForm }: Props = $props();
 
+	const user = fromUserState();
+	const caching = fromCachingState();
+
 	const form = superForm(upUpProfileForm, {
 		validators: zodClient(upUpProfileSchema),
 		id: crypto.randomUUID(),
+		invalidateAll: false,
 		onUpdate({ result }) {
-			const { status, data } = result as Result<{ msg: string }>;
+			const { status, data } = result as Result<{ msg: string; user: User }>;
 
 			switch (status) {
 				case 200:
 					toast.success('', { description: data.msg });
+					user.setUser(data.user);
+					caching.setCaching(crypto.randomUUID());
 					break;
 
 				case 401:
@@ -46,6 +55,12 @@
 			reader.readAsDataURL($formData.profilePhoto);
 		}
 	};
+
+	$effect(() => {
+		if (user.getUser()?.user_metadata.avatarLink) {
+			previewUrl = `${publicProfileAPI + user.getUser()?.user_metadata.avatarLink}?${caching.getCaching()}`;
+		}
+	});
 </script>
 
 <div class="">

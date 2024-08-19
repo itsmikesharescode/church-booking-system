@@ -76,14 +76,14 @@
 
 <Popover.Root openFocus>
 	<Popover.Trigger asChild let:builder>
-		<input {...attrs} type="hidden" {value} />
+		<input {...attrs} type="hidden" value={dateValue} />
 		<Button
 			builders={[builder]}
 			type="button"
 			variant="outline"
 			class="text-4 flex w-full items-center justify-between text-sm text-muted-foreground"
 		>
-			{value ? value : 'Select Birth Date'}
+			{value || dateValue ? value || dateValue : 'Select Birth Date'}
 			<CalendarArrowDown class="h-[15px] w-[15px]" />
 		</Button>
 	</Popover.Trigger>
