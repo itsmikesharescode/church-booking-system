@@ -9,6 +9,8 @@ declare global {
 			getSession(): Promise<{ session: Session | null; user: User | null }>;
 			session: Session | null;
 			user: User | null;
+			avifCompress: (file: File) => Promise<File | null>;
+			resizeImage: (file: File) => Promise<File | null>;
 		}
 		interface PageData {
 			session: Session | null;

@@ -11,15 +11,20 @@
 	import { invalidate } from '$app/navigation';
 	import { fromSupabaseState, initSupabase } from './_states/fromSupabaseState.svelte';
 	import { page } from '$app/stores';
+	import { fromCachingState, initCaching } from './_states/fromCachingState.svelte';
 
 	const { data, children } = $props();
 
 	initUserState();
 	initSupabase();
 	initStaticRoute();
+	initCaching();
 
 	const user = fromUserState();
 	const supabase = fromSupabaseState();
+	const caching = fromCachingState();
+
+	caching.setCaching(crypto.randomUUID());
 
 	onMount(() => {
 		const { data: sub } = data.supabase.auth.onAuthStateChange((_, newSession) => {

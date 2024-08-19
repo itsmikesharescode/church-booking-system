@@ -19,11 +19,34 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions: Actions = {
-	upUpProfileEvent: async ({ locals: { supabase }, request }) => {
+	upUpProfileEvent: async ({ locals: { supabase, resizeImage, user }, request }) => {
 		const form = await superValidate(request, zod(upUpProfileSchema));
 
 		if (!form.valid) return fail(400, withFiles({ form }));
-		console.log(form.data);
+
+		const resizeFile = await resizeImage(form.data.profilePhoto);
+		if (resizeFile) {
+			const { data, error } = await supabase.storage
+				.from('profile_bucket')
+				.upload(`${user?.id}/profile_photo`, resizeFile, { cacheControl: '3600', upsert: true });
+
+			if (error) return fail(401, withFiles({ form, msg: error.message }));
+			else if (data) {
+				const {
+					data: { user },
+					error: updateErr
+				} = await supabase.auth.updateUser({
+					data: {
+						avatarLink: data.path
+					}
+				});
+
+				if (updateErr) return fail(401, withFiles({ form, msg: updateErr.message }));
+				else if (user) return withFiles({ form, msg: 'Avatar updated.', user });
+			}
+		}
+
+		return fail(401, withFiles({ msg: 'Error Resizing in the server try reuploading.' }));
 	},
 
 	updateInfoEvent: async ({ locals: { supabase }, request }) => {

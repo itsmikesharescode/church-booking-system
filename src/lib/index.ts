@@ -24,3 +24,6 @@ export const mockChuchDatas = [
 		img: sample3
 	}
 ];
+
+export const publicProfileAPI =
+	'https://ldsuhuvtfqrflozlznho.supabase.co/storage/v1/object/public/profile_bucket/';
