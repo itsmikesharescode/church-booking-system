@@ -10,6 +10,7 @@
 	import { onMount } from 'svelte';
 	import { invalidate } from '$app/navigation';
 	import { fromSupabaseState, initSupabase } from './_states/fromSupabaseState.svelte';
+	import { page } from '$app/stores';
 
 	const { data, children } = $props();
 
@@ -38,7 +39,9 @@
 
 <ModeWatcher />
 <Toaster richColors={true} />
-<NormalNav />
+{#if $page.url.pathname !== '/authenticate/update-password'}
+	<NormalNav />
+{/if}
 {@render children()}
 
 <style>

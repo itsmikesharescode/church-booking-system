@@ -96,7 +96,7 @@ const authGuard: Handle = async ({ event, resolve }) => {
 
 	const path = event.url.pathname;
 	// for users
-	if (user && path.startsWith('/authenticate')) {
+	if (user && path === '/authenticate') {
 		const { role } = user.user_metadata;
 		if (role === 'user') redirect(303, '/');
 	}
