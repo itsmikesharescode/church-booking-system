@@ -27,9 +27,20 @@ export const updateInfoSchema = z.object({
 	birthDate: z.string().min(1, { message: 'Must enter your new birth date.' })
 });
 
-export const updateEmailSchema = z.object({
-	email: z.string().email({ message: 'Must enter a new valid email.' })
-});
+export const updateEmailSchema = z
+	.object({
+		email: z.string().email({ message: 'Must enter a new valid email.' }),
+		confirmEmail: z.string()
+	})
+	.superRefine(({ email, confirmEmail }, ctx) => {
+		if (email !== confirmEmail) {
+			ctx.addIssue({
+				code: 'custom',
+				message: 'Must confirm new email.',
+				path: ['confirmEmail']
+			});
+		}
+	});
 
 export const updatePwdSchema = z
 	.object({

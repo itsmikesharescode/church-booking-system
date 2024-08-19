@@ -44,6 +44,7 @@
 <div class="mx-auto flex max-w-[700px] flex-col justify-center p-[1rem]">
 	<div class="">
 		<form method="POST" action="?/signInEvent" use:enhance class="flex flex-col gap-[1rem]">
+			<p class="text-xl font-semibold">Personal Information</p>
 			<div class="grid gap-[1rem] md:grid-cols-2">
 				<Form.Field {form} name="firstName">
 					<Form.Control let:attrs>
