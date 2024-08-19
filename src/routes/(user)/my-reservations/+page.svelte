@@ -7,6 +7,6 @@
 	staticRoute.setRoute('/my-reservations');
 </script>
 
-<div class="">
+<div class="p-[1rem] sm:p-[2rem]">
 	<RenderReservations />
 </div>

@@ -7,6 +7,7 @@
 	import Button from '../ui/button/button.svelte';
 	import { ChevronDown } from 'lucide-svelte';
 	import * as Popover from '$lib/components/ui/popover';
+	import { CalendarArrowDown } from 'lucide-svelte';
 
 	type $$Props = CalendarPrimitive.Props;
 	type $$Events = CalendarPrimitive.Events;
@@ -83,7 +84,7 @@
 			class="text-4 flex w-full items-center justify-between text-sm text-muted-foreground"
 		>
 			{value ? value : 'Select Birth Date'}
-			<ChevronDown class="h-[15px] w-[15px]" />
+			<CalendarArrowDown class="h-[15px] w-[15px]" />
 		</Button>
 	</Popover.Trigger>
 	<Popover.Content class="w-auto p-0">
