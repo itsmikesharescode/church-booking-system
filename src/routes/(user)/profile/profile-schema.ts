@@ -14,7 +14,7 @@ export const upUpProfileSchema = z.object({
 		})
 });
 
-export const updateProfileSchema = z.object({
+export const updateInfoSchema = z.object({
 	firstName: z.string().min(1, { message: 'Must enter your new first name.' }),
 	middleName: z.string().min(1, { message: 'Must enter your new middle name.' }),
 	lastName: z.string().min(1, { message: 'Must enter your new last name.' }),
@@ -27,11 +27,11 @@ export const updateProfileSchema = z.object({
 	birthDate: z.string().min(1, { message: 'Must enter your new birth date.' })
 });
 
-export const updateEmail = z.object({
+export const updateEmailSchema = z.object({
 	email: z.string().email({ message: 'Must enter a new valid email.' })
 });
 
-export const updatePwd = z
+export const updatePwdSchema = z
 	.object({
 		pwd: z.string().min(8, { message: 'Must choose strong new password.' }),
 		confirmPwd: z.string()
@@ -45,3 +45,8 @@ export const updatePwd = z
 			});
 		}
 	});
+
+export type UpUpProfileSchema = typeof upUpProfileSchema;
+export type UpdateInfoShema = typeof updateInfoSchema;
+export type UpdateEmailSchema = typeof updateEmailSchema;
+export type UpdatePwdSchema = typeof updatePwdSchema;
