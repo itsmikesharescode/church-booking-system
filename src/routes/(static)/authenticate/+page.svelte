@@ -17,7 +17,7 @@
 		{#if $page.url.searchParams.get('q') === 'sign-up'}
 			<SignUp signUpForm={data.signUpForm} />
 		{:else if $page.url.searchParams.get('q') === 'forgot-password'}
-			<ForgotPwd />
+			<ForgotPwd forgotPwdForm={data.forgotPwdForm} />
 		{:else}
 			<SignIn signInForm={data.signInForm} />
 		{/if}

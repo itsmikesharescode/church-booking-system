@@ -29,5 +29,10 @@ export const signUpSchema = z
 		}
 	});
 
+export const forgotPwdSchema = z.object({
+	email: z.string().min(1, { message: 'Must enter valid email.' })
+});
+
 export type SignInSchema = typeof signInSchema;
 export type SignUpSchema = typeof signUpSchema;
+export type ForgotPwdSchema = typeof forgotPwdSchema;
