@@ -15,7 +15,9 @@ export const signUpSchema = z
 			.refine((v) => ['Male', 'Female'].includes(v), { message: 'Must choose a gender.' }),
 		birthDate: z.string().min(1, { message: 'Must enter birth date.' }),
 		email: z.string().email({ message: 'Must enter a valid email.' }),
-		mobileNum: z.string().min(1, { message: 'Must enter mobile number.' }),
+		mobileNum: z.string().regex(/^(\+63)\d{10}$/, {
+			message: 'Must enter a valid mobile number in the format +639xxxxxxxxx.'
+		}),
 		pwd: z.string().min(8, { message: 'Must choose strong password.' }),
 		confirmPwd: z.string()
 	})
