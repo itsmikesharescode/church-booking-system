@@ -11,7 +11,11 @@
 	const staticRoute = fromStaticRouteState();
 
 	let mobileMenu = $state(false);
+
+	let innerWidth = $state(0);
 </script>
+
+<svelte:window bind:innerWidth />
 
 <nav class="sticky top-0 z-10 flex justify-between border-b-[1px] p-[1rem] backdrop-blur-lg">
 	<div class="flex items-center gap-[0.625rem]">
@@ -19,9 +23,19 @@
 			<DarkMode />
 		</div>
 
-		<div class="flex items-center gap-[0.625rem]">
+		<div class="hidden items-center gap-[0.625rem] md:flex">
 			{#each staticRoute.getRoutes(user.getUser()) as route}
-				<a href={route.url} class="p-[0.625rem]">{route.name}</a>
+				<a
+					onclick={() => {
+						mobileMenu = false;
+						staticRoute.setRoute(route.url);
+					}}
+					href={route.url}
+					class="{staticRoute.getRoute() === route.url ? 'bg-secondary' : ''} 
+					p-[0.625rem]"
+				>
+					{route.name}
+				</a>
 			{/each}
 		</div>
 	</div>
@@ -41,16 +55,31 @@
 </nav>
 
 <!--Mobile-->
-<Sheet.Root bind:open={mobileMenu}>
-	<Sheet.Content side="left" class="flex flex-col justify-center gap-[1rem]">
-		<div class="flex flex-col gap-[1rem]">
-			<p class="text-center font-bold">Church Booking System</p>
+{#if innerWidth < 768}
+	<Sheet.Root bind:open={mobileMenu}>
+		<Sheet.Content side="left" class="flex flex-col justify-center gap-[1rem]">
 			<div class="flex flex-col gap-[1rem]">
-				<Button href="/authenticate" onclick={() => (mobileMenu = false)}>Sign In</Button>
-				<Button href="/authenticate?q=sign-up" onclick={() => (mobileMenu = false)}
-					>Sign Up Free</Button
-				>
+				{#each staticRoute.getRoutes(user.getUser()) as route}
+					<a
+						onclick={() => {
+							mobileMenu = false;
+							staticRoute.setRoute(route.url);
+						}}
+						href={route.url}
+						class="{staticRoute.getRoute() === route.url ? 'bg-secondary' : ''} 
+					p-[0.625rem] text-center"
+					>
+						{route.name}
+					</a>
+				{/each}
+
+				<div class="flex flex-col gap-[1rem]">
+					<Button href="/authenticate" onclick={() => (mobileMenu = false)}>Sign In</Button>
+					<Button href="/authenticate?q=sign-up" onclick={() => (mobileMenu = false)}
+						>Sign Up Free</Button
+					>
+				</div>
 			</div>
-		</div>
-	</Sheet.Content>
-</Sheet.Root>
+		</Sheet.Content>
+	</Sheet.Root>
+{/if}
