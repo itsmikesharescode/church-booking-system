@@ -6,6 +6,9 @@
 	import { signInSchema, type SignInSchema } from '../authenticate-schema';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import type { Result } from '$lib/types';
+	import { toast } from 'svelte-sonner';
+	import { Loader } from 'lucide-svelte';
 
 	interface Props {
 		signInForm: SuperValidated<Infer<SignInSchema>>;
@@ -15,10 +18,23 @@
 
 	const form = superForm(signInForm, {
 		validators: zodClient(signInSchema),
-		id: crypto.randomUUID()
+		id: crypto.randomUUID(),
+		onUpdate({ result }) {
+			const { status, data } = result as Result<{ msg: string }>;
+
+			switch (status) {
+				case 200:
+					toast.success('', { description: data.msg });
+					break;
+
+				case 401:
+					toast.error('', { description: data.msg });
+					break;
+			}
+		}
 	});
 
-	const { form: formData, enhance } = form;
+	const { form: formData, enhance, submitting } = form;
 </script>
 
 <div class="flex min-h-screen flex-col justify-center p-[1rem]">
@@ -53,7 +69,17 @@
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
-			<Form.Button>Sign In</Form.Button>
+			<Form.Button disabled={$submitting} class="relative">
+				{#if $submitting}
+					<div
+						class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm"
+					>
+						<Loader class="h-[15px] w-[15px] animate-spin" />
+					</div>
+				{:else}
+					Sign In
+				{/if}
+			</Form.Button>
 
 			<div class="flex items-center gap-[0.625rem]">
 				<div class="h-[1px] w-full bg-slate-400"></div>

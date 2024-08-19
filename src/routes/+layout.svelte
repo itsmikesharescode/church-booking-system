@@ -30,7 +30,7 @@
 </script>
 
 <ModeWatcher />
-<Toaster />
+<Toaster richColors={true} />
 <NormalNav />
 {@render children()}
 

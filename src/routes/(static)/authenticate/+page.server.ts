@@ -17,6 +17,14 @@ export const actions: Actions = {
 		const form = await superValidate(request, zod(signInSchema));
 
 		if (!form.valid) return fail(400, { form });
+
+		const { data, error } = await supabase.auth.signInWithPassword({
+			email: form.data.email,
+			password: form.data.pwd
+		});
+
+		if (error) return fail(401, { form, msg: error.message });
+		else if (data.user) return { form, msg: 'Welcome back!' };
 	},
 	signUpEvent: async ({ locals: { supabase }, request }) => {
 		const form = await superValidate(request, zod(signUpSchema));
