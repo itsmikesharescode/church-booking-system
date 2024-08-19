@@ -61,6 +61,14 @@ export const actions: Actions = {
 
 		if (!form.valid) return fail(400, { form });
 
-		console.log(form.data);
+		const {
+			data: { user },
+			error
+		} = await supabase.auth.updateUser({
+			password: form.data.pwd
+		});
+
+		if (error) return fail(401, { form, msg: error.message });
+		else if (user) return { form, msg: 'Password updated', user };
 	}
 };
