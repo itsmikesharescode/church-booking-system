@@ -46,7 +46,6 @@
 			open = true;
 			return;
 		}
-
 		goto('/authenticate?error=you-must-be-logged-in');
 	}}
 >
