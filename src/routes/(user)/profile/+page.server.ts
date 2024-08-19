@@ -31,7 +31,22 @@ export const actions: Actions = {
 
 		if (!form.valid) return fail(400, { form });
 
-		console.log(form.data);
+		const {
+			data: { user },
+			error
+		} = await supabase.auth.updateUser({
+			data: {
+				firstName: form.data.firstName,
+				middleName: form.data.middleName,
+				lastName: form.data.lastName,
+				gender: form.data.gender,
+				birthDate: form.data.birthDate,
+				mobileNum: form.data.mobileNum
+			}
+		});
+
+		if (error) return fail(401, { form, msg: error.message });
+		else if (user) return { form, msg: 'Information Updated.', user };
 	},
 
 	updateEmailEvent: async ({ locals: { supabase }, request }) => {
