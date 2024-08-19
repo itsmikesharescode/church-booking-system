@@ -47,7 +47,7 @@
 		<div class="flex flex-col gap-[0.625rem] overflow-auto">
 			<p class="text-lg font-semibold">Event Details</p>
 			<p class="text-sm leading-7 md:text-base">
-				<strong>Status:</strong> On-going
+				<strong>Status:</strong> Reserved
 			</p>
 			<p class="text-sm leading-7 md:text-base">
 				<strong>Reference Number:</strong> WD-000002

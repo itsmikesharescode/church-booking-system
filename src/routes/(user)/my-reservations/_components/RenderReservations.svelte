@@ -18,7 +18,7 @@
 			>
 				<p class="flex items-center">Eviota, Mike John Baguinaon</p>
 				<p class="hidden items-center md:flex">WD-000002</p>
-				<p class="flex items-center">On-going</p>
+				<p class="flex items-center">Reserved</p>
 				<div class="flex items-center justify-end p-2">
 					<ViewReservation />
 				</div>
