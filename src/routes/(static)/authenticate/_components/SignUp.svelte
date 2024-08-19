@@ -7,6 +7,9 @@
 	import * as Select from '$lib/components/ui/select/index.js';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import CustomCalendar from '$lib/components/gen/CustomCalendar.svelte';
+	import type { Result } from '$lib/types';
+	import { toast } from 'svelte-sonner';
+	import { Loader } from 'lucide-svelte';
 
 	interface Props {
 		signUpForm: SuperValidated<Infer<SignUpSchema>>;
@@ -16,10 +19,23 @@
 
 	const form = superForm(signUpForm, {
 		validators: zodClient(signUpSchema),
-		id: crypto.randomUUID()
+		id: crypto.randomUUID(),
+		onUpdate({ result }) {
+			const { status, data } = result as Result<{ msg: string }>;
+
+			switch (status) {
+				case 200:
+					toast.success('', { description: data.msg });
+					break;
+
+				case 401:
+					toast.error('', { description: data.msg });
+					break;
+			}
+		}
 	});
 
-	const { form: formData, enhance } = form;
+	const { form: formData, enhance, submitting } = form;
 
 	const selectedGender = $derived(
 		$formData.gender ? { label: $formData.gender, value: $formData.gender } : undefined
@@ -147,7 +163,16 @@
 			<div class="flex items-center justify-center">
 				<div class="w-full max-w-[450px]">
 					<div class="flex flex-col gap-[1rem]">
-						<Form.Button>Create Account</Form.Button>
+						<Form.Button disabled={$submitting} class="relative">
+							{#if $submitting}
+								<div
+									class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm bg-primary"
+								>
+									<Loader class="h-[15px] w-[15px] animate-spin" />
+								</div>
+							{/if}
+							Sign Up
+						</Form.Button>
 
 						<div class="flex items-center gap-[0.625rem]">
 							<div class="h-[1px] w-full bg-slate-400"></div>

@@ -72,13 +72,12 @@
 			<Form.Button disabled={$submitting} class="relative">
 				{#if $submitting}
 					<div
-						class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm"
+						class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm bg-primary"
 					>
 						<Loader class="h-[15px] w-[15px] animate-spin" />
 					</div>
-				{:else}
-					Sign In
 				{/if}
+				Sign In
 			</Form.Button>
 
 			<div class="flex items-center gap-[0.625rem]">

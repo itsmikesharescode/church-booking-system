@@ -5,6 +5,7 @@
 	import * as Sheet from '$lib/components/ui/sheet';
 	import { fromUserState } from '../_states/fromUserState.svelte';
 	import { fromStaticRouteState } from '../_states/fromStaticRouteState.svelte';
+	import Logout from './Logout.svelte';
 
 	const user = fromUserState();
 	const staticRoute = fromStaticRouteState();
@@ -26,8 +27,12 @@
 	</div>
 
 	<div class="hidden items-center gap-[0.625rem] md:flex">
-		<Button href="/authenticate">Sign In</Button>
-		<Button href="/authenticate?q=sign-up">Sign Up Free</Button>
+		{#if user.getUser()}
+			<Logout />
+		{:else}
+			<Button href="/authenticate">Sign In</Button>
+			<Button href="/authenticate?q=sign-up">Sign Up Free</Button>
+		{/if}
 	</div>
 
 	<button class="md:hidden" onclick={() => (mobileMenu = true)}>

@@ -9,14 +9,16 @@
 	import { fromUserState, initUserState } from './_states/fromUserState.svelte';
 	import { onMount } from 'svelte';
 	import { invalidate } from '$app/navigation';
+	import { fromSupabaseState, initSupabase } from './_states/fromSupabaseState.svelte';
 
 	const { data, children } = $props();
 
 	initUserState();
+	initSupabase();
 	initStaticRoute();
 
 	const user = fromUserState();
-	user.setUser(data.user);
+	const supabase = fromSupabaseState();
 
 	onMount(() => {
 		const { data: sub } = data.supabase.auth.onAuthStateChange((_, newSession) => {
@@ -26,6 +28,11 @@
 		});
 
 		return () => sub.subscription.unsubscribe();
+	});
+
+	$effect(() => {
+		user.setUser(data.user);
+		supabase.set(data.supabase);
 	});
 </script>
 
