@@ -43,12 +43,8 @@
 
 	<div class="hidden items-center gap-[0.625rem] md:flex">
 		{#if user.getUser()}
+			<p>Hello 👋, <strong>{user.getUser()?.user_metadata.firstName}</strong></p>
 			<Logout />
-			<img
-				src={publicProfileAPI + user.getUser()?.user_metadata.avatarLink}
-				alt=""
-				class="h-[40px] w-[40px] rounded-full"
-			/>
 		{:else}
 			<Button href="/authenticate">Sign In</Button>
 			<Button href="/authenticate?q=sign-up">Sign Up Free</Button>
@@ -64,11 +60,11 @@
 {#if innerWidth < 768}
 	<Sheet.Root bind:open={mobileMenu}>
 		<Sheet.Content side="left" class="flex flex-col justify-center gap-[1rem]">
-			<img
-				src={publicProfileAPI + user.getUser()?.user_metadata.avatarLink}
-				alt=""
-				class="absolute left-0 right-0 top-0 mx-auto mt-[2rem] h-[150px] w-[150px] rounded-full"
-			/>
+			<div class="absolute left-0 right-0 top-0 mx-auto mt-[5rem]">
+				<p class="text-center">
+					Hello 👋,<strong>{user.getUser()?.user_metadata.firstName}</strong>
+				</p>
+			</div>
 			<div class="flex flex-col gap-[1rem]">
 				{#each staticRoute.getRoutes(user.getUser()) as route}
 					<a
