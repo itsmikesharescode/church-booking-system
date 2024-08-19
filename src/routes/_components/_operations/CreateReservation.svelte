@@ -9,12 +9,16 @@
 	import type { Result } from '$lib/types';
 	import CustomDate from '$lib/components/gen/CustomDate.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
+	import { fromUserState } from '../../_states/fromUserState.svelte';
+	import { goto } from '$app/navigation';
 
 	interface Props {
 		reservationForm: SuperValidated<Infer<ReservationSchema>>;
 	}
 
 	const { reservationForm }: Props = $props();
+
+	const user = fromUserState();
 
 	const form = superForm(reservationForm, {
 		validators: zodClient(reservationSchema),
@@ -36,7 +40,18 @@
 	let open = $state(false);
 </script>
 
-<Button onclick={() => (open = true)}>Reserve Now</Button>
+<Button
+	onclick={() => {
+		if (user.getUser()) {
+			open = true;
+			return;
+		}
+
+		goto('/authenticate?error=you-must-be-logged-in');
+	}}
+>
+	Reserve Now
+</Button>
 <AlertDialog.Root bind:open>
 	<AlertDialog.Content class="flex max-h-screen max-w-[800px] flex-col gap-[1rem] p-0">
 		<AlertDialog.Header class="p-[1rem] sm:px-[2rem] sm:pt-[2rem]">
