@@ -53,7 +53,18 @@ export const actions: Actions = {
 		const form = await superValidate(request, zod(updateEmailSchema));
 		if (!form.valid) return fail(400, { form });
 
-		console.log(form.data);
+		const {
+			data: { user },
+			error
+		} = await supabase.auth.updateUser({
+			email: form.data.email
+		});
+		if (error) return fail(401, { form, msg: error.message });
+		else if (user)
+			return {
+				form,
+				msg: `An confirmation email has been sent to your new email ${form.data.email}.`
+			};
 	},
 
 	updatePwdEvent: async ({ locals: { supabase }, request }) => {

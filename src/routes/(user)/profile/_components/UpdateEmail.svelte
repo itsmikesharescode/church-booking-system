@@ -3,12 +3,10 @@
 	import { Input } from '$lib/components/ui/input';
 	import { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import * as Select from '$lib/components/ui/select/index.js';
 	import type { Result } from '$lib/types';
 	import { toast } from 'svelte-sonner';
 	import { Loader } from 'lucide-svelte';
 	import { updateEmailSchema, type UpdateEmailSchema } from '../profile-schema';
-	import CustomCalendar from '$lib/components/gen/CustomCalendar.svelte';
 
 	interface Props {
 		updateEmailForm: SuperValidated<Infer<UpdateEmailSchema>>;
@@ -19,12 +17,14 @@
 	const form = superForm(updateEmailForm, {
 		validators: zodClient(updateEmailSchema),
 		id: crypto.randomUUID(),
+		invalidateAll: false,
 		onUpdate({ result }) {
 			const { status, data } = result as Result<{ msg: string }>;
 
 			switch (status) {
 				case 200:
 					toast.success('', { description: data.msg });
+
 					break;
 
 				case 401:
@@ -39,7 +39,7 @@
 
 <div class="mx-auto flex max-w-[700px] flex-col justify-center p-[1rem]">
 	<div class="">
-		<form method="POST" action="?/signInEvent" use:enhance class="flex flex-col gap-[1rem]">
+		<form method="POST" action="?/updateEmailEvent" use:enhance class="flex flex-col gap-[1rem]">
 			<p class="text-xl font-semibold">Security Information</p>
 			<div class="grid gap-[1rem] md:grid-cols-2">
 				<Form.Field {form} name="email">
