@@ -20,7 +20,36 @@ const supabase: Handle = async ({ event, resolve }) => {
 	event.locals.supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
 		cookies: {
 			getAll: () => event.cookies.getAll(),
-			/**
+			/**event.locals.getSession = async () => {
+		const {
+			data: { session }
+		} = await event.locals.supabase.auth.getSession();
+
+		if (!session) return { session: null, user: null };
+
+		try {
+			const decoded = jwt.verify(session.access_token, jwtSecret) as SupabaseJwt;
+			const validated_session: Session = {
+				access_token: session.access_token,
+				refresh_token: session.refresh_token,
+				expires_at: decoded.exp,
+				expires_in: decoded.exp - Math.round(Date.now() / 1000),
+				token_type: 'bearer',
+				user: {
+					app_metadata: decoded.app_metadata ?? {},
+					aud: 'authenticated',
+					created_at: '',
+					id: decoded.sub,
+					user_metadata: decoded.user_metadata
+				}
+			};
+
+			return { session: validated_session, user: validated_session.user };
+		} catch (err) {
+			return { session: null, user: null };
+		}
+	};
+
 			 * SvelteKit's cookies API requires `path` to be explicitly set in
 			 * the cookie options. Setting `path` to `/` replicates previous/
 			 * standard behavior.
@@ -96,11 +125,14 @@ const authGuard: Handle = async ({ event, resolve }) => {
 	event.locals.user = user;
 
 	const path = event.url.pathname;
-	// for users
+	// redirect user by roles if has auth
 	if (user && path === '/authenticate') {
 		const { role } = user.user_metadata;
 		if (role === 'user') redirect(303, '/');
 	}
+
+	// check if no auth at restricted user routes
+	if (!user && ['/profile', '/my-reservations'].includes(path)) redirect(303, '/');
 
 	return resolve(event);
 };

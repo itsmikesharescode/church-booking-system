@@ -6,6 +6,7 @@
 	import { fromUserState } from '../_states/fromUserState.svelte';
 	import { fromStaticRouteState } from '../_states/fromStaticRouteState.svelte';
 	import Logout from './Logout.svelte';
+	import { publicProfileAPI } from '$lib';
 
 	const user = fromUserState();
 	const staticRoute = fromStaticRouteState();
@@ -43,6 +44,11 @@
 	<div class="hidden items-center gap-[0.625rem] md:flex">
 		{#if user.getUser()}
 			<Logout />
+			<img
+				src={publicProfileAPI + user.getUser()?.user_metadata.avatarLink}
+				alt=""
+				class="h-[40px] w-[40px] rounded-full"
+			/>
 		{:else}
 			<Button href="/authenticate">Sign In</Button>
 			<Button href="/authenticate?q=sign-up">Sign Up Free</Button>
@@ -58,6 +64,11 @@
 {#if innerWidth < 768}
 	<Sheet.Root bind:open={mobileMenu}>
 		<Sheet.Content side="left" class="flex flex-col justify-center gap-[1rem]">
+			<img
+				src={publicProfileAPI + user.getUser()?.user_metadata.avatarLink}
+				alt=""
+				class="absolute left-0 right-0 top-0 mx-auto mt-[2rem] h-[150px] w-[150px] rounded-full"
+			/>
 			<div class="flex flex-col gap-[1rem]">
 				{#each staticRoute.getRoutes(user.getUser()) as route}
 					<a
@@ -74,10 +85,14 @@
 				{/each}
 
 				<div class="flex flex-col gap-[1rem]">
-					<Button href="/authenticate" onclick={() => (mobileMenu = false)}>Sign In</Button>
-					<Button href="/authenticate?q=sign-up" onclick={() => (mobileMenu = false)}
-						>Sign Up Free</Button
-					>
+					{#if user.getUser()}
+						<Logout />
+					{:else}
+						<Button href="/authenticate" onclick={() => (mobileMenu = false)}>Sign In</Button>
+						<Button href="/authenticate?q=sign-up" onclick={() => (mobileMenu = false)}
+							>Sign Up Free</Button
+						>
+					{/if}
 				</div>
 			</div>
 		</Sheet.Content>
