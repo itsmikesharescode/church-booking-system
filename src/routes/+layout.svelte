@@ -12,6 +12,7 @@
 	import { fromSupabaseState, initSupabase } from './_states/fromSupabaseState.svelte';
 	import { page } from '$app/stores';
 	import { fromCachingState, initCaching } from './_states/fromCachingState.svelte';
+	import { onNavigate } from '$app/navigation';
 
 	const { data, children } = $props();
 
@@ -39,6 +40,19 @@
 	$effect(() => {
 		user.setUser(data.user);
 		supabase.set(data.supabase);
+	});
+
+	onNavigate((navigation) => {
+		//@ts-ignore
+		if (!document.startViewTransition) return;
+
+		return new Promise((resolve) => {
+			//@ts-ignore
+			document.startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
+		});
 	});
 </script>
 

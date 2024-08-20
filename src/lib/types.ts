@@ -29,3 +29,18 @@ export type SupabaseJwt = {
 	nbf?: string;
 	user_metadata: UserMetadata;
 };
+
+export type UserProfile = {
+	avatarLink: string;
+	birthDate: string;
+	email: string;
+	email_verified: boolean;
+	firstName: string;
+	lastName: string;
+	middleName: string;
+	gender: 'Male' | 'Female';
+	mobileNum: string;
+	phone_verified: boolean;
+	role: 'user' | 'admin';
+	sub: string;
+};
