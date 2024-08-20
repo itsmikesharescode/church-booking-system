@@ -3,6 +3,7 @@ import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { reservationSchema } from './_components/_operations/schema';
 import { fail } from '@sveltejs/kit';
+import type { UserProfile } from '$lib/types';
 
 export const load: PageServerLoad = async () => {
 	return {
@@ -11,11 +12,31 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions: Actions = {
-	reservationEvent: async ({ request }) => {
+	reservationEvent: async ({ locals: { supabase, user }, request }) => {
 		const form = await superValidate(request, zod(reservationSchema));
 
 		if (!form.valid) return fail(400, { form });
+		const userObj = JSON.parse(form.data.userObj) as UserProfile;
 
-		console.log(form.data);
+		if (userObj && user) {
+			const { error } = await supabase.from('reservation_tb').insert([
+				{
+					user_id: user.id,
+					user_obj: userObj,
+					event_name: form.data.eventName,
+					number_of_guest: form.data.guestCount,
+					date_in: form.data.dateIn,
+					initial_time: form.data.initialTime,
+					final_time: form.data.finalTime,
+					note: form.data.clientNote
+				}
+			]);
+
+			if (error) return fail(401, { form, msg: error.message });
+
+			return { form, msg: 'Successfully Reserve.' };
+		}
+
+		return fail(401, { form, msg: 'Not authorize try relogging your account.' });
 	}
 };

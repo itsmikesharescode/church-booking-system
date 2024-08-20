@@ -1,6 +1,8 @@
 import { z } from 'zod';
-
+// church obj needs to be configure from admin first
 export const reservationSchema = z.object({
+	churchObj: z.string(),
+	userObj: z.string(),
 	eventName: z.string().min(1, { message: 'Must enter event name.' }),
 	guestCount: z.number().min(1, { message: 'Must enter number of guest.' }),
 	clientNote: z.string().min(1, { message: 'Must enter client note.' }),

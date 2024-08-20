@@ -11,6 +11,8 @@
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import { fromUserState } from '../../_states/fromUserState.svelte';
 	import { goto } from '$app/navigation';
+	import { Loader } from 'lucide-svelte';
+	import { toast } from 'svelte-sonner';
 
 	interface Props {
 		reservationForm: SuperValidated<Infer<ReservationSchema>>;
@@ -28,14 +30,17 @@
 
 			switch (status) {
 				case 200:
+					toast.success('', { description: data.msg });
+					open = false;
 					break;
 				case 401:
+					toast.error('', { description: data.msg });
 					break;
 			}
 		}
 	});
 
-	const { form: formData, enhance } = form;
+	const { form: formData, enhance, submitting } = form;
 
 	let open = $state(false);
 </script>
@@ -131,6 +136,15 @@
 			</Form.Field>
 
 			<AlertDialog.Footer class="flex flex-col gap-[1rem] sm:gap-0">
+				<Form.Field {form} name="userObj">
+					<Form.Control let:attrs>
+						<Input
+							{...attrs}
+							value={JSON.stringify(user.getUser()?.user_metadata)}
+							class="hidden"
+						/>
+					</Form.Control>
+				</Form.Field>
 				<Button
 					variant="outline"
 					onclick={() => {
@@ -138,7 +152,16 @@
 						form.reset();
 					}}>Cancel</Button
 				>
-				<Form.Button>Submit</Form.Button>
+				<Form.Button disabled={$submitting} class="relative">
+					{#if $submitting}
+						<div
+							class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm bg-primary"
+						>
+							<Loader class="h-[15px] w-[15px] animate-spin" />
+						</div>
+					{/if}
+					Submit Reservation
+				</Form.Button>
 			</AlertDialog.Footer>
 		</form>
 	</AlertDialog.Content>
