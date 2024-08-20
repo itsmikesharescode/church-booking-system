@@ -1,3 +1,4 @@
+import { adminRoutes, userRoutes } from '$lib';
 import type { SupabaseJwt } from '$lib/types';
 import { createServerClient } from '@supabase/ssr';
 import type { Session } from '@supabase/supabase-js';
@@ -129,10 +130,30 @@ const authGuard: Handle = async ({ event, resolve }) => {
 	if (user && path === '/authenticate') {
 		const { role } = user.user_metadata;
 		if (role === 'user') redirect(303, '/');
+		if (role === 'admin') redirect(303, '/admin-dashboard');
+	}
+
+	// if has auth and visiting admin site but not admin
+	if (user && adminRoutes.includes(path)) {
+		const { role } = user.user_metadata;
+		if (role !== 'admin') redirect(303, '/?error=not-authorize');
+	}
+
+	// if has auth and visiting user site but is admin
+	if (user && userRoutes.includes(path)) {
+		const { role } = user.user_metadata;
+		if (role !== 'user') redirect(303, '/admin-dashboard');
+	}
+
+	// if admin visiting landing
+	if (user && path === '/') {
+		const { role } = user.user_metadata;
+		if (role === 'admin') redirect(303, '/admin-dashboard');
 	}
 
 	// check if no auth at restricted user routes
-	if (!user && ['/profile', '/my-reservations'].includes(path)) redirect(303, '/');
+	if (!user && userRoutes.includes(path)) redirect(303, '/');
+	if (!user && adminRoutes.includes(path)) redirect(303, '/?error=not-authorize');
 
 	return resolve(event);
 };

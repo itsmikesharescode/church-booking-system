@@ -27,3 +27,12 @@ export const mockChuchDatas = [
 
 export const publicProfileAPI =
 	'https://ldsuhuvtfqrflozlznho.supabase.co/storage/v1/object/public/profile_bucket/';
+
+export const userRoutes = ['/profile', 'my-reservations'];
+export const adminRoutes = [
+	'/admin-dashboard',
+	'/admin-event-reservations',
+	'/admin-generate-reports',
+	'/admin-manage-users'
+];
+export const defaultRoutes = ['/authenticate'];

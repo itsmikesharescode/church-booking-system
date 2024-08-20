@@ -12,7 +12,7 @@ const routes = {
 		{ name: 'Dashboard', url: '/admin-dashboard' },
 		{ name: 'Event Reservations', url: '/admin-event-reservations' },
 		{ name: 'Generate Reports', url: '/admin-generate-reports' },
-		{ name: 'Users', url: '/admin-users' }
+		{ name: 'Manage Users', url: '/admin-manage-users' }
 	]
 };
 
