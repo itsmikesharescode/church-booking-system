@@ -9,18 +9,18 @@
 	staticRoute.setRoute('/admin-dashboard');
 </script>
 
-<div class="flex flex-col gap-[2rem] p-[1rem] md:p-[2rem]">
-	<div class="grid min-h-[30dvh] gap-[0.625rem] md:grid-cols-2">
-		<div class="">
+<div class="flex flex-col gap-[1.25rem] p-[1rem] md:p-[2rem]">
+	<div class="grid gap-[0.625rem] md:grid-cols-2">
+		<div class="max-h-[30dvh]">
 			<LineChart first={1} sec={3} third={3} fourth={10} fifth={5} sixth={6} />
 		</div>
 
-		<div class="">
+		<div class="max-h-[30dvh]">
 			<BarChart first={1} sec={3} third={3} fourth={10} fifth={5} sixth={6} />
 		</div>
 	</div>
 
-	<div class="grid grid-cols-4 gap-[1rem]">
+	<div class="grid gap-[1rem] lg:grid-cols-4">
 		<CountCard title="Total Reservation" count={30} />
 
 		<CountCard title="Total Users" count={10100} />

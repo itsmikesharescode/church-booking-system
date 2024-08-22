@@ -24,7 +24,7 @@
 			<DarkMode />
 		</div>
 
-		<div class="hidden items-center gap-[0.625rem] md:flex">
+		<div class="hidden items-center gap-[0.625rem] lg:flex">
 			{#each staticRoute.getRoutes(user.getUser()) as route}
 				<a
 					onclick={() => {
@@ -41,7 +41,7 @@
 		</div>
 	</div>
 
-	<div class="hidden items-center gap-[0.625rem] md:flex">
+	<div class="hidden items-center gap-[0.625rem] lg:flex">
 		{#if user.getUser()}
 			<p>Hello 👋, <strong>{user.getUser()?.user_metadata.firstName}</strong></p>
 			<Logout />
@@ -51,13 +51,13 @@
 		{/if}
 	</div>
 
-	<button class="md:hidden" onclick={() => (mobileMenu = true)}>
+	<button class="lg:hidden" onclick={() => (mobileMenu = true)}>
 		<AlignJustify />
 	</button>
 </nav>
 
 <!--Mobile-->
-{#if innerWidth < 768}
+{#if innerWidth < 1024}
 	<Sheet.Root bind:open={mobileMenu}>
 		<Sheet.Content side="left" class="flex flex-col justify-center gap-[1rem]">
 			<div class="absolute left-0 right-0 top-0 mx-auto mt-[5rem]">
