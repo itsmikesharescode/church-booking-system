@@ -13,6 +13,7 @@
 	import { page } from '$app/stores';
 	import { fromCachingState, initCaching } from './_states/fromCachingState.svelte';
 	import { onNavigate } from '$app/navigation';
+	import { fromThemeState, initTheme } from './_states/fromThemeState.svelte';
 
 	const { data, children } = $props();
 
@@ -20,10 +21,12 @@
 	initSupabase();
 	initStaticRoute();
 	initCaching();
+	initTheme();
 
 	const user = fromUserState();
 	const supabase = fromSupabaseState();
 	const caching = fromCachingState();
+	const theme = fromThemeState();
 
 	caching.setCaching(crypto.randomUUID());
 
@@ -40,6 +43,12 @@
 	$effect(() => {
 		user.setUser(data.user);
 		supabase.set(data.supabase);
+
+		const clientMode = localStorage.getItem('mode-watcher-mode');
+
+		if (clientMode) {
+			theme.set(clientMode === 'dark' ? 'rgb(255, 255, 255)' : 'rgb(0, 0, 0)');
+		}
 	});
 
 	onNavigate((navigation) => {
