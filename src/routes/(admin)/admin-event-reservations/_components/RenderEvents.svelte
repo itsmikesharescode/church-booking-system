@@ -34,10 +34,10 @@
 					><span class="bg-yellow-900 p-[1px] px-[1rem] text-white">Pending</span></Table.Cell
 				>
 				<Table.Cell>WD-000002</Table.Cell>
-				<Table.Cell>Eviota, Mike John Baguinaon</Table.Cell>
+				<Table.Cell class="truncate">Eviota, Mike John Baguinaon</Table.Cell>
 				<Table.Cell class="">09123456789</Table.Cell>
 				<Table.Cell class="">Wedding</Table.Cell>
-				<Table.Cell class="">Mar 18, 2024 10:00 AM - 12:00 PM</Table.Cell>
+				<Table.Cell class="truncate">Mar 18, 2024 10:00 AM - 12:00 PM</Table.Cell>
 				<Table.Cell class="text-center">100</Table.Cell>
 			</Table.Row>
 		{/each}
