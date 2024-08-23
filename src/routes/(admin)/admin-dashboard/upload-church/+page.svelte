@@ -3,8 +3,6 @@
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label/index.js';
-	import { superForm } from 'sveltekit-superforms';
-	import { zodClient } from 'sveltekit-superforms/adapters';
 	import type { Result } from '$lib/types';
 	import { toast } from 'svelte-sonner';
 	import { Loader, X, Upload } from 'lucide-svelte';
@@ -13,14 +11,13 @@
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import CustomImageUploader from '$lib/components/gen/CustomImageUploader.svelte';
 	import { flip } from 'svelte/animate';
-
-	const { data } = $props();
+	import type { ZodIssue } from 'zod';
 
 	const staticRoute = fromStaticRouteState();
 
 	staticRoute.setRoute('/admin-dashboard');
-
-	let answerContainer = $state<UploadChurchTypes>({
+	//buggy need fins stable version
+	let answerContainer = $state({
 		churchName: '',
 		description: '',
 		images: [
@@ -32,6 +29,29 @@
 			}
 		]
 	});
+
+	let errors = $state<ZodIssue[] | undefined>(undefined);
+
+	const findErrMsg = (name: string) => {
+		return errors?.find((item) => item.path[0] === name)?.message;
+	};
+
+	const findErrLoopMsg = (index: number, name: 'description' | 'files' | 'imageTitle') => {
+		return errors?.find(
+			(item) => item.path[0] === 'images' && item.path[1] === index && item.path[2] === name
+		)?.message;
+	};
+
+	const handleUpload = () => {
+		const valResult = uploadChurchSchema.safeParse(answerContainer);
+		const { error } = valResult;
+		if (!valResult.success) {
+			errors = error?.issues;
+			return;
+		}
+
+		console.log($state.snapshot(answerContainer));
+	};
 </script>
 
 <div class="flex flex-col gap-[2rem] p-[1rem] sm:p-[2rem]">
@@ -49,18 +69,24 @@
 
 	<div class="flex flex-col gap-[0.625rem]">
 		<div class="flex flex-col gap-[0.625rem]">
-			<Label for="email">Church Name</Label>
-			<Input type="email" id="email" placeholder="Enter church name" />
+			<Label for="churchName">Church Name</Label>
+			<Input bind:value={answerContainer.churchName} placeholder="Enter church name" />
+			<p class="text-sm text-red-500">{findErrMsg('churchName')}</p>
 		</div>
 
 		<div class="flex flex-col gap-[0.625rem]">
-			<Label for="email">Church Description</Label>
-			<Textarea id="email" placeholder="Enter church description" />
+			<Label for="churchDescription">Church Description</Label>
+			<Textarea
+				bind:value={answerContainer.description}
+				id="churchDescription"
+				placeholder="Enter church description"
+			/>
+			<p class="text-sm text-red-500">{findErrMsg('description')}</p>
 		</div>
 
-		<Label for="email">Church Images</Label>
+		<Label for="chuchImages">Church Images</Label>
 		<div class="flex flex-col gap-[0.625rem] p-[1rem]">
-			{#each answerContainer.images as image (image)}
+			{#each answerContainer.images as image, i (image)}
 				<div class="flex flex-col gap-[0.625rem]" animate:flip={{ duration: 450 }}>
 					<div class="relative flex flex-col gap-[0.625rem]">
 						{#if answerContainer.images.length > 1}
@@ -79,22 +105,25 @@
 							</button>
 						{/if}
 
-						<Label for="email">Church Image</Label>
+						<Label for="churchImage">Church Image</Label>
 						<CustomImageUploader attrs={undefined} bind:files={image.files} />
+						<p class="text-sm text-red-500">{findErrLoopMsg(i, 'files')}</p>
 					</div>
 
 					<div class="flex flex-col gap-[0.625rem]">
-						<Label for="email">Image Title</Label>
-						<Input id="email" placeholder="Enter image title" bind:value={image.imageTitle} />
+						<Label for="imageTitle">Image Title</Label>
+						<Input id="imageTitle" placeholder="Enter image title" bind:value={image.imageTitle} />
+						<p class="text-sm text-red-500">{findErrLoopMsg(i, 'imageTitle')}</p>
 					</div>
 
 					<div class="flex flex-col gap-[0.625rem]">
-						<Label for="email">Image Description</Label>
+						<Label for="imageDescription">Image Description</Label>
 						<Textarea
-							id="email"
+							id="imageDescription"
 							placeholder="Enter image description"
 							bind:value={image.description}
 						/>
+						<p class="text-sm text-red-500">{findErrLoopMsg(i, 'description')}</p>
 					</div>
 				</div>
 			{/each}
@@ -120,7 +149,9 @@
 		</div>
 
 		<div class="flex justify-end">
-			<Button class="gap-[5px]">Upload Church <Upload class="h-[15px] w-[15px]" /></Button>
+			<Button class="gap-[5px]" onclick={handleUpload}
+				>Upload Church <Upload class="h-[15px] w-[15px]" /></Button
+			>
 		</div>
 	</div>
 </div>

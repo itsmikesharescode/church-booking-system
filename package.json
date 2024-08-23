@@ -38,7 +38,7 @@
 		"@fontsource-variable/lora": "^5.0.19",
 		"@internationalized/date": "^3.5.5",
 		"@supabase/ssr": "^0.4.1",
-		"@supabase/supabase-js": "^2.45.1",
+		"@supabase/supabase-js": "^2.45.2",
 		"@sveltejs/enhanced-img": "^0.3.3",
 		"@types/jsonwebtoken": "^9.0.6",
 		"bits-ui": "^0.21.13",
