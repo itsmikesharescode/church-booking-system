@@ -2,7 +2,7 @@
 	import { fromStaticRouteState } from '../../_states/fromStaticRouteState.svelte';
 	import Pagination from './_components/_operations/Pagination.svelte';
 	import RenderEvents from './_components/RenderEvents.svelte';
-
+	// change admin nav
 	const { data } = $props();
 
 	const staticRoute = fromStaticRouteState();
