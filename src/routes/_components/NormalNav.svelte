@@ -7,6 +7,11 @@
 	import { fromStaticRouteState } from '../_states/fromStaticRouteState.svelte';
 	import Logout from './Logout.svelte';
 	import { publicProfileAPI } from '$lib';
+	import type { Snippet } from 'svelte';
+
+	interface Props {
+		children: Snippet;
+	}
 
 	const user = fromUserState();
 	const staticRoute = fromStaticRouteState();

@@ -64,6 +64,7 @@
 {#if $page.url.pathname !== '/authenticate/update-password'}
 	<NormalNav />
 {/if}
+
 {@render children()}
 
 <style>
