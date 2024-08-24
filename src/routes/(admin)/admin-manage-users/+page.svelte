@@ -1,9 +1,26 @@
 <script lang="ts">
+	import Button from '$lib/components/ui/button/button.svelte';
+	import { MoveUpRight } from 'lucide-svelte';
 	import { fromStaticRouteState } from '../../_states/fromStaticRouteState.svelte';
+	import RenderUsers from './_components/RenderUsers.svelte';
+	import Pagination from './_components/_operations/Pagination.svelte';
+
+	const { data } = $props();
 
 	const staticRoute = fromStaticRouteState();
 
 	staticRoute.setRoute('/admin-manage-users');
 </script>
 
-<div class="">manage users</div>
+<div class="flex flex-col gap-[2rem] p-[1rem] sm:p-[2rem]">
+	<section class="flex flex-col gap-[0.625rem]">
+		<div class="flex flex-col items-center gap-[1rem] md:flex-row md:justify-between">
+			<Button class="flex  items-center gap-[0.313rem]">Create User</Button>
+
+			<div class="">
+				<Pagination />
+			</div>
+		</div>
+		<RenderUsers updateUserForm={data.updateUserForm} />
+	</section>
+</div>
