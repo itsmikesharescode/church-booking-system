@@ -1,6 +1,4 @@
 <script lang="ts">
-	import Button from '$lib/components/ui/button/button.svelte';
-	import { MoveUpRight } from 'lucide-svelte';
 	import { fromStaticRouteState } from '../../_states/fromStaticRouteState.svelte';
 	import RenderUsers from './_components/RenderUsers.svelte';
 	import Pagination from './_components/_operations/Pagination.svelte';

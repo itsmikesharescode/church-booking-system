@@ -5,7 +5,7 @@
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 	import DeleteUser from './_operations/DeleteUser.svelte';
 	import UpdateUser from './_operations/UpdateUser.svelte';
-	import type { UpdateUserSchema } from './_operations/user-schema';
+	import type { UpdateUserSchema } from '../../manage-users-schema';
 
 	interface Props {
 		updateUserForm: SuperValidated<Infer<UpdateUserSchema>>;

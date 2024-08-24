@@ -2,7 +2,7 @@
 	import * as Table from '$lib/components/ui/table/index.js';
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 	import Actions from './_operations/Actions.svelte';
-	import type { UpdateUserSchema } from './_operations/_operations/user-schema';
+	import type { UpdateUserSchema } from '../manage-users-schema';
 
 	interface Props {
 		updateUserForm: SuperValidated<Infer<UpdateUserSchema>>;
