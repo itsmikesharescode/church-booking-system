@@ -4,6 +4,7 @@
 	import { fromStaticRouteState } from '../../_states/fromStaticRouteState.svelte';
 	import RenderUsers from './_components/RenderUsers.svelte';
 	import Pagination from './_components/_operations/Pagination.svelte';
+	import CreateUser from './_components/CreateUser.svelte';
 
 	const { data } = $props();
 
@@ -15,7 +16,7 @@
 <div class="flex flex-col gap-[2rem] p-[1rem] sm:p-[2rem]">
 	<section class="flex flex-col gap-[0.625rem]">
 		<div class="flex flex-col items-center gap-[1rem] md:flex-row md:justify-between">
-			<Button class="flex  items-center gap-[0.313rem]">Create User</Button>
+			<CreateUser createUserForm={data.createUserForm} />
 
 			<div class="">
 				<Pagination />

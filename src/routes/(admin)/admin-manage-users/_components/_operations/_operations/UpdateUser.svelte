@@ -9,7 +9,7 @@
 	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import * as Select from '$lib/components/ui/select/index.js';
-	import { updateUserSchema, type UpdateUserSchema } from './user-schema';
+	import { updateUserSchema, type UpdateUserSchema } from '../../../manage-users-schema';
 	import { Loader } from 'lucide-svelte';
 
 	interface Props {
@@ -173,7 +173,7 @@
 
 			<AlertDialog.Footer class="gap-[0.625rem] pb-[1rem] sm:gap-0 sm:pb-[2rem]">
 				<Button
-					variant="outline"
+					variant="secondary"
 					onclick={() => {
 						updateSignal = false;
 						form.reset();

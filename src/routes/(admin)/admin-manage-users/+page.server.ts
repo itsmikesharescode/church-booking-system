@@ -1,10 +1,11 @@
 import { superValidate } from 'sveltekit-superforms';
 import type { PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
-import { updateUserSchema } from './_components/_operations/_operations/user-schema';
+import { createUserSchema, updateUserSchema } from './manage-users-schema';
 
 export const load: PageServerLoad = async () => {
 	return {
+		createUserForm: await superValidate(zod(createUserSchema)),
 		updateUserForm: await superValidate(zod(updateUserSchema))
 	};
 };
