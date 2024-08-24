@@ -36,10 +36,6 @@
 
 	<Separator />
 
-	{#snippet PaginationSnip()}
-		<Pagination />
-	{/snippet}
-
 	<div class="flex flex-col gap-[1rem]">
 		<div class="flex flex-col items-center gap-[1rem] md:flex-row md:justify-between">
 			<Button href="/admin-dashboard/upload-church" class="flex  items-center gap-[0.313rem]">
@@ -48,13 +44,9 @@
 			</Button>
 
 			<div class="">
-				{@render PaginationSnip()}
+				<Pagination />
 			</div>
 		</div>
 		<RenderChurch />
-
-		<div class="">
-			{@render PaginationSnip()}
-		</div>
 	</div>
 </div>

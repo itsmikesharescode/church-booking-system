@@ -23,9 +23,10 @@
 			'aria-required': 'true' | undefined;
 			'data-fs-control': string;
 		};
+		title: string;
 	}
 
-	let { dateValue = $bindable(), attrs }: Props = $props();
+	let { dateValue = $bindable(), attrs, title }: Props = $props();
 
 	let value = <$$Props['value']>$state();
 	let placeholder = $state<$$Props['placeholder']>(today(getLocalTimeZone()));
@@ -83,7 +84,7 @@
 			variant="outline"
 			class="text-4 flex w-full items-center justify-between text-sm text-muted-foreground"
 		>
-			{value || dateValue ? value || dateValue : 'Select Birth Date'}
+			{value || dateValue ? value || dateValue : title}
 			<CalendarArrowDown class="h-[15px] w-[15px]" />
 		</Button>
 	</Popover.Trigger>

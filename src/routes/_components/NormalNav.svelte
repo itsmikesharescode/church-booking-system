@@ -23,7 +23,7 @@
 
 <svelte:window bind:innerWidth />
 
-<nav class="sticky top-0 z-10 flex justify-between border-b-[1px] p-[1rem] backdrop-blur-lg">
+<nav class="sticky top-0 z-20 flex justify-between border-b-[1px] p-[1rem] backdrop-blur-lg">
 	<div class="flex items-center gap-[0.625rem]">
 		<div class="flex items-center gap-[0.625rem]">
 			<DarkMode />

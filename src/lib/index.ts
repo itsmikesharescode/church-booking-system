@@ -33,7 +33,7 @@ export const adminRoutes = [
 	'/admin-dashboard',
 	'/admin-dashboard/upload-church',
 	'/admin-event-reservations',
-	'/admin-generate-reports',
+	'/admin-',
 	'/admin-manage-users'
 ];
 export const defaultRoutes = ['/authenticate'];
