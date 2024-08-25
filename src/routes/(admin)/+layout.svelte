@@ -12,6 +12,7 @@
 		if (clientMode) {
 			theme.set(clientMode === 'dark' ? 'rgb(255, 255, 255)' : 'rgb(0, 0, 0)');
 		}
+		return;
 	});
 
 	initManageUsersRoute();

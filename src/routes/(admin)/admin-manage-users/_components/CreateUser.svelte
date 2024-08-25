@@ -4,19 +4,22 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Form from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
-	import type { Result } from '$lib/types';
+	import type { Result, UserType } from '$lib/types';
 	import { toast } from 'svelte-sonner';
 	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { Loader } from 'lucide-svelte';
 	import { createUserSchema, type CreateUserSchema } from '../manage-users-schema';
+	import { fromManageUsersRoute } from '../../_states/fromManageUsers.svelte';
 
 	interface Props {
 		createUserForm: SuperValidated<Infer<CreateUserSchema>>;
 	}
 
 	const { createUserForm }: Props = $props();
+
+	const manageUsersRoute = fromManageUsersRoute();
 
 	let open = $state(false);
 
@@ -25,11 +28,14 @@
 		id: crypto.randomUUID(),
 		invalidateAll: false,
 		onUpdate({ result }) {
-			const { status, data } = result as Result<{ msg: string }>;
+			const { status, data } = result as Result<{ msg: string; data: UserType[] }>;
 
 			switch (status) {
 				case 200:
 					toast.success('', { description: data.msg });
+					manageUsersRoute.setUsers(data.data);
+					form.reset();
+					open = false;
 					break;
 
 				case 401:

@@ -3,6 +3,8 @@ import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { createUserSchema, updateUserSchema } from './manage-users-schema';
 import { fail } from '@sveltejs/kit';
+import type { PostgrestSingleResponse } from '@supabase/supabase-js';
+import type { UserType } from '$lib/types';
 
 export const load: PageServerLoad = async () => {
 	return {
@@ -12,7 +14,7 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions: Actions = {
-	createUserEvent: async ({ locals: { supabase }, request }) => {
+	createUserEvent: async ({ locals: { supabaseAdmin }, request }) => {
 		const form = await superValidate(request, zod(createUserSchema));
 
 		if (!form.valid) return fail(400, { form });
@@ -20,9 +22,10 @@ export const actions: Actions = {
 		const {
 			data: { user },
 			error
-		} = await supabase.auth.admin.createUser({
+		} = await supabaseAdmin.auth.admin.createUser({
 			email: form.data.email,
 			password: form.data.pwd,
+			email_confirm: true,
 			user_metadata: {
 				role: 'user',
 				email: form.data.email,
@@ -36,10 +39,19 @@ export const actions: Actions = {
 		});
 
 		if (error) return fail(401, { form, msg: error.message });
-		else if (user) return { form, msg: 'Account Created.', user };
+		else if (user) {
+			const { data, error: selectErr } = (await supabaseAdmin
+				.from('user_list_tb')
+				.select('*')
+				.order('created_at', { ascending: true })) as PostgrestSingleResponse<UserType[]>;
+
+			if (selectErr) return fail(401, { form, msg: selectErr.message });
+
+			return { form, msg: 'Account Created.', data };
+		}
 	},
 
-	updateUserEvent: async ({ locals: { supabase }, request }) => {
+	updateUserEvent: async ({ locals: { supabaseAdmin }, request }) => {
 		const form = await superValidate(request, zod(updateUserSchema));
 
 		if (!form.valid) return fail(400, { form });
@@ -47,7 +59,7 @@ export const actions: Actions = {
 		const {
 			data: { user },
 			error
-		} = await supabase.auth.admin.updateUserById(form.data.userId, {
+		} = await supabaseAdmin.auth.admin.updateUserById(form.data.userId, {
 			email: form.data.email,
 			password: form.data.pwd,
 			user_metadata: {
@@ -63,19 +75,37 @@ export const actions: Actions = {
 		});
 
 		if (error) return fail(401, { form, msg: error.message });
-		else if (user) return { form, msg: 'Account Updated.', user };
+		else if (user) {
+			const { data, error: selectErr } = (await supabaseAdmin
+				.from('user_list_tb')
+				.select('*')
+				.order('created_at', { ascending: true })) as PostgrestSingleResponse<UserType[]>;
+
+			if (selectErr) return fail(401, { form, msg: selectErr.message });
+
+			return { form, msg: 'Account Updated.' };
+		}
 	},
 
-	deleteUserEvent: async ({ locals: { supabase }, request }) => {
+	deleteUserEvent: async ({ locals: { supabaseAdmin }, request }) => {
 		const formData = await request.formData();
 		const userId = formData.get('userId') as string;
 
 		const {
 			data: { user },
 			error
-		} = await supabase.auth.admin.deleteUser(userId);
+		} = await supabaseAdmin.auth.admin.deleteUser(userId);
 
 		if (error) return fail(401, { msg: error.message });
-		else if (user) return { msg: 'Account Deleted.', user };
+		else if (user) {
+			const { data, error: selectErr } = (await supabaseAdmin
+				.from('user_list_tb')
+				.select('*')
+				.order('created_at', { ascending: true })) as PostgrestSingleResponse<UserType[]>;
+
+			if (selectErr) return fail(401, { msg: selectErr.message });
+
+			return { msg: 'Account Deleted.' };
+		}
 	}
 };
