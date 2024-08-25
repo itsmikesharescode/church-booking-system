@@ -44,3 +44,9 @@ export type UserProfile = {
 	role: 'user' | 'admin';
 	sub: string;
 };
+
+export type UserType = {
+	user_id: string;
+	created_at: string;
+	user_meta_data: UserProfile;
+};

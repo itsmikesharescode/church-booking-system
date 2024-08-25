@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { fromThemeState } from '../_states/fromThemeState.svelte';
+	import { initManageUsersRoute } from './_states/fromManageUsers.svelte';
 
 	const { children } = $props();
 
@@ -12,6 +13,8 @@
 			theme.set(clientMode === 'dark' ? 'rgb(255, 255, 255)' : 'rgb(0, 0, 0)');
 		}
 	});
+
+	initManageUsersRoute();
 </script>
 
 {@render children()}

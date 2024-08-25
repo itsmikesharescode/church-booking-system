@@ -23,6 +23,7 @@
 	const form = superForm(createUserForm, {
 		validators: zodClient(createUserSchema),
 		id: crypto.randomUUID(),
+		invalidateAll: false,
 		onUpdate({ result }) {
 			const { status, data } = result as Result<{ msg: string }>;
 
@@ -56,7 +57,7 @@
 
 		<form
 			method="POST"
-			action="?/signUpEvent"
+			action="?/createUserEvent"
 			use:enhance
 			class="flex flex-col gap-[1rem] overflow-auto px-[1rem] sm:px-[2rem]"
 		>
