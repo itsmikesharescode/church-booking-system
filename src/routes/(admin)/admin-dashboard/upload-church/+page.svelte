@@ -50,6 +50,8 @@
 			return;
 		}
 
+		console.log(answerContainer);
+
 		console.log($state.snapshot(answerContainer));
 	};
 </script>
