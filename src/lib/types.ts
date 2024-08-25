@@ -50,3 +50,7 @@ export type UserType = {
 	created_at: string;
 	user_meta_data: UserProfile;
 };
+
+export interface AdminQType {
+	users: UserType[] | [];
+}

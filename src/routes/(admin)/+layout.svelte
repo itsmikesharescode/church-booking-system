@@ -1,12 +1,18 @@
 <script lang="ts">
 	import { fromThemeState } from '../_states/fromThemeState.svelte';
-	import { initManageUsersRoute } from './_states/fromManageUsers.svelte';
+	import { fromManageUsersRoute, initManageUsersRoute } from './_states/fromManageUsers.svelte';
 
-	const { children } = $props();
+	const { data, children } = $props();
 
 	const theme = fromThemeState();
 
+	initManageUsersRoute();
+
+	const manageUsersRoute = fromManageUsersRoute();
+
 	$effect(() => {
+		manageUsersRoute.setUsers(data.adminQ.data?.users ?? null);
+
 		const clientMode = localStorage.getItem('mode-watcher-mode');
 
 		if (clientMode) {
@@ -14,8 +20,6 @@
 		}
 		return;
 	});
-
-	initManageUsersRoute();
 </script>
 
 {@render children()}

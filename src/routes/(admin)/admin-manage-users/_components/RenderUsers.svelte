@@ -3,12 +3,15 @@
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 	import Actions from './_operations/Actions.svelte';
 	import type { UpdateUserSchema } from '../manage-users-schema';
+	import { fromManageUsersRoute } from '../../_states/fromManageUsers.svelte';
 
 	interface Props {
 		updateUserForm: SuperValidated<Infer<UpdateUserSchema>>;
 	}
 
 	const { updateUserForm }: Props = $props();
+
+	const manageUsersRoute = fromManageUsersRoute();
 </script>
 
 <Table.Root>
@@ -24,17 +27,29 @@
 		</Table.Row>
 	</Table.Header>
 	<Table.Body>
-		{#each Array(10) as _, index}
+		{#if !manageUsersRoute.getUsers()?.length}
+			<div class="fixed left-0 right-0 mt-[10dvh]">
+				<p class="text-center text-base font-semibold text-muted-foreground">No users</p>
+			</div>
+		{/if}
+		{#each manageUsersRoute.getUsers() ?? [] as user}
 			<Table.Row>
 				<Table.Cell class="">
 					<Actions {updateUserForm} />
 				</Table.Cell>
-				<Table.Cell>eviotamikemike@gmail.com</Table.Cell>
-				<Table.Cell class="truncate">Eviota, Mike John Baguinaon</Table.Cell>
-				<Table.Cell class="truncate">Aug 3, 2024 @ 10:20 AM</Table.Cell>
-				<Table.Cell class="">09123456789</Table.Cell>
-				<Table.Cell class="">Male</Table.Cell>
-				<Table.Cell class="truncate">Nov 1, 1945</Table.Cell>
+				<Table.Cell>{user.user_meta_data.email}</Table.Cell>
+				<Table.Cell class="truncate">
+					{user.user_meta_data.lastName},
+					{user.user_meta_data.firstName}
+					{user.user_meta_data.middleName}
+				</Table.Cell>
+				<Table.Cell class="truncate">
+					{new Date(user.created_at).toLocaleDateString()} @
+					{new Date(user.created_at).toLocaleTimeString()}
+				</Table.Cell>
+				<Table.Cell class="">{user.user_meta_data.mobileNum}</Table.Cell>
+				<Table.Cell class="">{user.user_meta_data.gender}</Table.Cell>
+				<Table.Cell class="truncate">{user.user_meta_data.birthDate}</Table.Cell>
 			</Table.Row>
 		{/each}
 	</Table.Body>
