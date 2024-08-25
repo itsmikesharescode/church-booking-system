@@ -103,11 +103,12 @@ export const actions: Actions = {
 			const { data, error: selectErr } = (await supabaseAdmin
 				.from('user_list_tb')
 				.select('*')
-				.order('created_at', { ascending: true })) as PostgrestSingleResponse<UserType[]>;
+				.order('created_at', { ascending: true })
+				.limit(10)) as PostgrestSingleResponse<UserType[]>;
 
 			if (selectErr) return fail(401, { msg: selectErr.message });
 
-			return { msg: 'Account Deleted.' };
+			return { msg: 'Account Deleted.', data };
 		}
 	}
 };

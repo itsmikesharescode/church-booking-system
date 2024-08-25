@@ -47,5 +47,5 @@
 	</DropdownMenu.Content>
 </DropdownMenu.Root>
 
-<DeleteUser bind:deleteSignal />
+<DeleteUser bind:deleteSignal {userProp} />
 <UpdateUser bind:updateSignal {updateUserForm} {userProp} />
