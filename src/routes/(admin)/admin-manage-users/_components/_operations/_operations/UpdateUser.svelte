@@ -4,30 +4,37 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Form from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
-	import type { Result } from '$lib/types';
+	import type { Result, UserType } from '$lib/types';
 	import { toast } from 'svelte-sonner';
 	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { updateUserSchema, type UpdateUserSchema } from '../../../manage-users-schema';
 	import { Loader } from 'lucide-svelte';
+	import { fromManageUsersRoute } from '../../../../_states/fromManageUsers.svelte';
 
 	interface Props {
 		updateSignal: boolean;
 		updateUserForm: SuperValidated<Infer<UpdateUserSchema>>;
+		userProp: UserType;
 	}
 
-	let { updateSignal = $bindable(), updateUserForm }: Props = $props();
+	let { updateSignal = $bindable(), updateUserForm, userProp }: Props = $props();
+
+	const manageUsersRoute = fromManageUsersRoute();
 
 	const form = superForm(updateUserForm, {
 		validators: zodClient(updateUserSchema),
 		id: crypto.randomUUID(),
+		invalidateAll: false,
 		onUpdate({ result }) {
-			const { status, data } = result as Result<{ msg: string }>;
-
+			const { status, data } = result as Result<{ msg: string; data: UserType[] }>;
 			switch (status) {
 				case 200:
 					toast.success('', { description: data.msg });
+					manageUsersRoute.setUsers(data.data);
+					form.reset();
+					updateSignal = false;
 					break;
 
 				case 401:
@@ -53,11 +60,17 @@
 
 		<form
 			method="POST"
-			action="?/signUpEvent"
+			action="?/updateUserEvent"
 			use:enhance
 			class="flex flex-col gap-[1rem] overflow-auto px-[1rem] sm:px-[2rem]"
 		>
 			<div class="grid gap-[1rem] md:grid-cols-2">
+				<Form.Field {form} name="userId" class="hidden">
+					<Form.Control let:attrs>
+						<Input {...attrs} bind:value={userProp.user_id} />
+					</Form.Control>
+				</Form.Field>
+
 				<Form.Field {form} name="firstName">
 					<Form.Control let:attrs>
 						<Form.Label>First Name</Form.Label>

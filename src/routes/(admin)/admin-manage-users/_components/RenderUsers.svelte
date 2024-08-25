@@ -35,7 +35,7 @@
 		{#each manageUsersRoute.getUsers() ?? [] as user}
 			<Table.Row>
 				<Table.Cell class="">
-					<Actions {updateUserForm} />
+					<Actions {updateUserForm} userProp={user} />
 				</Table.Cell>
 				<Table.Cell>{user.user_meta_data.email}</Table.Cell>
 				<Table.Cell class="truncate">

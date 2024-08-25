@@ -6,12 +6,14 @@
 	import DeleteUser from './_operations/DeleteUser.svelte';
 	import UpdateUser from './_operations/UpdateUser.svelte';
 	import type { UpdateUserSchema } from '../../manage-users-schema';
+	import type { UserType } from '$lib/types';
 
 	interface Props {
 		updateUserForm: SuperValidated<Infer<UpdateUserSchema>>;
+		userProp: UserType;
 	}
 
-	const { updateUserForm }: Props = $props();
+	const { updateUserForm, userProp }: Props = $props();
 
 	let open = $state(false);
 	let updateSignal = $state(false);
@@ -46,4 +48,4 @@
 </DropdownMenu.Root>
 
 <DeleteUser bind:deleteSignal />
-<UpdateUser bind:updateSignal {updateUserForm} />
+<UpdateUser bind:updateSignal {updateUserForm} {userProp} />
