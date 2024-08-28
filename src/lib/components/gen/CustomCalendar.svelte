@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { Calendar as CalendarPrimitive } from 'bits-ui';
-	import { DateFormatter, getLocalTimeZone, today } from '@internationalized/date';
+	import { DateFormatter, getLocalTimeZone, today, type DateValue } from '@internationalized/date';
 	import * as Calendar from '$lib/components/ui/calendar/index.js';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { cn } from '$lib/utils.js';
 	import Button from '../ui/button/button.svelte';
-	import { ChevronDown } from 'lucide-svelte';
 	import * as Popover from '$lib/components/ui/popover';
 	import { CalendarArrowDown } from 'lucide-svelte';
 
@@ -28,7 +27,7 @@
 
 	let { dateValue = $bindable(), attrs, title }: Props = $props();
 
-	let value = <$$Props['value']>$state();
+	let value = $state<DateValue | DateValue[]>();
 	let placeholder = $state<$$Props['placeholder']>(today(getLocalTimeZone()));
 	let weekdayFormat = $state<$$Props['weekdayFormat']>('short');
 
