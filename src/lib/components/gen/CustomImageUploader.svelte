@@ -3,7 +3,7 @@
 	import { onDestroy } from 'svelte';
 
 	interface Props {
-		files: FileList | undefined;
+		file: File | undefined;
 		attrs:
 			| {
 					name: string;
@@ -17,32 +17,41 @@
 			| undefined;
 	}
 
-	let { files = $bindable(), attrs }: Props = $props();
+	let { file = $bindable(), attrs }: Props = $props();
 
 	let previewUrl: string | null = $state(null);
 
 	const readImage = () => {
 		const reader = new FileReader();
-		if (files?.length) {
+		if (file) {
 			reader.onload = () => {
 				previewUrl = reader.result as string;
 			};
-			reader.readAsDataURL(files[0]);
+			reader.readAsDataURL(file);
 		}
 	};
 
-	onDestroy(() => (files = undefined));
+	onDestroy(() => (file = undefined));
 </script>
 
 <label
 	class="flex flex-col items-center justify-center gap-[1.25rem] rounded-lg bg-secondary p-[1rem]"
 >
 	{#if previewUrl}
-		<img src={previewUrl} alt="" class="h-[200px] w-full" />
+		<img src={previewUrl} alt="" class="h-[150px] w-full" />
 	{:else}
-		<ImageUp class="h-[200px] w-[100px]" />
+		<ImageUp class="h-[150px] w-[100px]" />
 	{/if}
 
 	<span class="text-sm text-muted-foreground">Upload Church Photo</span>
-	<input {...attrs} type="file" class="hidden" onchange={readImage} bind:files accept="image/*" />
+	<input
+		{...attrs}
+		type="file"
+		class="hidden"
+		onchange={readImage}
+		oninput={(e) => {
+			file = e.currentTarget.files?.item(0) as File;
+		}}
+		accept="image/*"
+	/>
 </label>

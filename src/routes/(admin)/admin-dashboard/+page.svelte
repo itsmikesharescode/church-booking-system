@@ -7,7 +7,9 @@
 	import CountCard from './_components/CountCard.svelte';
 	import LineChart from './_components/LineChart.svelte';
 	import RenderChurch from './_components/RenderChurch.svelte';
-	import { MoveUpRight } from 'lucide-svelte';
+	import UploadChurch from './_components/UploadChurch.svelte';
+
+	const { data } = $props();
 
 	const staticRoute = fromStaticRouteState();
 
@@ -38,10 +40,7 @@
 
 	<div class="flex flex-col gap-[1rem]">
 		<div class="flex flex-col items-center gap-[1rem] md:flex-row md:justify-between">
-			<Button href="/admin-dashboard/upload-church" class="flex  items-center gap-[0.313rem]">
-				Upload Church
-				<MoveUpRight class="h-[15px] w-[15px]" />
-			</Button>
+			<UploadChurch upChForm={data.upChForm} />
 
 			<div class="">
 				<Pagination />

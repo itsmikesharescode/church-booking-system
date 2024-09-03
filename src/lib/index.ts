@@ -37,3 +37,17 @@ export const adminRoutes = [
 	'/admin-manage-users'
 ];
 export const defaultRoutes = ['/authenticate'];
+
+export const convertTo24HourFormat = (time: string) => {
+	const [timePart, modifier] = time.split(' ');
+	let [hours, minutes] = timePart.split(':');
+
+	if (hours === '12') {
+		hours = modifier === 'AM' ? '00' : '12';
+	} else {
+		hours =
+			modifier === 'PM' ? String(Number(hours) + 12).padStart(2, '0') : hours.padStart(2, '0');
+	}
+
+	return `${hours}:${minutes}:00`;
+};
