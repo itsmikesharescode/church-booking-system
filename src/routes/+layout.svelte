@@ -13,6 +13,7 @@
 	import { page } from '$app/stores';
 	import { fromCachingState, initCaching } from './_states/fromCachingState.svelte';
 	import { onNavigate } from '$app/navigation';
+	import { fromThemeState, initTheme } from './_states/fromThemeState.svelte';
 
 	const { data, children } = $props();
 
@@ -20,10 +21,12 @@
 	initSupabase();
 	initStaticRoute();
 	initCaching();
+	initTheme();
 
 	const user = fromUserState();
 	const supabase = fromSupabaseState();
 	const caching = fromCachingState();
+	const theme = fromThemeState();
 
 	caching.setCaching(crypto.randomUUID());
 
@@ -61,6 +64,7 @@
 {#if $page.url.pathname !== '/authenticate/update-password'}
 	<NormalNav />
 {/if}
+
 {@render children()}
 
 <style>

@@ -25,6 +25,7 @@ export const actions: Actions = {
 		if (!form.valid) return fail(400, withFiles({ form }));
 
 		const resizeFile = await resizeImage(form.data.profilePhoto);
+
 		if (resizeFile) {
 			const { data, error } = await supabase.storage
 				.from('profile_bucket')

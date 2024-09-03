@@ -44,3 +44,24 @@ export type UserProfile = {
 	role: 'user' | 'admin';
 	sub: string;
 };
+
+export type UserType = {
+	user_id: string;
+	created_at: string;
+	user_meta_data: UserProfile;
+};
+
+export type ChurchType = {
+	id: number;
+	created_at: string;
+	name: string;
+	description: string;
+	open_time: string;
+	close_time: string;
+	photo_path: string;
+};
+
+export interface AdminQType {
+	users: UserType[] | [];
+	churches: ChurchType[] | [];
+}

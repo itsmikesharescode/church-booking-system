@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { Calendar as CalendarPrimitive } from 'bits-ui';
-	import { DateFormatter, getLocalTimeZone, today } from '@internationalized/date';
+	import { DateFormatter, getLocalTimeZone, today, type DateValue } from '@internationalized/date';
 	import * as Calendar from '$lib/components/ui/calendar/index.js';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { cn } from '$lib/utils.js';
 	import Button from '../ui/button/button.svelte';
-	import { ChevronDown } from 'lucide-svelte';
 	import * as Popover from '$lib/components/ui/popover';
 	import { CalendarArrowDown } from 'lucide-svelte';
 
@@ -23,11 +22,12 @@
 			'aria-required': 'true' | undefined;
 			'data-fs-control': string;
 		};
+		title: string;
 	}
 
-	let { dateValue = $bindable(), attrs }: Props = $props();
+	let { dateValue = $bindable(), attrs, title }: Props = $props();
 
-	let value = <$$Props['value']>$state();
+	let value = $state<DateValue | DateValue[]>();
 	let placeholder = $state<$$Props['placeholder']>(today(getLocalTimeZone()));
 	let weekdayFormat = $state<$$Props['weekdayFormat']>('short');
 
@@ -83,7 +83,7 @@
 			variant="outline"
 			class="text-4 flex w-full items-center justify-between text-sm text-muted-foreground"
 		>
-			{value || dateValue ? value || dateValue : 'Select Birth Date'}
+			{value || dateValue ? value || dateValue : title}
 			<CalendarArrowDown class="h-[15px] w-[15px]" />
 		</Button>
 	</Popover.Trigger>

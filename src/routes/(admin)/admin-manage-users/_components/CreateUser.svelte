@@ -1,31 +1,41 @@
 <script lang="ts">
+	import CustomCalendar from '$lib/components/gen/CustomCalendar.svelte';
+	import * as AlertDialog from '$lib/components/ui/alert-dialog';
+	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Form from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
-	import { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
-	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { signUpSchema, type SignUpSchema } from '../authenticate-schema';
-	import * as Select from '$lib/components/ui/select/index.js';
-	import Button from '$lib/components/ui/button/button.svelte';
-	import CustomCalendar from '$lib/components/gen/CustomCalendar.svelte';
-	import type { Result } from '$lib/types';
+	import type { Result, UserType } from '$lib/types';
 	import { toast } from 'svelte-sonner';
+	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
+	import { zodClient } from 'sveltekit-superforms/adapters';
+	import * as Select from '$lib/components/ui/select/index.js';
 	import { Loader } from 'lucide-svelte';
+	import { createUserSchema, type CreateUserSchema } from '../manage-users-schema';
+	import { fromManageUsersRoute } from '../../_states/fromManageUsers.svelte';
 
 	interface Props {
-		signUpForm: SuperValidated<Infer<SignUpSchema>>;
+		createUserForm: SuperValidated<Infer<CreateUserSchema>>;
 	}
 
-	const { signUpForm }: Props = $props();
+	const { createUserForm }: Props = $props();
 
-	const form = superForm(signUpForm, {
-		validators: zodClient(signUpSchema),
+	const manageUsersRoute = fromManageUsersRoute();
+
+	let open = $state(false);
+
+	const form = superForm(createUserForm, {
+		validators: zodClient(createUserSchema),
 		id: crypto.randomUUID(),
+		invalidateAll: false,
 		onUpdate({ result }) {
-			const { status, data } = result as Result<{ msg: string }>;
+			const { status, data } = result as Result<{ msg: string; data: UserType[] }>;
 
 			switch (status) {
 				case 200:
 					toast.success('', { description: data.msg });
+					manageUsersRoute.setUsers(data.data);
+					form.reset();
+					open = false;
 					break;
 
 				case 401:
@@ -42,14 +52,21 @@
 	);
 </script>
 
-<div class="flex min-h-screen flex-col justify-center p-[1rem] sm:p-[2rem]">
-	<div class="">
-		<form method="POST" action="?/signUpEvent" use:enhance class="mx-auto flex flex-col gap-[1rem]">
-			<div class="mx-auto">
-				<p class="text-center text-6xl font-bold">Sign Up</p>
-				<p class="text-center leading-7 text-muted-foreground">Sign up to church booking system</p>
-			</div>
+<Button onclick={() => (open = true)}>Create User</Button>
 
+<AlertDialog.Root bind:open>
+	<AlertDialog.Content class="flex max-h-screen max-w-[800px] flex-col gap-[0.625rem] p-0">
+		<AlertDialog.Header class="p-[1rem] sm:p-[2rem]">
+			<AlertDialog.Title>Create User Account</AlertDialog.Title>
+			<AlertDialog.Description>Answer the fields to create account</AlertDialog.Description>
+		</AlertDialog.Header>
+
+		<form
+			method="POST"
+			action="?/createUserEvent"
+			use:enhance
+			class="flex flex-col gap-[1rem] overflow-auto px-[1rem] sm:px-[2rem]"
+		>
 			<div class="grid gap-[1rem] md:grid-cols-2">
 				<Form.Field {form} name="firstName">
 					<Form.Control let:attrs>
@@ -164,30 +181,27 @@
 				</Form.Field>
 			</div>
 
-			<div class="flex items-center justify-center">
-				<div class="w-full max-w-[450px]">
-					<div class="flex flex-col gap-[1rem]">
-						<Form.Button disabled={$submitting} class="relative">
-							{#if $submitting}
-								<div
-									class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm bg-primary"
-								>
-									<Loader class="h-[15px] w-[15px] animate-spin" />
-								</div>
-							{/if}
-							Sign Up
-						</Form.Button>
-
-						<div class="flex items-center gap-[0.625rem]">
-							<div class="h-[1px] w-full bg-slate-400"></div>
-							<span>Or</span>
-							<div class="h-[1px] w-full bg-slate-400"></div>
+			<AlertDialog.Footer class="gap-[0.625rem] pb-[1rem] sm:gap-0 sm:pb-[2rem]">
+				<Button
+					variant="secondary"
+					onclick={() => {
+						open = false;
+						form.reset();
+					}}
+				>
+					Cancel
+				</Button>
+				<Form.Button disabled={$submitting} class="relative">
+					{#if $submitting}
+						<div
+							class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm bg-primary"
+						>
+							<Loader class="h-[15px] w-[15px] animate-spin" />
 						</div>
-
-						<Button variant="secondary" href="/authenticate">Sign In Here</Button>
-					</div>
-				</div>
-			</div>
+					{/if}
+					Create Account
+				</Form.Button>
+			</AlertDialog.Footer>
 		</form>
-	</div>
-</div>
+	</AlertDialog.Content>
+</AlertDialog.Root>
