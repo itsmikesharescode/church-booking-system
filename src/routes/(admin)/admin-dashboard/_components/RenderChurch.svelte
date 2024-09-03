@@ -1,9 +1,18 @@
 <script lang="ts">
 	import * as Table from '$lib/components/ui/table/index.js';
-	import Actions from './_operations/Actions.svelte';
+	import Actions from './Actions.svelte';
 	import { fromDashBRouteState } from '../../_states/fromDashboard.svelte';
 	import { convertTo12HourFormat, publicAPIs } from '$lib';
 	import * as Avatar from '$lib/components/ui/avatar';
+	import type { UpdateChInfoSchema, UpdateChPhotoSchema } from '../admin-dashboard-schema';
+	import type { Infer, SuperValidated } from 'sveltekit-superforms';
+
+	interface Props {
+		updateChInfoForm: SuperValidated<Infer<UpdateChInfoSchema>>;
+		updateChPhotoForm: SuperValidated<Infer<UpdateChPhotoSchema>>;
+	}
+
+	const { ...props }: Props = $props();
 
 	const dashboardRoute = fromDashBRouteState();
 </script>
@@ -21,7 +30,11 @@
 		{#each dashboardRoute.getChurches() ?? [] as church (church)}
 			<Table.Row>
 				<Table.Cell class="">
-					<Actions />
+					<Actions
+						{church}
+						updateChInfoForm={props.updateChInfoForm}
+						updateChPhotoForm={props.updateChPhotoForm}
+					/>
 				</Table.Cell>
 				<Table.Cell class="flex items-center  gap-[0.625rem] truncate font-medium">
 					<Avatar.Root>

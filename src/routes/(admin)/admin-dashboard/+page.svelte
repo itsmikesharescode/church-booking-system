@@ -46,6 +46,9 @@
 				<Pagination />
 			</div>
 		</div>
-		<RenderChurch />
+		<RenderChurch
+			updateChPhotoForm={data.updateChPhotoForm}
+			updateChInfoForm={data.updateChInfoForm}
+		/>
 	</div>
 </div>

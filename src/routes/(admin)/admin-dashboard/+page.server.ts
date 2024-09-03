@@ -1,13 +1,15 @@
 import { superValidate, withFiles } from 'sveltekit-superforms';
 import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
-import { upChSchema } from './admin-dashboard-schema';
+import { upChSchema, updateChInfoSchema, updateChPhotoSchema } from './admin-dashboard-schema';
 import { fail } from '@sveltejs/kit';
 import { convertTo24HourFormat } from '$lib';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 	return {
-		upChForm: await superValidate(zod(upChSchema))
+		upChForm: await superValidate(zod(upChSchema)),
+		updateChInfoForm: await superValidate(zod(updateChInfoSchema)),
+		updateChPhotoForm: await superValidate(zod(updateChPhotoSchema))
 	};
 };
 
@@ -45,5 +47,19 @@ export const actions: Actions = {
 
 			return withFiles({ form, msg: 'Upload success.' });
 		}
+	},
+
+	updateChInfoEvent: async ({ request, locals: { supabase } }) => {
+		const form = await superValidate(request, zod(updateChInfoSchema));
+
+		if (!form.valid) return fail(400, { form });
+		console.log(form.data);
+	},
+
+	updateChPhotoEvent: async ({ request, locals: { supabase } }) => {
+		const form = await superValidate(request, zod(updateChPhotoSchema));
+
+		if (!form.valid) return fail(400, { form });
+		console.log(form.data);
 	}
 };

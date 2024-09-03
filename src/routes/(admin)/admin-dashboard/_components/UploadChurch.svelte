@@ -7,7 +7,6 @@
 	import * as Form from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
 	import { Textarea } from '$lib/components/ui/textarea';
-	import CustomDate from '$lib/components/gen/CustomDate.svelte';
 	import CustomImageUploader from '$lib/components/gen/CustomImageUploader.svelte';
 	import { LoaderCircle, X } from 'lucide-svelte';
 	import type { Result } from '$lib/types';
