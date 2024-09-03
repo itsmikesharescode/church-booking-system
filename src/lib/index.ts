@@ -51,3 +51,25 @@ export const convertTo24HourFormat = (time: string) => {
 
 	return `${hours}:${minutes}:00`;
 };
+
+export const convertTo12HourFormat = (time: string) => {
+	let [hours, minutes] = time.split(':');
+	const parsedHours = Number(hours);
+	const modifier = parsedHours >= 12 ? 'PM' : 'AM';
+
+	// Convert hours to 12-hour format
+	hours = parsedHours % 12 === 0 ? '12' : String(parsedHours % 12).padStart(2, '0');
+
+	return `${hours}:${minutes} ${modifier}`;
+};
+
+export const publicAPIs = (path: string, selection: 'Profile' | 'Church') => {
+	const churchpath =
+		'https://ldsuhuvtfqrflozlznho.supabase.co/storage/v1/object/public/church_bucket/';
+	const profilepath =
+		'https://ldsuhuvtfqrflozlznho.supabase.co/storage/v1/object/public/profile_bucket/';
+
+	if (selection === 'Church') return churchpath + path;
+
+	return profilepath + path;
+};

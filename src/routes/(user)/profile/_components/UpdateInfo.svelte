@@ -99,7 +99,7 @@
 				<Form.Field {form} name="birthDate">
 					<Form.Control let:attrs>
 						<Form.Label>Birth Date</Form.Label>
-						<CustomCalendar {attrs} bind:dateValue={$formData.birthDate} />
+						<CustomCalendar title="" {attrs} bind:dateValue={$formData.birthDate} />
 					</Form.Control>
 					<Form.FieldErrors />
 				</Form.Field>

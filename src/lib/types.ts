@@ -51,6 +51,17 @@ export type UserType = {
 	user_meta_data: UserProfile;
 };
 
+export type ChurchType = {
+	id: number;
+	created_at: string;
+	name: string;
+	description: string;
+	open_time: string;
+	close_time: string;
+	photo_path: string;
+};
+
 export interface AdminQType {
 	users: UserType[] | [];
+	churches: ChurchType[] | [];
 }

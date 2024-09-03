@@ -5,7 +5,7 @@ import { upChSchema } from './admin-dashboard-schema';
 import { fail } from '@sveltejs/kit';
 import { convertTo24HourFormat } from '$lib';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 	return {
 		upChForm: await superValidate(zod(upChSchema))
 	};
