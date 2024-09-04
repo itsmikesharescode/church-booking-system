@@ -59,6 +59,7 @@ export type ChurchType = {
 	open_time: string;
 	close_time: string;
 	photo_path: string;
+	booking_list_tb: { initial_time: string; final_time: string; date: string }[];
 };
 
 export interface AdminQType {

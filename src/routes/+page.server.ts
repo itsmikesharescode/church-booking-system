@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 	return {
 		churches: (await supabase
 			.from('church_list_tb')
-			.select('*')
+			.select('*, booking_list_tb("initial_time","final_time", "date")')
 			.order('created_at', { ascending: true })) as PostgrestSingleResponse<ChurchType[]>,
 		reservationForm: await superValidate(zod(reservationSchema))
 	};

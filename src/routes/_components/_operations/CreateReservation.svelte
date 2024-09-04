@@ -14,6 +14,7 @@
 	import { Loader } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	import { convertTo12HourFormat } from '$lib';
+	import * as Popover from '$lib/components/ui/popover';
 
 	interface Props {
 		church: ChurchType;
@@ -34,6 +35,8 @@
 				case 200:
 					toast.success('', { description: data.msg });
 					open = false;
+					form.reset();
+					goto('/my-reservations');
 					break;
 				case 401:
 					toast.error('', { description: data.msg });
@@ -112,31 +115,53 @@
 				</Form.Field>
 			</div>
 
-			<div class="grid gap-[1rem] md:grid-cols-2">
-				<Form.Field {form} name="initialTime">
-					<Form.Control let:attrs>
-						<Form.Label>Initial Time</Form.Label>
-						<Input
-							{...attrs}
-							bind:value={$formData.initialTime}
-							placeholder="Enter initial time example 07:30 AM"
-						/>
-					</Form.Control>
-					<Form.FieldErrors />
-				</Form.Field>
+			<div class="">
+				<div class="grid gap-[1rem] md:grid-cols-2">
+					<Form.Field {form} name="initialTime">
+						<Form.Control let:attrs>
+							<Form.Label>Initial Time</Form.Label>
+							<Input
+								{...attrs}
+								bind:value={$formData.initialTime}
+								placeholder="Enter initial time example 07:30 AM"
+							/>
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
 
-				<Form.Field {form} name="finalTime">
-					<Form.Control let:attrs>
-						<Form.Label>Final Time</Form.Label>
-						<Input
-							{...attrs}
-							bind:value={$formData.finalTime}
-							placeholder="Enter final time example 11:30 AM"
-						/>
-					</Form.Control>
-					<Form.FieldErrors />
-				</Form.Field>
+					<Form.Field {form} name="finalTime">
+						<Form.Control let:attrs>
+							<Form.Label>Final Time</Form.Label>
+							<Input
+								{...attrs}
+								bind:value={$formData.finalTime}
+								placeholder="Enter final time example 11:30 AM"
+							/>
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
+				</div>
+
+				<Popover.Root>
+					<div class="flex justify-end">
+						<Popover.Trigger class="text-sm underline">View Schedules</Popover.Trigger>
+					</div>
+					<Popover.Content class="">
+						<p class="text-sm font-semibold">Taken Slots</p>
+						<div class="flex max-h-[200px] flex-col overflow-auto">
+							{#each props.church.booking_list_tb as book}
+								<p class="text-sm">
+									{book.date}
+									{convertTo12HourFormat(book.initial_time)} - {convertTo12HourFormat(
+										book.final_time
+									)}
+								</p>
+							{/each}
+						</div>
+					</Popover.Content>
+				</Popover.Root>
 			</div>
+
 			<Form.Field {form} name="clientNote">
 				<Form.Control let:attrs>
 					<Form.Label>Note</Form.Label>
