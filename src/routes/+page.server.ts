@@ -3,16 +3,12 @@ import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { reservationSchema } from './_components/_operations/schema';
 import { fail } from '@sveltejs/kit';
-import type { ChurchType, UserProfile } from '$lib/types';
-import type { PostgrestSingleResponse } from '@supabase/supabase-js';
+import type { ChurchType } from '$lib/types';
+
 import { convertTo24HourFormat } from '$lib';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 	return {
-		churches: (await supabase
-			.from('church_list_tb')
-			.select('*, booking_list_tb("initial_time","final_time", "date")')
-			.order('created_at', { ascending: true })) as PostgrestSingleResponse<ChurchType[]>,
 		reservationForm: await superValidate(zod(reservationSchema))
 	};
 };

@@ -2,6 +2,15 @@
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import { BookOpenCheck, X } from 'lucide-svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import type { Book2User } from '$lib/types';
+	import { convertTo12HourFormat } from '$lib';
+
+	interface Props {
+		book: Book2User;
+		status: string;
+	}
+
+	const { ...props }: Props = $props();
 
 	let open = $state(false);
 </script>
@@ -32,11 +41,15 @@
 			<p class="text-lg font-semibold">Client Details</p>
 
 			<p class="text-sm leading-7 md:text-base">
-				<strong>Full name:</strong> Eviota Mike John Baguinaon
+				<strong>Full name:</strong>
+				{props.book.user_list_tb.user_meta_data.lastName}, {props.book.user_list_tb.user_meta_data
+					.firstName}
+				{props.book.user_list_tb.user_meta_data.middleName}
 			</p>
 
 			<p class="text-sm leading-7 md:text-base">
-				<strong>Mobile Number:</strong> 09123456789
+				<strong>Mobile Number:</strong>
+				{props.book.user_list_tb.user_meta_data.mobileNum}
 			</p>
 
 			<p class="text-sm leading-7 md:text-base">
@@ -47,28 +60,35 @@
 		<div class="flex flex-col gap-[0.625rem] overflow-auto">
 			<p class="text-lg font-semibold">Event Details</p>
 			<p class="text-sm leading-7 md:text-base">
-				<strong>Status:</strong> Reserved
+				<strong>Status:</strong>
+				{props.status}
 			</p>
-			<p class="text-sm leading-7 md:text-base">
+			<!-- <p class="text-sm leading-7 md:text-base">
 				<strong>Reference Number:</strong> WD-000002
-			</p>
+			</p> -->
 			<p class="text-sm leading-7 md:text-base">
-				<strong>Event Name:</strong> Wedding
-			</p>
-
-			<p class="text-sm leading-7 md:text-base">
-				<strong>Date and Time:</strong> Mar 18, 2024 10:00 AM - 12:00 PM
+				<strong>Event Name:</strong>
+				{props.book.event_name}
 			</p>
 
 			<p class="text-sm leading-7 md:text-base">
-				<strong>Number of Guests:</strong> 75
+				<strong>Date and Time:</strong>
+				{props.book.date}
+				{convertTo12HourFormat(props.book.initial_time)} - {convertTo12HourFormat(
+					props.book.final_time
+				)}
+			</p>
+
+			<p class="text-sm leading-7 md:text-base">
+				<strong>Number of Guests:</strong>
+				{props.book.number_guest}
 			</p>
 
 			<div class="">
 				<p class="text-sm font-semibold leading-7 md:text-base">Notes:</p>
 
-				<pre
-					class="text-wrap font-sans text-sm leading-7 md:text-base">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Hic, possimus deserunt dolorem dignissimos veritatis debitis minus eveniet, odit soluta quidem, incidunt aspernatur expedita voluptates. Doloremque mollitia quod incidunt vitae quam corrupti, facere culpa distinctio, earum repellat repellendus fugit error perspiciatis cupiditate magni quia laborum blanditiis aliquam, iste adipisci ex molestiae numquam voluptatem impedit! Magni ipsa blanditiis corrupti, sed modi minima minus nobis soluta non unde? Est provident, labore molestiae ipsam quidem necessitatibus nam inventore soluta! At, illum deserunt aspernatur magni enim omnis pariatur ratione ipsam. Iusto, obcaecati recusandae autem quasi soluta sit, qui doloremque alias molestiae unde amet quas dignissimos.</pre>
+				<pre class="text-wrap font-sans text-sm leading-7 md:text-base">{props.book
+						.number_guest}</pre>
 			</div>
 		</div>
 	</AlertDialog.Content>
