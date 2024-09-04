@@ -76,7 +76,7 @@
 
 			<form
 				method="POST"
-				action="?/updateChPhotoEvent"
+				action="?/updateChInfoEvent"
 				use:enhance
 				class="flex flex-col gap-[0.625rem] px-[2rem] pb-[2rem]"
 			>
