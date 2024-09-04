@@ -51,6 +51,19 @@ export type UserType = {
 	user_meta_data: UserProfile;
 };
 
+export type BookingType = {
+	id: number;
+	created_at: string;
+	church_id: number;
+	event_name: string;
+	number_guest: number;
+	date: string;
+	initial_time: string;
+	final_time: string;
+	event_note: string;
+	user_id: string;
+};
+
 export type ChurchType = {
 	id: number;
 	created_at: string;
@@ -59,7 +72,12 @@ export type ChurchType = {
 	open_time: string;
 	close_time: string;
 	photo_path: string;
+	booking_list_tb: { initial_time: string; final_time: string; date: string }[];
 };
+
+export interface Book2User extends BookingType {
+	user_list_tb: UserType;
+}
 
 export interface AdminQType {
 	users: UserType[] | [];

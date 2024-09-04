@@ -45,6 +45,15 @@
 	});
 
 	const { form: formData, enhance, submitting } = form;
+
+	$effect(() => {
+		if (!viewSignal) return;
+
+		$formData.chName = props.church.name;
+		$formData.description = props.church.description;
+		$formData.openT = props.church.open_time;
+		$formData.closeT = props.church.close_time;
+	});
 </script>
 
 <AlertDialog.Root bind:open={viewSignal}>
@@ -82,7 +91,6 @@
 			>
 				<Form.Field {form} name="chId" class="hidden">
 					<Form.Control let:attrs>
-						<Form.Label>Church Name</Form.Label>
 						<Input type="number" {...attrs} value={props.church.id} />
 					</Form.Control>
 				</Form.Field>

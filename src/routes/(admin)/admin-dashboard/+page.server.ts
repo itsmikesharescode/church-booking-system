@@ -53,13 +53,55 @@ export const actions: Actions = {
 		const form = await superValidate(request, zod(updateChInfoSchema));
 
 		if (!form.valid) return fail(400, { form });
-		console.log(form.data);
+
+		const { error } = await supabase
+			.from('church_list_tb')
+			.update([
+				{
+					name: form.data.chName,
+					description: form.data.description,
+					open_time: form.data.openT,
+					close_time: form.data.closeT
+				}
+			])
+			.eq('id', form.data.chId);
+
+		if (error) return fail(401, { form, msg: error.message });
+		return { form, msg: 'Updated details successfully' };
 	},
 
 	updateChPhotoEvent: async ({ request, locals: { supabase } }) => {
 		const form = await superValidate(request, zod(updateChPhotoSchema));
 
 		if (!form.valid) return fail(400, { form });
-		console.log(form.data);
+
+		const { data, error } = await supabase.storage
+			.from('church_bucket')
+			.update(form.data.chPhotoPath, form.data.chPhoto);
+
+		if (error) return fail(401, withFiles({ form, msg: error.message }));
+
+		const { error: updateErr } = await supabase
+			.from('church_list_tb')
+			.update([
+				{
+					photo_path: data.path
+				}
+			])
+			.eq('id', form.data.chId);
+
+		if (updateErr) return fail(401, withFiles({ form, msg: updateErr.message }));
+		return withFiles({ form, msg: 'Updated photo successfully.' });
+	},
+
+	deleteChEvent: async ({ request, locals: { supabase } }) => {
+		const formData = await request.formData();
+		const chId = formData.get('chId') as string;
+		const chPhotoPath = formData.get('chPhotoPath') as string;
+
+		await supabase.storage.from('church_bucket').remove([chPhotoPath]);
+		const { error } = await supabase.from('church_list_tb').delete().eq('id', Number(chId));
+		if (error) return fail(401, { msg: error.message });
+		return { msg: 'Deleted successfully.' };
 	}
 };

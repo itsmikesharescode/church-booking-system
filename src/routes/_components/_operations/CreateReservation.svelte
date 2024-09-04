@@ -6,23 +6,26 @@
 	import * as Form from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import type { Result } from '$lib/types';
+	import type { ChurchType, Result } from '$lib/types';
 	import CustomDate from '$lib/components/gen/CustomDate.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import { fromUserState } from '../../_states/fromUserState.svelte';
 	import { goto } from '$app/navigation';
 	import { Loader } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
+	import { convertTo12HourFormat } from '$lib';
+	import * as Popover from '$lib/components/ui/popover';
 
 	interface Props {
+		church: ChurchType;
 		reservationForm: SuperValidated<Infer<ReservationSchema>>;
 	}
 
-	const { reservationForm }: Props = $props();
+	const { ...props }: Props = $props();
 
 	const user = fromUserState();
 
-	const form = superForm(reservationForm, {
+	const form = superForm(props.reservationForm, {
 		validators: zodClient(reservationSchema),
 		id: crypto.randomUUID(),
 		onUpdate({ result }) {
@@ -32,6 +35,8 @@
 				case 200:
 					toast.success('', { description: data.msg });
 					open = false;
+					form.reset();
+					goto('/my-reservations');
 					break;
 				case 401:
 					toast.error('', { description: data.msg });
@@ -61,7 +66,9 @@
 		<AlertDialog.Header class="p-[1rem] sm:px-[2rem] sm:pt-[2rem]">
 			<AlertDialog.Title>Create Reservation</AlertDialog.Title>
 			<AlertDialog.Description>
-				You are creating reservation for <strong>Simbahang Banal</strong>
+				You are creating reservation for <strong>Simbahang Banal</strong> from
+				<strong>{convertTo12HourFormat(props.church.open_time)}</strong> to
+				<strong>{convertTo12HourFormat(props.church.close_time)}</strong>
 			</AlertDialog.Description>
 		</AlertDialog.Header>
 
@@ -71,6 +78,12 @@
 			use:enhance
 			class="flex flex-col gap-[1rem] overflow-auto p-[1rem] sm:px-[2rem] sm:pt-0"
 		>
+			<Form.Field {form} name="churchObj" class="hidden">
+				<Form.Control let:attrs>
+					<Input {...attrs} value={JSON.stringify(props.church)} />
+				</Form.Control>
+			</Form.Field>
+
 			<Form.Field {form} name="eventName">
 				<Form.Control let:attrs>
 					<Form.Label>Event Name</Form.Label>
@@ -102,31 +115,53 @@
 				</Form.Field>
 			</div>
 
-			<div class="grid gap-[1rem] md:grid-cols-2">
-				<Form.Field {form} name="initialTime">
-					<Form.Control let:attrs>
-						<Form.Label>Initial Time</Form.Label>
-						<Input
-							{...attrs}
-							bind:value={$formData.initialTime}
-							placeholder="Enter initial time example 07:30 AM"
-						/>
-					</Form.Control>
-					<Form.FieldErrors />
-				</Form.Field>
+			<div class="">
+				<div class="grid gap-[1rem] md:grid-cols-2">
+					<Form.Field {form} name="initialTime">
+						<Form.Control let:attrs>
+							<Form.Label>Initial Time</Form.Label>
+							<Input
+								{...attrs}
+								bind:value={$formData.initialTime}
+								placeholder="Enter initial time example 07:30 AM"
+							/>
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
 
-				<Form.Field {form} name="finalTime">
-					<Form.Control let:attrs>
-						<Form.Label>Final Time</Form.Label>
-						<Input
-							{...attrs}
-							bind:value={$formData.finalTime}
-							placeholder="Enter final time example 11:30 AM"
-						/>
-					</Form.Control>
-					<Form.FieldErrors />
-				</Form.Field>
+					<Form.Field {form} name="finalTime">
+						<Form.Control let:attrs>
+							<Form.Label>Final Time</Form.Label>
+							<Input
+								{...attrs}
+								bind:value={$formData.finalTime}
+								placeholder="Enter final time example 11:30 AM"
+							/>
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
+				</div>
+
+				<Popover.Root>
+					<div class="flex justify-end">
+						<Popover.Trigger class="text-sm underline">View Schedules</Popover.Trigger>
+					</div>
+					<Popover.Content class="">
+						<p class="text-sm font-semibold">Taken Slots</p>
+						<div class="flex max-h-[200px] flex-col overflow-auto">
+							{#each props.church.booking_list_tb as book}
+								<p class="text-sm">
+									{book.date}
+									{convertTo12HourFormat(book.initial_time)} - {convertTo12HourFormat(
+										book.final_time
+									)}
+								</p>
+							{/each}
+						</div>
+					</Popover.Content>
+				</Popover.Root>
 			</div>
+
 			<Form.Field {form} name="clientNote">
 				<Form.Control let:attrs>
 					<Form.Label>Note</Form.Label>
@@ -136,15 +171,6 @@
 			</Form.Field>
 
 			<AlertDialog.Footer class="flex flex-col gap-[1rem] sm:gap-0">
-				<Form.Field {form} name="userObj">
-					<Form.Control let:attrs>
-						<Input
-							{...attrs}
-							value={JSON.stringify(user.getUser()?.user_metadata)}
-							class="hidden"
-						/>
-					</Form.Control>
-				</Form.Field>
 				<Button
 					variant="outline"
 					onclick={() => {
