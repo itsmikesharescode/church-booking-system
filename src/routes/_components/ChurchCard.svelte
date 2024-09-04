@@ -1,56 +1,61 @@
 <script lang="ts">
-	import * as Carousel from '$lib/components/ui/carousel/index.js';
-	import { mockChuchDatas } from '$lib';
-	import Autoplay from 'embla-carousel-autoplay';
 	import CreateReservation from './_operations/CreateReservation.svelte';
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 	import type { ReservationSchema } from './_operations/schema';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import type { ChurchType } from '$lib/types';
+	import * as Avatar from '$lib/components/ui/avatar';
+	import { publicAPIs } from '$lib';
 
 	interface Props {
 		reservationForm: SuperValidated<Infer<ReservationSchema>>;
+		index: number;
+		church: ChurchType;
 	}
 
-	const { reservationForm }: Props = $props();
+	const { ...props }: Props = $props();
 
-	const randomSeconds = () => {
-		const randomNumber = Math.floor(Math.random() * 3);
-		return (randomNumber + 2) * 1000;
+	const isOdd = () => {
+		return props.index % 2 !== 0;
 	};
+
+	let innerWidth = $state(0);
 </script>
 
-<div class="">
-	<div class="">
-		<p class="text-xl font-semibold">Simbahang Banal</p>
-		<p class="leading-7 text-muted-foreground">
-			A nurturing spiritual home dedicated to cultivating a deep relationship with God and
-			empowering individuals to reach their full potential.
-		</p>
-	</div>
-	<Carousel.Root
-		plugins={[
-			Autoplay({
-				delay: randomSeconds()
-			})
-		]}
-		class="flex flex-col gap-[1rem] p-[1rem]"
-	>
-		<Carousel.Content>
-			{#each mockChuchDatas as mockData, i (i)}
-				<Carousel.Item>
-					<div class="grid md:grid-cols-2">
-						<img src={mockData.img} alt="" class="h-[300px] w-full" />
-						<div class="flex h-[300px] flex-col gap-[1rem] overflow-auto bg-secondary p-[1rem]">
-							<p class="text-4xl font-semibold">{mockData.title}</p>
-							<pre
-								class="text-wrap font-sans leading-7 text-muted-foreground">{mockData.description}</pre>
-						</div>
-					</div>
-				</Carousel.Item>
-			{/each}
-		</Carousel.Content>
+<svelte:window bind:innerWidth />
 
-		<div class="flex justify-end">
-			<CreateReservation {reservationForm} />
+{#snippet Photo()}
+	<div class="flex flex-col gap-[0.625rem]">
+		<Avatar.Root class="h-[250px] w-full rounded-none md:w-[500px]">
+			<Avatar.Image src={publicAPIs(props.church.photo_path, 'Church')} alt="@shadcn" class="" />
+			<Avatar.Fallback class="rounded-none">Loading ...</Avatar.Fallback>
+		</Avatar.Root>
+		<div class="flex">
+			<Button>Reserve Now</Button>
 		</div>
-	</Carousel.Root>
+	</div>
+{/snippet}
+
+{#snippet Body()}
+	<div class="">
+		<p class="text-2xl">{props.church.name}</p>
+		<pre class="text-wrap font-sans leading-7">{props.church.description}</pre>
+	</div>
+{/snippet}
+
+<div class="">
+	<div
+		class="grid gap-[1.25rem] {isOdd() ? 'md:grid-cols-[500px,1fr]' : 'md:grid-cols-[1fr,500px]'}"
+	>
+		{#if innerWidth <= 768}
+			{@render Photo()}
+			{@render Body()}
+		{:else if isOdd()}
+			{@render Photo()}
+			{@render Body()}
+		{:else}
+			{@render Body()}
+			{@render Photo()}
+		{/if}
+	</div>
 </div>
