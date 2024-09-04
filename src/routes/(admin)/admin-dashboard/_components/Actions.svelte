@@ -6,6 +6,7 @@
 	import ViewChurch from './_operations/ViewChurch.svelte';
 	import type { ChurchType } from '$lib/types';
 	import type { UpdateChInfoSchema, UpdateChPhotoSchema } from '../admin-dashboard-schema';
+	import DeleteChurch from './_operations/DeleteChurch.svelte';
 
 	interface Props {
 		church: ChurchType;
@@ -52,3 +53,5 @@
 	updateChInfoForm={props.updateChInfoForm}
 	updateChPhotoForm={props.updateChPhotoForm}
 />
+
+<DeleteChurch church={props.church} bind:deleteSignal />

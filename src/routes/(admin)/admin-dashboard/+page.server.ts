@@ -61,5 +61,16 @@ export const actions: Actions = {
 
 		if (!form.valid) return fail(400, { form });
 		console.log(form.data);
+	},
+
+	deleteChEvent: async ({ request, locals: { supabase } }) => {
+		const formData = await request.formData();
+		const chId = formData.get('chId') as string;
+		const chPhotoPath = formData.get('chPhotoPath') as string;
+
+		await supabase.storage.from('church_bucket').remove([chPhotoPath]);
+		const { error } = await supabase.from('church_list_tb').delete().eq('id', Number(chId));
+		if (error) return fail(401, { msg: error.message });
+		return { msg: 'Deleted successfully.' };
 	}
 };
