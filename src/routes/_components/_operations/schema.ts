@@ -1,14 +1,15 @@
 import { z } from 'zod';
-// church obj needs to be configure from admin first
+
+const timeFormat = /^(0[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/;
+
 export const reservationSchema = z.object({
 	churchObj: z.string(),
-	userObj: z.string(),
 	eventName: z.string().min(1, { message: 'Must enter event name.' }),
 	guestCount: z.number().min(1, { message: 'Must enter number of guest.' }),
 	clientNote: z.string().min(1, { message: 'Must enter client note.' }),
 	dateIn: z.string().min(1, { message: 'Must enter a date.' }),
-	initialTime: z.string().min(1, { message: 'Enter initial time.' }),
-	finalTime: z.string().min(1, { message: 'Must enter final time.' })
+	initialTime: z.string().regex(timeFormat, { message: 'Must be in the format HH:MM AM/PM.' }),
+	finalTime: z.string().regex(timeFormat, { message: 'Must be in the format HH:MM AM/PM.' })
 });
 
 export type ReservationSchema = typeof reservationSchema;

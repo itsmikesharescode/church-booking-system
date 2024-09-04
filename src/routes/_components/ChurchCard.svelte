@@ -5,7 +5,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import type { ChurchType } from '$lib/types';
 	import * as Avatar from '$lib/components/ui/avatar';
-	import { publicAPIs } from '$lib';
+	import { convertTo12HourFormat, publicAPIs } from '$lib';
 
 	interface Props {
 		reservationForm: SuperValidated<Infer<ReservationSchema>>;
@@ -31,7 +31,7 @@
 			<Avatar.Fallback class="rounded-none">Loading ...</Avatar.Fallback>
 		</Avatar.Root>
 		<div class="flex">
-			<Button>Reserve Now</Button>
+			<CreateReservation church={props.church} reservationForm={props.reservationForm} />
 		</div>
 	</div>
 {/snippet}
@@ -39,6 +39,11 @@
 {#snippet Body()}
 	<div class="">
 		<p class="text-2xl">{props.church.name}</p>
+		<p class="text-muted-foreground">
+			({convertTo12HourFormat(props.church.open_time)} - {convertTo12HourFormat(
+				props.church.close_time
+			)})
+		</p>
 		<pre class="text-wrap font-sans leading-7">{props.church.description}</pre>
 	</div>
 {/snippet}

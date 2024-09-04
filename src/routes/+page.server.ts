@@ -5,6 +5,7 @@ import { reservationSchema } from './_components/_operations/schema';
 import { fail } from '@sveltejs/kit';
 import type { ChurchType, UserProfile } from '$lib/types';
 import type { PostgrestSingleResponse } from '@supabase/supabase-js';
+import { convertTo24HourFormat } from '$lib';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 	return {
@@ -21,27 +22,22 @@ export const actions: Actions = {
 		const form = await superValidate(request, zod(reservationSchema));
 
 		if (!form.valid) return fail(400, { form });
-		const userObj = JSON.parse(form.data.userObj) as UserProfile;
+		const initialTime = convertTo24HourFormat(form.data.initialTime);
+		const finalTime = convertTo24HourFormat(form.data.finalTime);
+		const churchObj = JSON.parse(form.data.churchObj) as ChurchType;
 
-		if (userObj && user) {
-			const { error } = await supabase.from('reservation_tb').insert([
-				{
-					user_id: user.id,
-					user_obj: userObj,
-					event_name: form.data.eventName,
-					number_of_guest: form.data.guestCount,
-					date_in: form.data.dateIn,
-					initial_time: form.data.initialTime,
-					final_time: form.data.finalTime,
-					note: form.data.clientNote
-				}
-			]);
+		const { error } = await supabase.rpc('validate_and_insert_booking', {
+			p_church_id: churchObj.id,
+			p_event_name: form.data.eventName,
+			p_number_guest: form.data.guestCount,
+			p_date: form.data.dateIn,
+			p_initial_time: initialTime,
+			p_final_time: finalTime,
+			p_event_note: form.data.clientNote
+		});
 
-			if (error) return fail(401, { form, msg: error.message });
+		if (error) return fail(401, { form, msg: error.message });
 
-			return { form, msg: 'Successfully Reserve.' };
-		}
-
-		return fail(401, { form, msg: 'Not authorize try relogging your account.' });
+		return { form, msg: 'Successfully booked.' };
 	}
 };

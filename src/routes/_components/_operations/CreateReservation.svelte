@@ -6,23 +6,25 @@
 	import * as Form from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import type { Result } from '$lib/types';
+	import type { ChurchType, Result } from '$lib/types';
 	import CustomDate from '$lib/components/gen/CustomDate.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import { fromUserState } from '../../_states/fromUserState.svelte';
 	import { goto } from '$app/navigation';
 	import { Loader } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
+	import { convertTo12HourFormat } from '$lib';
 
 	interface Props {
+		church: ChurchType;
 		reservationForm: SuperValidated<Infer<ReservationSchema>>;
 	}
 
-	const { reservationForm }: Props = $props();
+	const { ...props }: Props = $props();
 
 	const user = fromUserState();
 
-	const form = superForm(reservationForm, {
+	const form = superForm(props.reservationForm, {
 		validators: zodClient(reservationSchema),
 		id: crypto.randomUUID(),
 		onUpdate({ result }) {
@@ -61,7 +63,9 @@
 		<AlertDialog.Header class="p-[1rem] sm:px-[2rem] sm:pt-[2rem]">
 			<AlertDialog.Title>Create Reservation</AlertDialog.Title>
 			<AlertDialog.Description>
-				You are creating reservation for <strong>Simbahang Banal</strong>
+				You are creating reservation for <strong>Simbahang Banal</strong> from
+				<strong>{convertTo12HourFormat(props.church.open_time)}</strong> to
+				<strong>{convertTo12HourFormat(props.church.close_time)}</strong>
 			</AlertDialog.Description>
 		</AlertDialog.Header>
 
@@ -71,6 +75,12 @@
 			use:enhance
 			class="flex flex-col gap-[1rem] overflow-auto p-[1rem] sm:px-[2rem] sm:pt-0"
 		>
+			<Form.Field {form} name="churchObj" class="hidden">
+				<Form.Control let:attrs>
+					<Input {...attrs} value={JSON.stringify(props.church)} />
+				</Form.Control>
+			</Form.Field>
+
 			<Form.Field {form} name="eventName">
 				<Form.Control let:attrs>
 					<Form.Label>Event Name</Form.Label>
@@ -136,15 +146,6 @@
 			</Form.Field>
 
 			<AlertDialog.Footer class="flex flex-col gap-[1rem] sm:gap-0">
-				<Form.Field {form} name="userObj">
-					<Form.Control let:attrs>
-						<Input
-							{...attrs}
-							value={JSON.stringify(user.getUser()?.user_metadata)}
-							class="hidden"
-						/>
-					</Form.Control>
-				</Form.Field>
 				<Button
 					variant="outline"
 					onclick={() => {
