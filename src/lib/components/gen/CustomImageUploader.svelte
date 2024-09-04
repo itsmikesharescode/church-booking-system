@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { publicAPIs } from '$lib';
 	import { ImageUp } from 'lucide-svelte';
 	import { onDestroy } from 'svelte';
 
 	interface Props {
 		file: File | undefined;
+		hasLink: string;
 		attrs:
 			| {
 					name: string;
@@ -17,7 +19,7 @@
 			| undefined;
 	}
 
-	let { file = $bindable(), attrs }: Props = $props();
+	let { file = $bindable(), attrs, hasLink }: Props = $props();
 
 	let previewUrl: string | null = $state(null);
 
@@ -39,6 +41,8 @@
 >
 	{#if previewUrl}
 		<img src={previewUrl} alt="" class="h-[150px] w-full" />
+	{:else if hasLink}
+		<img src={publicAPIs(hasLink, 'Church')} alt="churchImg" class="h-[150px] w-full" />
 	{:else}
 		<ImageUp class="h-[150px] w-[100px]" />
 	{/if}
