@@ -20,7 +20,9 @@ export const updateChInfoSchema = baseChSchemaWithoutPhoto.extend({
 	chId: z.number()
 });
 
-export const updateChPhotoSchema = baseChSchema.pick({ chPhoto: true });
+export const updateChPhotoSchema = baseChSchema
+	.pick({ chPhoto: true })
+	.extend({ chId: z.number(), chPhotoPath: z.string() });
 
 export type UpChSchema = typeof upChSchema;
 export type UpdateChInfoSchema = typeof updateChInfoSchema;

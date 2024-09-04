@@ -76,13 +76,12 @@
 
 			<form
 				method="POST"
-				action="?/updateChInfoEvent"
+				action="?/updateChPhotoEvent"
 				use:enhance
 				class="flex flex-col gap-[0.625rem] px-[2rem] pb-[2rem]"
 			>
 				<Form.Field {form} name="chId" class="hidden">
 					<Form.Control let:attrs>
-						<Form.Label>Church Name</Form.Label>
 						<Input type="number" {...attrs} value={props.church.id} />
 					</Form.Control>
 				</Form.Field>

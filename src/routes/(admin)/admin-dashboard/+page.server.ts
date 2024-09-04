@@ -60,7 +60,24 @@ export const actions: Actions = {
 		const form = await superValidate(request, zod(updateChPhotoSchema));
 
 		if (!form.valid) return fail(400, { form });
-		console.log(form.data);
+
+		const { data, error } = await supabase.storage
+			.from('church_bucket')
+			.update(form.data.chPhotoPath, form.data.chPhoto);
+
+		if (error) return fail(401, withFiles({ form, msg: error.message }));
+
+		const { error: updateErr } = await supabase
+			.from('church_list_tb')
+			.update([
+				{
+					photo_path: data.path
+				}
+			])
+			.eq('id', form.data.chId);
+
+		if (updateErr) return fail(401, withFiles({ form, msg: updateErr.message }));
+		return withFiles({ form, msg: 'Updated successfully.' });
 	},
 
 	deleteChEvent: async ({ request, locals: { supabase } }) => {

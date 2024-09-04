@@ -7,6 +7,7 @@
 	import * as Form from '$lib/components/ui/form';
 	import CustomImageUploader from '$lib/components/gen/CustomImageUploader.svelte';
 	import { LoaderCircle } from 'lucide-svelte';
+	import { Input } from '$lib/components/ui/input';
 
 	interface Props {
 		viewSignal: boolean;
@@ -46,6 +47,18 @@
 	use:enhance
 	class="flex flex-col gap-[0.625rem] px-[2rem] pb-[2rem]"
 >
+	<Form.Field {form} name="chId" class="hidden">
+		<Form.Control let:attrs>
+			<Input type="number" {...attrs} value={props.church.id} />
+		</Form.Control>
+	</Form.Field>
+
+	<Form.Field {form} name="chPhotoPath" class="hidden">
+		<Form.Control let:attrs>
+			<Input type="text" {...attrs} value={props.church.photo_path} />
+		</Form.Control>
+	</Form.Field>
+
 	<Form.Field {form} name="chPhoto">
 		<Form.Control let:attrs>
 			<Form.Label>Church Photo</Form.Label>
