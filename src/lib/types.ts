@@ -79,7 +79,12 @@ export interface Book2User extends BookingType {
 	user_list_tb: UserType;
 }
 
+export interface BookJoinUser extends BookingType {
+	user_meta_data: UserProfile;
+}
+
 export interface AdminQType {
 	users: UserType[] | [];
 	churches: ChurchType[] | [];
+	bookings: BookJoinUser[] | [];
 }

@@ -3,12 +3,15 @@
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 	import Actions from './_operations/Actions.svelte';
 	import type { UpdateStatusEventSchema } from './_operations/_operations/event-schema';
+	import type { BookJoinUser } from '$lib/types';
+	import { convertTo12HourFormat, getBookingStatus } from '$lib';
 
 	interface Props {
 		updateStatusEventForm: SuperValidated<Infer<UpdateStatusEventSchema>>;
+		bookings: [] | BookJoinUser[] | null;
 	}
 
-	const { updateStatusEventForm }: Props = $props();
+	const { ...props }: Props = $props();
 </script>
 
 <Table.Root>
@@ -16,7 +19,6 @@
 		<Table.Row>
 			<Table.Head class="w-[50px]"></Table.Head>
 			<Table.Head class="w-[100px]">STATUS</Table.Head>
-			<Table.Head class="truncate">REFERENCE NUMBER</Table.Head>
 			<Table.Head class="w-[250px] truncate">CLIENT NAME</Table.Head>
 			<Table.Head class="w-[250px] truncate">MOBILE NUMBER</Table.Head>
 			<Table.Head class="w-[250px] truncate">EVENT NAME</Table.Head>
@@ -25,20 +27,30 @@
 		</Table.Row>
 	</Table.Header>
 	<Table.Body>
-		{#each Array(10) as _, index}
+		{#each props.bookings ?? [] as booking, index}
 			<Table.Row>
 				<Table.Cell class="">
-					<Actions {updateStatusEventForm} />
+					<Actions updateStatusEventForm={props.updateStatusEventForm} {booking} />
 				</Table.Cell>
-				<Table.Cell class="font-medium"
-					><span class="bg-yellow-900 p-[1px] px-[1rem] text-white">Pending</span></Table.Cell
+				<Table.Cell class="font-medium">
+					<span class="bg-yellow-900 p-[1px] px-[1rem] text-white">
+						{getBookingStatus(`${booking.date}/${booking.initial_time}/${booking.final_time}`)}
+					</span>
+				</Table.Cell>
+				<Table.Cell class="truncate">
+					{booking.user_meta_data.lastName},
+					{booking.user_meta_data.firstName}
+					{booking.user_meta_data.middleName},
+				</Table.Cell>
+				<Table.Cell class="">{booking.user_meta_data.mobileNum}</Table.Cell>
+				<Table.Cell class="">{booking.event_name}</Table.Cell>
+				<Table.Cell class="truncate"
+					>{booking.date}
+					{convertTo12HourFormat(booking.initial_time)} - {convertTo12HourFormat(
+						booking.final_time
+					)}</Table.Cell
 				>
-				<Table.Cell>WD-000002</Table.Cell>
-				<Table.Cell class="truncate">Eviota, Mike John Baguinaon</Table.Cell>
-				<Table.Cell class="">09123456789</Table.Cell>
-				<Table.Cell class="">Wedding</Table.Cell>
-				<Table.Cell class="truncate">Mar 18, 2024 10:00 AM - 12:00 PM</Table.Cell>
-				<Table.Cell class="text-center">100</Table.Cell>
+				<Table.Cell class="text-center">{booking.number_guest}</Table.Cell>
 			</Table.Row>
 		{/each}
 	</Table.Body>

@@ -2,6 +2,10 @@
 	import { fromThemeState } from '../_states/fromThemeState.svelte';
 	import { fromDashBRouteState, initDashboardRoute } from './_states/fromDashboard.svelte';
 	import { fromManageUsersRoute, initManageUsersRoute } from './_states/fromManageUsers.svelte';
+	import {
+		fromReservationRouteState,
+		initReservationRoute
+	} from './_states/fromReservations.svelte';
 
 	const { data, children } = $props();
 
@@ -9,12 +13,15 @@
 
 	initManageUsersRoute();
 	initDashboardRoute();
+	initReservationRoute();
 
 	const manageUsersRoute = fromManageUsersRoute();
+	const reservationRoute = fromReservationRouteState();
 	const dashboardRoute = fromDashBRouteState();
 
 	$effect(() => {
 		manageUsersRoute.setUsers(data.adminQ.data?.users ?? null);
+		reservationRoute.setBookings(data.adminQ.data?.bookings ?? null);
 		dashboardRoute.setChurches(data.adminQ.data?.churches ?? null);
 
 		const clientMode = localStorage.getItem('mode-watcher-mode');

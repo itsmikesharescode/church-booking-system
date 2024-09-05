@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { getBookingStatus } from '$lib';
 	import type { Book2User } from '$lib/types';
 	import ViewReservation from './_operations/ViewReservation.svelte';
 
@@ -7,32 +8,6 @@
 	}
 
 	const { ...props }: Props = $props();
-
-	const getBookingStatus = (input: string) => {
-		// Ensure the input format is 'YYYY-MM-DD/HH:MM:SS/HH:MM:SS'
-		if (!/^(\d{4}-\d{2}-\d{2})\/(\d{2}:\d{2}:\d{2})\/(\d{2}:\d{2}:\d{2})$/.test(input)) {
-			throw new Error("Invalid input format. Expected 'YYYY-MM-DD/HH:MM:SS/HH:MM:SS'.");
-		}
-
-		// Split the input string to extract the date and times
-		const [date, startTime, endTime] = input.split('/');
-
-		// Create Date objects for the start and end times in local time
-		const startDateTime = new Date(`${date}T${startTime}`);
-		const endDateTime = new Date(`${date}T${endTime}`);
-
-		// Get the current date and time in local time
-		const now = new Date();
-
-		// Determine the booking status based on the current time
-		if (now < startDateTime) {
-			return 'Reserve';
-		} else if (now >= startDateTime && now <= endDateTime) {
-			return 'On-going';
-		} else {
-			return 'Done';
-		}
-	};
 </script>
 
 <div class="flex flex-col">
