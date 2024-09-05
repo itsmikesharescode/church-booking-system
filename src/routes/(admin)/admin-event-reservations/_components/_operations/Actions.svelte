@@ -59,4 +59,4 @@
 
 <ViewEvent bind:viewSignal booking={props.booking} />
 <!-- <UpdateStatus bind:updateSignal updateStatusEventForm={props.updateStatusEventForm} /> -->
-<DeleteEvent bind:deleteSignal />
+<DeleteEvent bind:deleteSignal booking={props.booking} />
