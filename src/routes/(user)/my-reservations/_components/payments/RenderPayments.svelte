@@ -16,11 +16,14 @@
 </script>
 
 <Table.Root>
-	<!-- <Table.Caption>A list of your recent invoices.</Table.Caption> -->
+	{#if !reservationRoute.getPayments()?.length}
+		<Table.Caption>No payments record.</Table.Caption>
+	{/if}
 	<Table.Header>
 		<Table.Row>
 			<Table.Head class="w-[60px]"></Table.Head>
 			<Table.Head class="truncate">REF #</Table.Head>
+			<Table.Head class="truncate">CHANNEL</Table.Head>
 			<Table.Head class="truncate">METHOD</Table.Head>
 			<Table.Head class="truncate">DATE</Table.Head>
 			<Table.Head class="truncate">AMOUNT</Table.Head>
@@ -35,6 +38,7 @@
 				<Table.Cell class="truncate font-medium">
 					{payment.xendit_callback.payment_method_id}
 				</Table.Cell>
+				<Table.Cell class="truncate">{payment.xendit_callback.payment_channel}</Table.Cell>
 				<Table.Cell class="truncate">{payment.xendit_callback.payment_method}</Table.Cell>
 				<Table.Cell class="truncate">
 					{new Date(payment.xendit_callback.created).toLocaleDateString()}</Table.Cell
