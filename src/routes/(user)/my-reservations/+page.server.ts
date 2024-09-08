@@ -1,4 +1,5 @@
 import { fail, type Actions } from '@sveltejs/kit';
+import type { CreateInvoiceRequest } from 'xendit-node/invoice/models';
 
 export const actions: Actions = {
 	deleteReservationEvent: async ({ locals: { supabase }, request }) => {
@@ -11,8 +12,23 @@ export const actions: Actions = {
 		return { msg: 'Reservation deleted.' };
 	},
 
-	paymentProcessEvent: async ({ locals: { supabase }, request }) => {
+	paymentProcessEvent: async ({ locals: { xenditClient }, request }) => {
 		const formData = await request.formData();
-		console.log('HI');
+		const invoiceRef = formData.get('invoiceRef') as string;
+		const invoice = JSON.parse(invoiceRef) as CreateInvoiceRequest;
+
+		try {
+			if (invoice) {
+				const res = await xenditClient.Invoice.createInvoice({
+					data: invoice
+				});
+				if (res) {
+					return { xenditData: res };
+				}
+			}
+			return fail(401, { msg: 'There is an error 1 try reloading.' });
+		} catch (error) {
+			return fail(401, { msg: 'There is an error 1 try reloading.' });
+		}
 	}
 };
