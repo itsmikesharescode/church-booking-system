@@ -227,4 +227,4 @@ const paymentHooks: Handle = async ({ event, resolve }) => {
 	return resolve(event);
 };
 
-export const handle: Handle = sequence(supabase, authGuard, workers);
+export const handle: Handle = sequence(supabase, authGuard, workers, paymentHooks);

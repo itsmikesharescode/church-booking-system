@@ -1,8 +1,8 @@
-import { z } from 'zod';
+import { number, z } from 'zod';
 
-export const updateStatusEventSchema = z.object({
-	eventObj: z.string().min(1, { message: 'Must have event obj' }),
-	status: z.string().min(1, { message: 'Must choose status.' })
+export const approveSchema = z.object({
+	bookId: z.string(),
+	price: z.number().refine((v) => v > 1, { message: 'Must enter a valid price.' })
 });
 
-export type UpdateStatusEventSchema = typeof updateStatusEventSchema;
+export type ApproveSchema = typeof approveSchema;

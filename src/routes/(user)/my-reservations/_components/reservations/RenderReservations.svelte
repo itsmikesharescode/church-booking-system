@@ -33,8 +33,8 @@
 				</Table.Cell>
 				<Table.Cell class="truncate font-medium">{booking.event_name}</Table.Cell>
 				<Table.Cell class="truncate">
-					{#if booking.approved}
-						<PaymentProcess />
+					{#if booking.price}
+						<PaymentProcess reservation={booking} />
 					{:else}
 						<span class=" bg-red-600 px-[0.5rem] font-semibold text-white">Pending</span>
 					{/if}

@@ -5,14 +5,13 @@
 	import ViewEvent from './_operations/ViewEvent.svelte';
 	import DeleteEvent from './_operations/DeleteEvent.svelte';
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
-	import type { UpdateStatusEventSchema } from './_operations/event-schema';
-	import UpdateStatus from './_operations/UpdateStatus.svelte';
-	import type { BookJoinUser } from '$lib/types';
 	import ApproveEvent from './_operations/ApproveEvent.svelte';
+	import type { AdminQType } from '$lib/types';
+	import type { ApproveSchema } from './_operations/event-schema';
 
 	interface Props {
-		updateStatusEventForm: SuperValidated<Infer<UpdateStatusEventSchema>>;
-		booking: BookJoinUser;
+		approveForm: SuperValidated<Infer<ApproveSchema>>;
+		booking: AdminQType['bookings'][number];
 	}
 
 	const { ...props }: Props = $props();
@@ -67,7 +66,6 @@
 	</DropdownMenu.Content>
 </DropdownMenu.Root>
 
-<ApproveEvent bind:approveSignal booking={props.booking} />
+<ApproveEvent bind:approveSignal booking={props.booking} approveForm={props.approveForm} />
 <ViewEvent bind:viewSignal booking={props.booking} />
-<!-- <UpdateStatus bind:updateSignal updateStatusEventForm={props.updateStatusEventForm} /> -->
 <DeleteEvent bind:deleteSignal booking={props.booking} />

@@ -2,14 +2,14 @@
 	import { enhance } from '$app/forms';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import type { BookJoinUser, Result } from '$lib/types';
+	import type { AdminQType, Result } from '$lib/types';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import { Loader } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 
 	interface Props {
 		deleteSignal: boolean;
-		booking: BookJoinUser;
+		booking: AdminQType['bookings'][number];
 	}
 
 	let { deleteSignal = $bindable(), ...props }: Props = $props();
