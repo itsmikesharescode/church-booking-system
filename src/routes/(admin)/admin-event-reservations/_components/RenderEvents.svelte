@@ -2,13 +2,13 @@
 	import * as Table from '$lib/components/ui/table/index.js';
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 	import Actions from './_operations/Actions.svelte';
-	import type { UpdateStatusEventSchema } from './_operations/_operations/event-schema';
 	import { convertTo12HourFormat, getBookingStatus } from '$lib';
 	import type { AdminQType } from '$lib/types';
+	import type { ApproveSchema } from './_operations/_operations/event-schema';
 
 	interface Props {
-		updateStatusEventForm: SuperValidated<Infer<UpdateStatusEventSchema>>;
-		bookings: AdminQType['bookings'];
+		approveForm: SuperValidated<Infer<ApproveSchema>>;
+		bookings: AdminQType['bookings'] | null;
 	}
 
 	const { ...props }: Props = $props();
@@ -32,7 +32,7 @@
 			{#each props.bookings ?? [] as booking, index}
 				<Table.Row>
 					<Table.Cell class="">
-						<Actions updateStatusEventForm={props.updateStatusEventForm} {booking} />
+						<Actions approveForm={props.approveForm} {booking} />
 					</Table.Cell>
 					<Table.Cell class="">
 						<span class="bg-red-600 p-[1px] px-[1rem] text-white">

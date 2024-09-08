@@ -23,15 +23,6 @@
 				<Pagination />
 			</div>
 		</div>
-		<RenderEvents
-			bookings={reservationRoute.getBookings()}
-			updateStatusEventForm={data.updateStatusEventForm}
-		/>
+		<RenderEvents bookings={reservationRoute.getBookings()} approveForm={data.approveForm} />
 	</section>
-	<!-- <Separator />
-	<section class="flex flex-col gap-[0.625rem]">
-		<p class="text-3xl font-semibold">Schedules</p>
-		<CustomRangeDate />
-		<RenderSchedules />
-	</section> -->
 </div>
