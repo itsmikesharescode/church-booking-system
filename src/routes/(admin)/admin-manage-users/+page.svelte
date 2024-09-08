@@ -17,7 +17,7 @@
 			<CreateUser createUserForm={data.createUserForm} />
 
 			<div class="">
-				<Pagination />
+				<!-- <Pagination /> -->
 			</div>
 		</div>
 		<RenderUsers updateUserForm={data.updateUserForm} />

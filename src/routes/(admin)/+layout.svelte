@@ -19,9 +19,12 @@
 	const reservationRoute = fromReservationRouteState();
 	const dashboardRoute = fromDashBRouteState();
 
+	console.log(data.adminQ.data?.payments);
+
 	$effect(() => {
 		manageUsersRoute.setUsers(data.adminQ.data?.users ?? null);
 		reservationRoute.setBookings(data.adminQ.data?.bookings ?? null);
+		reservationRoute.setPayments(data.adminQ.data?.payments ?? null);
 		dashboardRoute.setChurches(data.adminQ.data?.churches ?? null);
 
 		const clientMode = localStorage.getItem('mode-watcher-mode');

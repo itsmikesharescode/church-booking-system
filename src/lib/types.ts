@@ -79,8 +79,8 @@ export type PaidType = {
 	id: number;
 	created_at: string;
 	xendit_callback: XenditCB;
+	booking_obj: BookingType;
 	user_id: string;
-	church_id: number;
 };
 
 export interface XenditCB {
@@ -119,6 +119,7 @@ export interface AdminQType {
 	users: UserType[];
 	churches: ChurchType[];
 	bookings: BookChurchUser[];
+	payments: PaidType[];
 }
 
 export interface Church2Book extends ChurchType {

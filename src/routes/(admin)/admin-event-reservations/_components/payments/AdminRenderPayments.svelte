@@ -1,18 +1,8 @@
 <script lang="ts">
-	import { getBookingStatus } from '$lib';
-	import type { Book2User, UserQType } from '$lib/types';
 	import * as Table from '$lib/components/ui/table';
-	import { Logs } from 'lucide-svelte';
-	import Actions from './Actions.svelte';
-	import { fromReservationRoute } from '../../../../_states/fromReservationState.svelte';
-
-	interface Props {
-		payments: UserQType['payments'] | null;
-	}
-
-	const { ...props }: Props = $props();
-
-	const reservationRoute = fromReservationRoute();
+	import { fromReservationRouteState } from '../../../_states/fromReservations.svelte';
+	import AdminPaymentActions from './_operations/AdminPaymentActions.svelte';
+	const reservationRoute = fromReservationRouteState();
 </script>
 
 <Table.Root>
@@ -33,7 +23,7 @@
 		{#each reservationRoute.getPayments() ?? [] as payment}
 			<Table.Row>
 				<Table.Cell class="">
-					<Actions {payment} />
+					<AdminPaymentActions {payment} />
 				</Table.Cell>
 				<Table.Cell class="truncate font-medium">
 					{payment.xendit_callback.payment_method_id}

@@ -14,13 +14,15 @@
 </script>
 
 <Table.Root>
-	<!-- <Table.Caption>A list of your recent invoices.</Table.Caption> -->
+	{#if !props.bookings?.length}
+		<Table.Caption>No booking record.</Table.Caption>
+	{/if}
 	<Table.Header>
 		<Table.Row>
 			<Table.Head class="w-[60px]"></Table.Head>
 			<Table.Head class="truncate">EVENT NAME</Table.Head>
 			<Table.Head class="truncate">STATUS</Table.Head>
-			<Table.Head class="truncate">OVERVIEW</Table.Head>
+			<Table.Head class="truncate">PREVIEW</Table.Head>
 			<Table.Head class="truncate">EVENT DATE</Table.Head>
 			<Table.Head class="truncate">GUEST #</Table.Head>
 		</Table.Row>
