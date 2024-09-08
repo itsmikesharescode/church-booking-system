@@ -52,6 +52,7 @@
 	$effect(() => {
 		homeRoute.setChurches(data.userQ.data?.churches ?? null);
 		reservationRoute.setReservations(data.userQ.data?.reservations ?? null);
+		reservationRoute.setPayments(data.userQ.data?.payments ?? null);
 		user.setUser(data.user);
 		supabase.set(data.supabase);
 	});

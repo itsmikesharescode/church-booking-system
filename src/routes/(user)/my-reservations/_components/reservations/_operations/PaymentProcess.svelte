@@ -22,7 +22,7 @@
 		if (!userRef) return '';
 
 		const invoice: CreateInvoiceRequest = {
-			externalId: `${userRef.id}/${props.reservation.id}/${props.reservation.church_id}`,
+			externalId: `${userRef.id}/${props.reservation.id}`,
 			description: `Paying reservation for ${props.reservation.event_name} `,
 			amount: props.reservation.price,
 			currency: 'PHP',

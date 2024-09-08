@@ -7,8 +7,7 @@ export const POST: RequestHandler = async ({ locals: { supabaseAdmin }, request 
 		const { error } = await supabaseAdmin.rpc('xendit_cb', {
 			xendit_callback_c: body,
 			user_id_c: body.external_id.split('/')[0],
-			booking_id_c: body.external_id.split('/')[1],
-			church_id_c: body.external_id.split('/')[2]
+			booking_id_c: body.external_id.split('/')[1]
 		});
 
 		if (error) console.log(error);

@@ -11,6 +11,16 @@ class ReservationRoute {
 	getReservations() {
 		return this.reservations;
 	}
+
+	private payments = $state<UserQType['payments'] | null>(null);
+
+	setPayments(p: UserQType['payments'] | null) {
+		this.payments = p;
+	}
+
+	getPayments() {
+		return this.payments;
+	}
 }
 
 const RESERVATION_ROUTE_KEY = Symbol('ReservationRouteKey');
