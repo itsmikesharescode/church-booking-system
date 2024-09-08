@@ -20,6 +20,8 @@
 			<Table.Row>
 				<Table.Head class="w-[50px]"></Table.Head>
 				<Table.Head class="w-[100px]">STATUS</Table.Head>
+				<Table.Head class="w-[150px] truncate">PAYMENT</Table.Head>
+				<Table.Head class="w-[100px]">PREVIEW</Table.Head>
 				<Table.Head class="w-[250px] truncate">CLIENT NAME</Table.Head>
 				<Table.Head class="w-[250px] truncate">MOBILE NUMBER</Table.Head>
 				<Table.Head class="w-[250px] truncate">EVENT NAME</Table.Head>
@@ -35,6 +37,16 @@
 					</Table.Cell>
 					<Table.Cell class="font-medium">
 						<span class="bg-yellow-900 p-[1px] px-[1rem] text-white">
+							{booking.approved ? 'APPROVED' : 'PENDING'}
+						</span>
+					</Table.Cell>
+					<Table.Cell class="truncate font-medium">
+						<span class="truncate bg-yellow-900 p-[1px] px-[1rem] text-white">
+							{booking.paid ? 'PAID' : 'NOT PAID'}
+						</span>
+					</Table.Cell>
+					<Table.Cell>
+						<span class="truncate bg-yellow-900 p-[1px] px-[1rem] text-white">
 							{getBookingStatus(`${booking.date}/${booking.initial_time}/${booking.final_time}`)}
 						</span>
 					</Table.Cell>
@@ -45,12 +57,12 @@
 					</Table.Cell>
 					<Table.Cell class="">{booking.user_meta_data.mobileNum}</Table.Cell>
 					<Table.Cell class="">{booking.event_name}</Table.Cell>
-					<Table.Cell class="truncate"
-						>{booking.date}
+					<Table.Cell class="truncate">
+						{booking.date}
 						{convertTo12HourFormat(booking.initial_time)} - {convertTo12HourFormat(
 							booking.final_time
-						)}</Table.Cell
-					>
+						)}
+					</Table.Cell>
 					<Table.Cell class="text-center">{booking.number_guest}</Table.Cell>
 				</Table.Row>
 			{/each}

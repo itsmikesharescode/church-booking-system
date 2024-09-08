@@ -28,10 +28,10 @@
 			updateStatusEventForm={data.updateStatusEventForm}
 		/>
 	</section>
-	<Separator />
+	<!-- <Separator />
 	<section class="flex flex-col gap-[0.625rem]">
 		<p class="text-3xl font-semibold">Schedules</p>
 		<CustomRangeDate />
 		<RenderSchedules />
-	</section>
+	</section> -->
 </div>

@@ -6,7 +6,7 @@
 	import * as Form from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import type { ChurchType, Result } from '$lib/types';
+	import type { ChurchType, Result, UserQType } from '$lib/types';
 	import CustomDate from '$lib/components/gen/CustomDate.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import { fromUserState } from '../../_states/fromUserState.svelte';
@@ -17,7 +17,7 @@
 	import * as Popover from '$lib/components/ui/popover';
 
 	interface Props {
-		church: ChurchType;
+		church: UserQType['churches'][number];
 		reservationForm: SuperValidated<Infer<ReservationSchema>>;
 	}
 
@@ -149,7 +149,7 @@
 					<Popover.Content class="">
 						<p class="text-sm font-semibold">Taken Slots</p>
 						<div class="flex max-h-[200px] flex-col overflow-auto">
-							{#each props.church.booking_list_tb as book}
+							{#each props.church.bookings as book}
 								<p class="text-sm">
 									{book.date}
 									{convertTo12HourFormat(book.initial_time)} - {convertTo12HourFormat(

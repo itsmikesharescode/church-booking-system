@@ -20,5 +20,24 @@ export const actions: Actions = {
 		if (error) return fail(401, { msg: error.message });
 
 		return { msg: 'Deleted successfully.' };
+	},
+
+	approveBookingEvent: async ({ locals: { supabase }, request }) => {
+		const formData = await request.formData();
+		const bookingId = formData.get('bookingId') as string;
+
+		console.log(bookingId);
+
+		const { error } = await supabase
+			.from('booking_list_tb')
+			.update([
+				{
+					approved: true
+				}
+			])
+			.eq('id', bookingId);
+
+		if (error) return fail(401, { msg: error?.message });
+		return { msg: 'Approved' };
 	}
 };

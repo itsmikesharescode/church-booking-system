@@ -14,15 +14,24 @@
 	import { fromCachingState, initCaching } from './_states/fromCachingState.svelte';
 	import { onNavigate } from '$app/navigation';
 	import { fromThemeState, initTheme } from './_states/fromThemeState.svelte';
+	import { fromHomeRouteState, initHomeRoute } from './_states/fromHomeState.svelte';
+	import {
+		fromReservationRoute,
+		initReservationRoute
+	} from './_states/fromReservationState.svelte';
 
 	const { data, children } = $props();
 
+	initHomeRoute();
+	initReservationRoute();
 	initUserState();
 	initSupabase();
 	initStaticRoute();
 	initCaching();
 	initTheme();
 
+	const homeRoute = fromHomeRouteState();
+	const reservationRoute = fromReservationRoute();
 	const user = fromUserState();
 	const supabase = fromSupabaseState();
 	const caching = fromCachingState();
@@ -40,7 +49,11 @@
 		return () => sub.subscription.unsubscribe();
 	});
 
+	console.log(data.userQ.data);
+
 	$effect(() => {
+		homeRoute.setChurches(data.userQ.data?.churches ?? null);
+		reservationRoute.setReservations(data.userQ.data?.reservations ?? null);
 		user.setUser(data.user);
 		supabase.set(data.supabase);
 	});
