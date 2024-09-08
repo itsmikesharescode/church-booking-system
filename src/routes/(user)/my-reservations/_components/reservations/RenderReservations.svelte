@@ -22,13 +22,14 @@
 			<Table.Head class="truncate">STATUS</Table.Head>
 			<Table.Head class="truncate">OVERVIEW</Table.Head>
 			<Table.Head class="truncate">EVENT DATE</Table.Head>
+			<Table.Head class="truncate">GUEST #</Table.Head>
 		</Table.Row>
 	</Table.Header>
 	<Table.Body>
 		{#each props.bookings ?? [] as booking}
 			<Table.Row>
 				<Table.Cell class="">
-					<Actions />
+					<Actions reservation={booking} />
 				</Table.Cell>
 				<Table.Cell class="truncate font-medium">{booking.event_name}</Table.Cell>
 				<Table.Cell class="truncate">
@@ -46,6 +47,10 @@
 					{convertTo12HourFormat(booking.initial_time)} - {convertTo12HourFormat(
 						booking.final_time
 					)}
+				</Table.Cell>
+
+				<Table.Cell class="truncate">
+					{booking.number_guest}
 				</Table.Cell>
 			</Table.Row>
 		{/each}
