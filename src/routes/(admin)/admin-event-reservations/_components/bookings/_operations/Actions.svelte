@@ -2,10 +2,10 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Logs } from 'lucide-svelte';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import ViewEvent from './_operations/ViewEvent.svelte';
-	import DeleteEvent from './_operations/DeleteEvent.svelte';
+	import AdminViewEvent from './_operations/AdminViewEvent.svelte';
+	import AdminDeleteEvent from './_operations/AdminDeleteEvent.svelte';
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
-	import ApproveEvent from './_operations/ApproveEvent.svelte';
+	import AdminApproveEvent from './_operations/AdminApproveEvent.svelte';
 	import type { AdminQType } from '$lib/types';
 	import type { ApproveSchema } from './_operations/event-schema';
 
@@ -66,6 +66,6 @@
 	</DropdownMenu.Content>
 </DropdownMenu.Root>
 
-<ApproveEvent bind:approveSignal booking={props.booking} approveForm={props.approveForm} />
-<ViewEvent bind:viewSignal booking={props.booking} />
-<DeleteEvent bind:deleteSignal booking={props.booking} />
+<AdminApproveEvent bind:approveSignal booking={props.booking} approveForm={props.approveForm} />
+<AdminViewEvent bind:viewSignal booking={props.booking} />
+<AdminDeleteEvent bind:deleteSignal booking={props.booking} />

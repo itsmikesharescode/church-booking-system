@@ -119,6 +119,7 @@ export interface AdminQType {
 	users: UserType[];
 	churches: ChurchType[];
 	bookings: BookChurchUser[];
+	payments: PaidType[];
 }
 
 export interface Church2Book extends ChurchType {

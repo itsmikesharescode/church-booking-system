@@ -43,7 +43,7 @@
 			<UploadChurch upChForm={data.upChForm} />
 
 			<div class="">
-				<Pagination />
+				<!-- <Pagination /> -->
 			</div>
 		</div>
 		<RenderChurch
