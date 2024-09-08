@@ -8,23 +8,23 @@
 	import { toast } from 'svelte-sonner';
 
 	interface Props {
-		deleteSignal: boolean;
+		approveSignal: boolean;
 		booking: BookJoinUser;
 	}
 
-	let { deleteSignal = $bindable(), ...props }: Props = $props();
+	let { approveSignal = $bindable(), ...props }: Props = $props();
 
-	let deleteLoader = $state(false);
+	let approveLoader = $state(false);
 
-	const deleteBookingEvent: SubmitFunction = () => {
-		deleteLoader = true;
+	const approveBookingEvent: SubmitFunction = () => {
+		approveLoader = true;
 		return async ({ result, update }) => {
 			const { status, data } = result as Result<{ msg: string }>;
 
 			switch (status) {
 				case 200:
 					toast.success('', { description: data.msg });
-					deleteSignal = false;
+					approveSignal = false;
 					break;
 
 				case 401:
@@ -32,12 +32,12 @@
 					break;
 			}
 			await update();
-			deleteLoader = false;
+			approveLoader = false;
 		};
 	};
 </script>
 
-<AlertDialog.Root bind:open={deleteSignal}>
+<AlertDialog.Root bind:open={approveSignal}>
 	<AlertDialog.Content>
 		<AlertDialog.Header>
 			<AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
@@ -50,22 +50,22 @@
 			<Button
 				variant="secondary"
 				onclick={() => {
-					deleteSignal = false;
+					approveSignal = false;
 				}}
 			>
 				Cancel
 			</Button>
-			<form method="post" action="?/deleteBookingEvent" use:enhance={deleteBookingEvent}>
+			<form method="post" action="?/approveBookingEvent" use:enhance={approveBookingEvent}>
 				<input name="bookingId" type="hidden" value={props.booking.id} />
-				<Button disabled={deleteLoader} type="submit" class="relative">
-					{#if deleteLoader}
+				<Button disabled={approveLoader} type="submit" class="relative">
+					{#if approveLoader}
 						<div
 							class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm bg-primary"
 						>
 							<Loader class="h-[15px] w-[15px] animate-spin" />
 						</div>
 					{/if}
-					Delete
+					Approve
 				</Button>
 			</form>
 		</AlertDialog.Footer>

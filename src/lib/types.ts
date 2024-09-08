@@ -62,6 +62,8 @@ export type BookingType = {
 	final_time: string;
 	event_note: string;
 	user_id: string;
+	approved: boolean;
+	paid: boolean;
 };
 
 export type ChurchType = {
@@ -72,14 +74,31 @@ export type ChurchType = {
 	open_time: string;
 	close_time: string;
 	photo_path: string;
-	booking_list_tb: { initial_time: string; final_time: string; date: string }[];
 };
 
 export interface Book2User extends BookingType {
 	user_list_tb: UserType;
 }
 
+export interface BookJoinUser extends BookingType {
+	user_meta_data: UserProfile;
+}
+
 export interface AdminQType {
 	users: UserType[] | [];
 	churches: ChurchType[] | [];
+	bookings: BookJoinUser[] | [];
+}
+
+export interface Church2Book extends ChurchType {
+	bookings: {
+		date: string;
+		initial_time: string;
+		final_time: string;
+	}[];
+}
+
+export interface UserQType {
+	churches: Church2Book[];
+	reservations: BookingType[];
 }

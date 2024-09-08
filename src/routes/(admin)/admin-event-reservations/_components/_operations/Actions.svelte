@@ -7,17 +7,21 @@
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 	import type { UpdateStatusEventSchema } from './_operations/event-schema';
 	import UpdateStatus from './_operations/UpdateStatus.svelte';
+	import type { BookJoinUser } from '$lib/types';
+	import ApproveEvent from './_operations/ApproveEvent.svelte';
 
 	interface Props {
 		updateStatusEventForm: SuperValidated<Infer<UpdateStatusEventSchema>>;
+		booking: BookJoinUser;
 	}
 
-	const { updateStatusEventForm }: Props = $props();
+	const { ...props }: Props = $props();
 
 	let open = $state(false);
 	let viewSignal = $state(false);
 	let updateSignal = $state(false);
 	let deleteSignal = $state(false);
+	let approveSignal = $state(false);
 </script>
 
 <DropdownMenu.Root bind:open>
@@ -29,19 +33,27 @@
 			<DropdownMenu.Item
 				class="flex items-center justify-center"
 				onclick={() => {
+					approveSignal = true;
+				}}
+			>
+				Approve
+			</DropdownMenu.Item>
+			<DropdownMenu.Item
+				class="flex items-center justify-center"
+				onclick={() => {
 					viewSignal = true;
 				}}
 			>
 				View Event
 			</DropdownMenu.Item>
-			<DropdownMenu.Item
+			<!-- <DropdownMenu.Item
 				class="flex items-center justify-center"
 				onclick={() => {
 					updateSignal = true;
 				}}
 			>
 				Update Status
-			</DropdownMenu.Item>
+			</DropdownMenu.Item> -->
 
 			<DropdownMenu.Item
 				class="flex items-center justify-center"
@@ -55,6 +67,7 @@
 	</DropdownMenu.Content>
 </DropdownMenu.Root>
 
-<ViewEvent bind:viewSignal />
-<UpdateStatus bind:updateSignal {updateStatusEventForm} />
-<DeleteEvent bind:deleteSignal />
+<ApproveEvent bind:approveSignal booking={props.booking} />
+<ViewEvent bind:viewSignal booking={props.booking} />
+<!-- <UpdateStatus bind:updateSignal updateStatusEventForm={props.updateStatusEventForm} /> -->
+<DeleteEvent bind:deleteSignal booking={props.booking} />
