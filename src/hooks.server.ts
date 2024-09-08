@@ -6,11 +6,13 @@ import { type Handle, redirect } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import jwt from 'jsonwebtoken';
 import sharp from 'sharp';
+import { Xendit } from 'xendit-node';
 
 const supabaseUrl = import.meta.env.VITE_SB_URL;
 const supabaseAnonKey = import.meta.env.VITE_SB_ANON_KEY;
 const supabaseAdminKey = import.meta.env.VITE_SB_ADMIN_KEY;
 const jwtSecret = import.meta.env.VITE_JWT_KEY;
+const xenditKey = import.meta.env.VITE_XENDIT_KEY;
 
 const supabase: Handle = async ({ event, resolve }) => {
 	/**
@@ -215,6 +217,12 @@ const workers: Handle = async ({ event, resolve }) => {
 			return null;
 		}
 	};
+
+	return resolve(event);
+};
+
+const paymentHooks: Handle = async ({ event, resolve }) => {
+	event.locals.xenditClient = new Xendit({ secretKey: xenditKey });
 
 	return resolve(event);
 };
