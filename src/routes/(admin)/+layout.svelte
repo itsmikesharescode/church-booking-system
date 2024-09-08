@@ -9,6 +9,8 @@
 
 	const { data, children } = $props();
 
+	console.log(data.adminQ.data?.bookings);
+
 	const theme = fromThemeState();
 
 	initManageUsersRoute();

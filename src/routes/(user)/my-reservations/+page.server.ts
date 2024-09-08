@@ -9,5 +9,10 @@ export const actions: Actions = {
 
 		if (error) return fail(401, { msg: error.message });
 		return { msg: 'Reservation deleted.' };
+	},
+
+	paymentProcessEvent: async ({ locals: { supabase }, request }) => {
+		const formData = await request.formData();
+		console.log('HI');
 	}
 };

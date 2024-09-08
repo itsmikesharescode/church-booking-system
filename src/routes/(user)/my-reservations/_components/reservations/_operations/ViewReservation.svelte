@@ -1,8 +1,7 @@
 <script lang="ts">
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
-	import { BookOpenCheck, X } from 'lucide-svelte';
-	import Button from '$lib/components/ui/button/button.svelte';
-	import type { Book2User, UserQType } from '$lib/types';
+	import { X } from 'lucide-svelte';
+	import type { UserQType } from '$lib/types';
 	import { convertTo12HourFormat } from '$lib';
 	import PaymentProcess from './PaymentProcess.svelte';
 
@@ -32,11 +31,18 @@
 		<div class="flex flex-col gap-[0.625rem] overflow-auto">
 			<div class="flex flex-wrap gap-[0.5rem]">
 				<p class="text-sm leading-7 md:text-base">
+					<strong>Price:</strong>
+					{props.reservation.price ?? 'Not available'}
+				</p>
+			</div>
+
+			<div class="flex flex-wrap gap-[0.5rem]">
+				<p class="text-sm leading-7 md:text-base">
 					<strong>Status:</strong>
 				</p>
 
-				{#if props.reservation.approved}
-					<PaymentProcess />
+				{#if props.reservation.price}
+					<PaymentProcess reservation={props.reservation} />
 				{:else}
 					<span class=" bg-red-600 px-[0.5rem] font-semibold text-white">Pending</span>
 				{/if}

@@ -49,8 +49,6 @@
 		return () => sub.subscription.unsubscribe();
 	});
 
-	console.log(data.userQ.data);
-
 	$effect(() => {
 		homeRoute.setChurches(data.userQ.data?.churches ?? null);
 		reservationRoute.setReservations(data.userQ.data?.reservations ?? null);

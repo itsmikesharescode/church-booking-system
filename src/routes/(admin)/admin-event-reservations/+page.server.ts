@@ -26,8 +26,6 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const bookingId = formData.get('bookingId') as string;
 
-		console.log(bookingId);
-
 		const { error } = await supabase
 			.from('booking_list_tb')
 			.update([
