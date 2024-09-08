@@ -75,6 +75,37 @@ export type ChurchType = {
 	photo_path: string;
 };
 
+export type PaidType = {
+	id: number;
+	created_at: string;
+	xendit_callback: XenditCB;
+	user_id: string;
+	church_id: number;
+};
+
+export interface XenditCB {
+	id: string;
+	amount: number;
+	status: 'PAID' | 'PENDING' | 'FAILED' | string; // Allows for future states beyond PAID
+	created: string; // Assuming format "YYYY-MM-DDTHH:mm:ss.sssZ"
+	is_high: boolean;
+	paid_at?: string; // Optional property for paid_at
+	updated: string;
+	user_id: string;
+	currency: string;
+	payment_id: string;
+	description: string;
+	external_id: string;
+	paid_amount: number;
+	ewallet_type: 'GCASH' | string; // Allows for other ewallet types
+	merchant_name: string;
+	payment_method: 'EWALLET' | string; // Allows for future payment methods
+	payment_channel: 'GCASH' | string; // Allows for other payment channels
+	payment_method_id?: string; // Optional property for payment_method_id
+	failure_redirect_url: string;
+	success_redirect_url: string;
+}
+
 export interface Book2User extends BookingType {
 	user_list_tb: UserType;
 }
@@ -101,4 +132,5 @@ export interface Church2Book extends ChurchType {
 export interface UserQType {
 	churches: Church2Book[];
 	reservations: BookingType[];
+	payments: PaidType[];
 }

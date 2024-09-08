@@ -1,6 +1,18 @@
 <script lang="ts">
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Logs } from 'lucide-svelte';
+	import ViewPayment from './_operations/ViewPayment.svelte';
+	import type { UserQType } from '$lib/types';
+
+	interface Props {
+		payment: UserQType['payments'][number];
+	}
+
+	const { ...props }: Props = $props();
+
+	let viewSignal = $state(false);
+
+	const handleViewPayment = () => (viewSignal = true);
 </script>
 
 <DropdownMenu.Root>
@@ -9,12 +21,9 @@
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content>
 		<DropdownMenu.Group>
-			<DropdownMenu.Label>My Account</DropdownMenu.Label>
-			<DropdownMenu.Separator />
-			<DropdownMenu.Item>Profile</DropdownMenu.Item>
-			<DropdownMenu.Item>Billing</DropdownMenu.Item>
-			<DropdownMenu.Item>Team</DropdownMenu.Item>
-			<DropdownMenu.Item>Subscription</DropdownMenu.Item>
+			<DropdownMenu.Item onclick={handleViewPayment}>View</DropdownMenu.Item>
 		</DropdownMenu.Group>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>
+
+<ViewPayment bind:viewSignal payment={props.payment} />
