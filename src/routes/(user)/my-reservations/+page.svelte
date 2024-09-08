@@ -17,7 +17,7 @@
 		<p class="text-3xl font-semibold">Reservations</p>
 		<div class="flex justify-end">
 			<div class="max-w-fit">
-				<ReservationPagination />
+				<!-- <ReservationPagination /> -->
 			</div>
 		</div>
 		<RenderReservations bookings={reservationRoute.getReservations()} />
@@ -27,7 +27,7 @@
 		<p class="text-3xl font-semibold">Payments</p>
 		<div class="flex justify-end">
 			<div class="max-w-fit">
-				<PaymentPagination />
+				<!-- <PaymentPagination /> -->
 			</div>
 		</div>
 		<RenderPayments payments={reservationRoute.getPayments()} />
