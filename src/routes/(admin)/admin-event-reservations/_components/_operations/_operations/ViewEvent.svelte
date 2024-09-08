@@ -109,7 +109,11 @@
 
 						<div class="flex flex-wrap gap-[0.5rem]">
 							<p class="font-semibold">Status:</p>
-							<span class="bg-red-600 p-[1px] px-[1rem] text-white">
+							<span
+								class="{props.booking.price
+									? 'bg-green-700'
+									: 'bg-red-500'}  p-[1px] px-[1rem] text-white"
+							>
 								{props.booking.price ? 'Approved' : 'Pending'}
 							</span>
 						</div>

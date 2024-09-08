@@ -35,7 +35,9 @@
 						<Actions approveForm={props.approveForm} {booking} />
 					</Table.Cell>
 					<Table.Cell class="">
-						<span class="bg-red-600 p-[1px] px-[1rem] text-white">
+						<span
+							class="{booking.price ? 'bg-green-700' : 'bg-red-500'}  p-[1px] px-[1rem] text-white"
+						>
 							{booking.price ? 'Approved' : 'Pending'}
 						</span>
 					</Table.Cell>
