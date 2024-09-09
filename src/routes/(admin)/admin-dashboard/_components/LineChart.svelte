@@ -2,32 +2,21 @@
 	import { onMount } from 'svelte';
 	import Chart from 'chart.js/auto';
 	import { fromThemeState } from '../../../_states/fromThemeState.svelte';
+	import type { AdminQType } from '$lib/types';
 
 	interface Props {
-		first: number | null;
-		sec: number | null;
-		third: number | null;
-		fourth: number | null;
-		fifth: number | null;
-		sixth: number | null;
+		weeklyApproved: AdminQType['dashboard']['weekly_approve'];
 	}
 
-	const { first, sec, third, fourth, fifth, sixth }: Props = $props();
+	const { weeklyApproved }: Props = $props();
 
 	const theme = fromThemeState();
 
 	let chartCanvas: HTMLCanvasElement | undefined = $state(undefined);
 	let chartInstance: Chart | null = $state(null);
 
-	const chartValues: number[] = [
-		first ?? 0,
-		sec ?? 0,
-		third ?? 0,
-		fourth ?? 0,
-		fifth ?? 0,
-		sixth ?? 0
-	];
-	const chartLabels: string[] = ['1', '2', '3', '4', '5', '6'];
+	const chartValues: number[] = weeklyApproved.map((item) => item.count);
+	const chartLabels: string[] = weeklyApproved.map((item) => item.date);
 
 	onMount(async () => {
 		if (typeof window !== 'undefined') {
@@ -47,7 +36,7 @@
 				labels: chartLabels,
 				datasets: [
 					{
-						label: 'Users this week',
+						label: 'Approved this week',
 						backgroundColor: theme.get(),
 						borderColor: theme.get(), // Added borderColor for line chart
 						data: chartValues,
