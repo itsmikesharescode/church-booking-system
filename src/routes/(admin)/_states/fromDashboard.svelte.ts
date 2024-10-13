@@ -1,4 +1,4 @@
-import type { ChurchType } from '$lib/types';
+import type { AdminQType, ChurchType } from '$lib/types';
 import { getContext, setContext } from 'svelte';
 
 class DashboardRoute {
@@ -10,6 +10,16 @@ class DashboardRoute {
 
 	getChurches() {
 		return this.churches;
+	}
+
+	private dashboard = $state<AdminQType['dashboard'] | null>(null);
+
+	setDashboard(p: AdminQType['dashboard'] | null) {
+		this.dashboard = p;
+	}
+
+	getDashboard() {
+		return this.dashboard;
 	}
 }
 

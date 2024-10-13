@@ -86,10 +86,10 @@ export type PaidType = {
 export interface XenditCB {
 	id: string;
 	amount: number;
-	status: 'PAID' | 'PENDING' | 'FAILED' | string; // Allows for future states beyond PAID
-	created: string; // Assuming format "YYYY-MM-DDTHH:mm:ss.sssZ"
+	status: 'PAID' | 'PENDING' | 'FAILED' | string;
+	created: string;
 	is_high: boolean;
-	paid_at?: string; // Optional property for paid_at
+	paid_at?: string;
 	updated: string;
 	user_id: string;
 	currency: string;
@@ -97,11 +97,11 @@ export interface XenditCB {
 	description: string;
 	external_id: string;
 	paid_amount: number;
-	ewallet_type: 'GCASH' | string; // Allows for other ewallet types
+	ewallet_type: 'GCASH' | string;
 	merchant_name: string;
-	payment_method: 'EWALLET' | string; // Allows for future payment methods
-	payment_channel: 'GCASH' | string; // Allows for other payment channels
-	payment_method_id?: string; // Optional property for payment_method_id
+	payment_method: 'EWALLET' | string;
+	payment_channel: 'GCASH' | string;
+	payment_method_id?: string;
 	failure_redirect_url: string;
 	success_redirect_url: string;
 }
@@ -120,6 +120,12 @@ export interface AdminQType {
 	churches: ChurchType[];
 	bookings: BookChurchUser[];
 	payments: PaidType[];
+	dashboard: {
+		total_reservation: number;
+		total_users: number;
+		weekly_approve: Array<{ date: string; count: number }>;
+		weekly_income: Array<{ date: string; income: number }>;
+	};
 }
 
 export interface Church2Book extends ChurchType {

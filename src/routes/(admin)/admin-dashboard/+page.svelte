@@ -2,6 +2,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import { fromStaticRouteState } from '../../_states/fromStaticRouteState.svelte';
+	import { fromDashBRouteState } from '../_states/fromDashboard.svelte';
 	import Pagination from './_components/_operations/Pagination.svelte';
 	import BarChart from './_components/BarChart.svelte';
 	import CountCard from './_components/CountCard.svelte';
@@ -12,28 +13,51 @@
 	const { data } = $props();
 
 	const staticRoute = fromStaticRouteState();
+	const dashboardRoute = fromDashBRouteState();
 
 	staticRoute.setRoute('/admin-dashboard');
+
+	const getTotalWeeklyReservation = () => {
+		const copy = dashboardRoute.getDashboard()?.weekly_approve;
+		if (!copy) return 0;
+
+		return copy.map((item) => item.count).reduce((curr, acc) => curr + acc);
+	};
+
+	const getTotalWeeklyIncome = () => {
+		const copy = dashboardRoute.getDashboard()?.weekly_income;
+		if (!copy) return 0;
+
+		return copy.map((item) => item.income).reduce((curr, acc) => curr + acc);
+	};
 </script>
 
 <div class="flex flex-col gap-[1.25rem] p-[1rem] md:p-[2rem]">
 	<div class="grid gap-[0.625rem] md:grid-cols-2">
 		<div class="max-h-[30dvh]">
-			<LineChart first={1} sec={3} third={3} fourth={10} fifth={5} sixth={6} />
+			<LineChart weeklyApproved={dashboardRoute.getDashboard()?.weekly_approve ?? []} />
 		</div>
 
 		<div class="max-h-[30dvh]">
-			<BarChart first={1} sec={3} third={3} fourth={10} fifth={5} sixth={6} />
+			<BarChart weeklyIncome={dashboardRoute.getDashboard()?.weekly_income ?? []} />
 		</div>
 	</div>
 
 	<div class="grid gap-[1rem] lg:grid-cols-4">
-		<CountCard title="Total Reservation" count={30} />
+		<CountCard
+			sign=""
+			title="Total Reservation"
+			count={dashboardRoute.getDashboard()?.total_reservation ?? 0}
+		/>
 
-		<CountCard title="Total Users" count={10100} />
+		<CountCard
+			sign=""
+			title="Total Users"
+			count={dashboardRoute.getDashboard()?.total_users ?? 0}
+		/>
 
-		<CountCard title="Approved Reservation" count={1230} />
-		<CountCard title="Active Reservation" count={500} />
+		<CountCard sign="" title="Weekly Approved Reservation" count={getTotalWeeklyReservation()} />
+		<CountCard sign="₱" title="Weekly Total Income" count={getTotalWeeklyIncome()} />
 	</div>
 
 	<Separator />

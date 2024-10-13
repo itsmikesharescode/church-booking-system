@@ -74,7 +74,7 @@
 			<Form.Field {form} name="chPhoto">
 				<Form.Control let:attrs>
 					<Form.Label>Church Photo</Form.Label>
-					<CustomImageUploader {attrs} bind:file={$formData.chPhoto} />
+					<CustomImageUploader hasLink="" {attrs} bind:file={$formData.chPhoto} />
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
