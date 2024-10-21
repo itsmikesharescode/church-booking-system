@@ -8,32 +8,32 @@ import type { ChurchType } from '$lib/types';
 import { convertTo24HourFormat } from '$lib';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
-	return {
-		reservationForm: await superValidate(zod(reservationSchema))
-	};
+  return {
+    reservationForm: await superValidate(zod(reservationSchema))
+  };
 };
 
 export const actions: Actions = {
-	reservationEvent: async ({ locals: { supabase, user }, request }) => {
-		const form = await superValidate(request, zod(reservationSchema));
+  reservationEvent: async ({ locals: { supabase, user }, request }) => {
+    const form = await superValidate(request, zod(reservationSchema));
 
-		if (!form.valid) return fail(400, { form });
-		const initialTime = convertTo24HourFormat(form.data.initialTime);
-		const finalTime = convertTo24HourFormat(form.data.finalTime);
-		const churchObj = JSON.parse(form.data.churchObj) as ChurchType;
+    if (!form.valid) return fail(400, { form });
+    const initialTime = convertTo24HourFormat(form.data.initialTime);
+    const finalTime = convertTo24HourFormat(form.data.finalTime);
+    const churchObj = JSON.parse(form.data.churchObj) as ChurchType;
 
-		const { error } = await supabase.rpc('validate_and_insert_booking', {
-			p_church_id: churchObj.id,
-			p_event_name: form.data.eventName,
-			p_number_guest: form.data.guestCount,
-			p_date: form.data.dateIn,
-			p_initial_time: initialTime,
-			p_final_time: finalTime,
-			p_event_note: form.data.clientNote
-		});
+    const { error } = await supabase.rpc('validate_and_insert_booking', {
+      p_church_id: churchObj.id,
+      p_event_name: form.data.eventName,
+      p_number_guest: form.data.guestCount,
+      p_date: form.data.dateIn,
+      p_initial_time: initialTime,
+      p_final_time: finalTime,
+      p_event_note: form.data.clientNote
+    });
 
-		if (error) return fail(401, { form, msg: error.message });
+    if (error) return fail(401, { form, msg: error.message });
 
-		return { form, msg: 'Successfully booked.' };
-	}
+    return { form, msg: 'Successfully booked.' };
+  }
 };

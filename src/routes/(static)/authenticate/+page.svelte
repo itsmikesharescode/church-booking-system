@@ -1,29 +1,29 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import bg_photo from '$lib/assets/bg_landing.jpg?enhanced';
-	import { fromStaticRouteState } from '../../_states/fromStaticRouteState.svelte';
-	import ForgotPwd from './_components/ForgotPwd.svelte';
-	import SignIn from './_components/SignIn.svelte';
-	import SignUp from './_components/SignUp.svelte';
+  import { page } from '$app/stores';
+  import bg_photo from '$lib/assets/bg_landing.jpg?enhanced';
+  import { fromStaticRouteState } from '../../_states/fromStaticRouteState.svelte';
+  import ForgotPwd from './_components/ForgotPwd.svelte';
+  import SignIn from './_components/SignIn.svelte';
+  import SignUp from './_components/SignUp.svelte';
 
-	const staticRoute = fromStaticRouteState();
-	staticRoute.setRoute('');
+  const staticRoute = fromStaticRouteState();
+  staticRoute.setRoute('');
 
-	const { data } = $props();
+  const { data } = $props();
 </script>
 
 <div class="grid h-screen md:grid-cols-[40%,1fr]">
-	<div class="hidden md:block">
-		<enhanced:img src={bg_photo} alt="" class="h-full w-full"></enhanced:img>
-	</div>
+  <div class="hidden md:block">
+    <enhanced:img src={bg_photo} alt="" class="h-full w-full"></enhanced:img>
+  </div>
 
-	<div class="">
-		{#if $page.url.searchParams.get('q') === 'sign-up'}
-			<SignUp signUpForm={data.signUpForm} />
-		{:else if $page.url.searchParams.get('q') === 'forgot-password'}
-			<ForgotPwd forgotPwdForm={data.forgotPwdForm} />
-		{:else}
-			<SignIn signInForm={data.signInForm} />
-		{/if}
-	</div>
+  <div class="">
+    {#if $page.url.searchParams.get('q') === 'sign-up'}
+      <SignUp signUpForm={data.signUpForm} />
+    {:else if $page.url.searchParams.get('q') === 'forgot-password'}
+      <ForgotPwd forgotPwdForm={data.forgotPwdForm} />
+    {:else}
+      <SignIn signInForm={data.signInForm} />
+    {/if}
+  </div>
 </div>

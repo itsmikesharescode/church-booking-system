@@ -2,33 +2,33 @@ import type { AdminQType } from '$lib/types';
 import { getContext, setContext } from 'svelte';
 
 class ReservationsRoute {
-	private bookings = $state<AdminQType['bookings'] | null>(null);
+  private bookings = $state<AdminQType['bookings'] | null>(null);
 
-	setBookings(p: AdminQType['bookings'] | null) {
-		this.bookings = p;
-	}
+  setBookings(p: AdminQType['bookings'] | null) {
+    this.bookings = p;
+  }
 
-	getBookings() {
-		return this.bookings;
-	}
+  getBookings() {
+    return this.bookings;
+  }
 
-	private payments = $state<AdminQType['payments'] | null>(null);
+  private payments = $state<AdminQType['payments'] | null>(null);
 
-	setPayments(p: AdminQType['payments'] | null) {
-		this.payments = p;
-	}
+  setPayments(p: AdminQType['payments'] | null) {
+    this.payments = p;
+  }
 
-	getPayments() {
-		return this.payments;
-	}
+  getPayments() {
+    return this.payments;
+  }
 }
 
 const RESERVATIONS_ROUTE_KEY = Symbol('reservationRouteKey');
 
 export const initReservationRoute = () => {
-	return setContext(RESERVATIONS_ROUTE_KEY, new ReservationsRoute());
+  return setContext(RESERVATIONS_ROUTE_KEY, new ReservationsRoute());
 };
 
 export const fromReservationRouteState = () => {
-	return getContext<ReturnType<typeof initReservationRoute>>(RESERVATIONS_ROUTE_KEY);
+  return getContext<ReturnType<typeof initReservationRoute>>(RESERVATIONS_ROUTE_KEY);
 };

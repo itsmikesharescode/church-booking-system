@@ -1,7 +1,7 @@
 <script lang="ts">
-	import DarkMode from './DarkMode.svelte';
+  import DarkMode from './DarkMode.svelte';
 </script>
 
 <footer>
-	<DarkMode />
+  <DarkMode />
 </footer>

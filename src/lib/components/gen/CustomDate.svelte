@@ -1,50 +1,50 @@
 <script lang="ts">
-	import CalendarIcon from 'lucide-svelte/icons/calendar';
-	import { type DateValue, DateFormatter, getLocalTimeZone } from '@internationalized/date';
-	import { cn } from '$lib/utils.js';
-	import { Button } from '$lib/components/ui/button';
-	import { Calendar } from '$lib/components/ui/calendar';
-	import * as Popover from '$lib/components/ui/popover';
+  import CalendarIcon from 'lucide-svelte/icons/calendar';
+  import { type DateValue, DateFormatter, getLocalTimeZone } from '@internationalized/date';
+  import { cn } from '$lib/utils.js';
+  import { Button } from '$lib/components/ui/button';
+  import { Calendar } from '$lib/components/ui/calendar';
+  import * as Popover from '$lib/components/ui/popover';
 
-	interface Props {
-		dateValue: string;
-		attrs: {
-			name: string;
-			id: string;
-			'data-fs-error': string | undefined;
-			'aria-describedby': string | undefined;
-			'aria-invalid': 'true' | undefined;
-			'aria-required': 'true' | undefined;
-			'data-fs-control': string;
-		};
-	}
+  interface Props {
+    dateValue: string;
+    attrs: {
+      name: string;
+      id: string;
+      'data-fs-error': string | undefined;
+      'aria-describedby': string | undefined;
+      'aria-invalid': 'true' | undefined;
+      'aria-required': 'true' | undefined;
+      'data-fs-control': string;
+    };
+  }
 
-	let { dateValue = $bindable(), attrs }: Props = $props();
+  let { dateValue = $bindable(), attrs }: Props = $props();
 
-	const df = new DateFormatter('en-US', {
-		dateStyle: 'long'
-	});
+  const df = new DateFormatter('en-US', {
+    dateStyle: 'long'
+  });
 
-	let value = $state<DateValue | undefined>();
+  let value = $state<DateValue | undefined>();
 
-	$effect(() => {
-		dateValue = String(value ?? '');
-	});
+  $effect(() => {
+    dateValue = String(value ?? '');
+  });
 </script>
 
 <Popover.Root openFocus>
-	<Popover.Trigger asChild let:builder>
-		<input {...attrs} type="hidden" {value} />
-		<Button
-			variant="outline"
-			class={cn('w-full justify-start text-left font-normal', !value && 'text-muted-foreground')}
-			builders={[builder]}
-		>
-			<CalendarIcon class="mr-2 h-4 w-4" />
-			{value ? df.format(value.toDate(getLocalTimeZone())) : 'Select a date'}
-		</Button>
-	</Popover.Trigger>
-	<Popover.Content class="w-auto p-0">
-		<Calendar bind:value initialFocus />
-	</Popover.Content>
+  <Popover.Trigger asChild let:builder>
+    <input {...attrs} type="hidden" {value} />
+    <Button
+      variant="outline"
+      class={cn('w-full justify-start text-left font-normal', !value && 'text-muted-foreground')}
+      builders={[builder]}
+    >
+      <CalendarIcon class="mr-2 h-4 w-4" />
+      {value ? df.format(value.toDate(getLocalTimeZone())) : 'Select a date'}
+    </Button>
+  </Popover.Trigger>
+  <Popover.Content class="w-auto p-0">
+    <Calendar bind:value initialFocus />
+  </Popover.Content>
 </Popover.Root>

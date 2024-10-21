@@ -2,33 +2,33 @@ import type { AdminQType, ChurchType } from '$lib/types';
 import { getContext, setContext } from 'svelte';
 
 class DashboardRoute {
-	private churches = $state<ChurchType[] | null>(null);
+  private churches = $state<ChurchType[] | null>(null);
 
-	setChurches(p: ChurchType[] | null) {
-		this.churches = p;
-	}
+  setChurches(p: ChurchType[] | null) {
+    this.churches = p;
+  }
 
-	getChurches() {
-		return this.churches;
-	}
+  getChurches() {
+    return this.churches;
+  }
 
-	private dashboard = $state<AdminQType['dashboard'] | null>(null);
+  private dashboard = $state<AdminQType['dashboard'] | null>(null);
 
-	setDashboard(p: AdminQType['dashboard'] | null) {
-		this.dashboard = p;
-	}
+  setDashboard(p: AdminQType['dashboard'] | null) {
+    this.dashboard = p;
+  }
 
-	getDashboard() {
-		return this.dashboard;
-	}
+  getDashboard() {
+    return this.dashboard;
+  }
 }
 
 const DASHBOARD_ROUTE_KEY = Symbol('DashboardRoute');
 
 export const initDashboardRoute = () => {
-	return setContext(DASHBOARD_ROUTE_KEY, new DashboardRoute());
+  return setContext(DASHBOARD_ROUTE_KEY, new DashboardRoute());
 };
 
 export const fromDashBRouteState = () => {
-	return getContext<ReturnType<typeof initDashboardRoute>>(DASHBOARD_ROUTE_KEY);
+  return getContext<ReturnType<typeof initDashboardRoute>>(DASHBOARD_ROUTE_KEY);
 };
