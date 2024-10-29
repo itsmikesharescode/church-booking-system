@@ -19,6 +19,7 @@
     fromReservationRoute,
     initReservationRoute
   } from './_states/fromReservationState.svelte';
+  import ChurchBot from '$lib/components/gen/ChurchBot/ChurchBot.svelte';
 
   const { data, children } = $props();
 
@@ -73,6 +74,9 @@
 
 <ModeWatcher />
 <Toaster richColors={true} />
+<div class="fixed bottom-4 right-4 z-50">
+  <ChurchBot />
+</div>
 {#if $page.url.pathname !== '/authenticate/update-password'}
   <NormalNav />
 {/if}
