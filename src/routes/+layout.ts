@@ -1,8 +1,6 @@
 import { createBrowserClient, createServerClient, isBrowser } from '@supabase/ssr';
 import type { LayoutLoad } from './$types';
-
-const supabaseUrl = import.meta.env.VITE_SB_URL;
-const supabaseAnonKey = import.meta.env.VITE_SB_ANON_KEY;
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 
 export const load: LayoutLoad = async ({ data, depends, fetch }) => {
   /**
@@ -12,12 +10,12 @@ export const load: LayoutLoad = async ({ data, depends, fetch }) => {
   depends('supabase:auth');
 
   const supabase = isBrowser()
-    ? createBrowserClient(supabaseUrl, supabaseAnonKey, {
+    ? createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
         global: {
           fetch
         }
       })
-    : createServerClient(supabaseUrl, supabaseAnonKey, {
+    : createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
         global: {
           fetch
         },

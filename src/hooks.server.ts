@@ -7,12 +7,13 @@ import { sequence } from '@sveltejs/kit/hooks';
 import jwt from 'jsonwebtoken';
 import sharp from 'sharp';
 import { Xendit } from 'xendit-node';
-
-const supabaseUrl = import.meta.env.VITE_SB_URL;
-const supabaseAnonKey = import.meta.env.VITE_SB_ANON_KEY;
-const supabaseAdminKey = import.meta.env.VITE_SB_ADMIN_KEY;
-const jwtSecret = import.meta.env.VITE_JWT_KEY;
-const xenditKey = import.meta.env.VITE_XENDIT_KEY;
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
+import {
+  PRIVATE_SUPABASE_ADMIN_KEY,
+  PRIVATE_XENDIT_KEY,
+  PRIVATE_SUPABASE_JWT_KEY,
+  PRIVATE_MAILER_KEY
+} from '$env/static/private';
 
 const supabase: Handle = async ({ event, resolve }) => {
   /**
@@ -20,7 +21,7 @@ const supabase: Handle = async ({ event, resolve }) => {
    *
    * The Supabase client gets the Auth token from the request cookies.
    */
-  event.locals.supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+  event.locals.supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
     cookies: {
       getAll: () => event.cookies.getAll(),
       setAll: (cookiesToSet) => {
@@ -31,7 +32,7 @@ const supabase: Handle = async ({ event, resolve }) => {
     }
   });
 
-  event.locals.supabaseAdmin = createServerClient(supabaseUrl, supabaseAdminKey, {
+  event.locals.supabaseAdmin = createServerClient(PUBLIC_SUPABASE_URL, PRIVATE_SUPABASE_ADMIN_KEY, {
     cookies: {
       getAll: () => event.cookies.getAll(),
       /**
@@ -55,7 +56,7 @@ const supabase: Handle = async ({ event, resolve }) => {
     if (!session) return { session: null, user: null };
 
     try {
-      const decoded = jwt.verify(session.access_token, jwtSecret) as SupabaseJwt;
+      const decoded = jwt.verify(session.access_token, PRIVATE_SUPABASE_JWT_KEY) as SupabaseJwt;
       const validated_session: Session = {
         access_token: session.access_token,
         refresh_token: session.refresh_token,
@@ -188,7 +189,7 @@ const workers: Handle = async ({ event, resolve }) => {
 };
 
 const paymentHooks: Handle = async ({ event, resolve }) => {
-  event.locals.xenditClient = new Xendit({ secretKey: xenditKey });
+  event.locals.xenditClient = new Xendit({ secretKey: PRIVATE_XENDIT_KEY });
 
   return resolve(event);
 };
