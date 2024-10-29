@@ -2,9 +2,7 @@
   import * as AlertDialog from '$lib/components/ui/alert-dialog';
   import Button from '$lib/components/ui/button/button.svelte';
   import { MessageCircle, X, Send, Loader } from 'lucide-svelte';
-  import { Textarea } from '$lib/components/ui/textarea';
   import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
-  import * as Avatar from '$lib/components/ui/avatar';
   import { toast } from 'svelte-sonner';
   import { fromUserState } from '../../../../routes/_states/fromUserState.svelte';
 
@@ -16,7 +14,64 @@
   let chatContainer = $state('');
   let sendingLoader = $state(false);
 
-  const handleSubmitChat = async () => {};
+  type ChatType = {
+    id: string;
+    chat: string;
+    displayName: string;
+    timeStamp: string;
+  };
+
+  let chats: ChatType[] = $state([]);
+
+  let scrollAreaContent: HTMLDivElement;
+
+  // Watch for changes to chats array and scroll to bottom
+  $effect(() => {
+    if (chats.length && scrollAreaContent) {
+      setTimeout(() => {
+        scrollAreaContent.scrollTo({
+          top: scrollAreaContent.scrollHeight,
+          behavior: 'smooth'
+        });
+      }, 100);
+    }
+  });
+
+  const handleSubmitChat = async () => {
+    if (!userRef) return;
+    chats.push({
+      id: userRef.id,
+      chat: chatContainer,
+      displayName: userRef?.user_metadata.firstName,
+      timeStamp: new Date().toISOString()
+    });
+
+    chatContainer = '';
+
+    sendingLoader = true;
+
+    const response = await fetch('/ChatAPI', {
+      method: 'POST',
+      body: JSON.stringify({ chats: chats.map((item) => item.chat) })
+    });
+
+    if (response.status === 401) {
+      toast.error('You are not authorized to ask this question');
+      sendingLoader = false;
+      return;
+    }
+
+    const { message } = await response.json();
+    console.log(message);
+    chats.push({
+      id: 'bot',
+      chat: message,
+      displayName: 'Church Bot',
+      timeStamp: new Date().toISOString()
+    });
+
+    sendingLoader = false;
+  };
 </script>
 
 <Button onclick={() => (open = true)} variant="secondary" class="gap-1.5">
@@ -39,68 +94,43 @@
     </AlertDialog.Header>
 
     <!--Screen area-->
-    <ScrollArea class="h-[70dvh] w-full">
-      <div class="flex flex-col gap-2.5 px-5">
-        {#each [] as chat}
-          <div class="flex flex-col gap-2.5">
-            <div
-              class={userRef?.id === chat.id
-                ? 'flex w-full flex-row-reverse items-center gap-1.5'
-                : 'flex items-center gap-1.5'}
-            >
-              <Avatar.Root>
-                <Avatar.Image src={chat.photoURL} alt={`${chat.displayName} photo`} />
-                <Avatar.Fallback>{chat.displayName[0]}</Avatar.Fallback>
-              </Avatar.Root>
-              <div class="">
-                <p
-                  class="line-clamp-1 text-sm {userRef?.id === chat.id
-                    ? 'text-right'
-                    : 'text-left'}"
-                >
-                  {chat.displayName}
-                </p>
-                {#if chat.timeStamp}
-                  <p class="text-sm text-muted-foreground">
-                    {new Date(chat.timeStamp.seconds * 1000).toLocaleDateString()} @ {new Date(
-                      chat.timeStamp.seconds * 1000
-                    ).toLocaleTimeString()}
-                  </p>
-                {/if}
-              </div>
-            </div>
 
-            <div class="flex {userRef?.id === chat.userUUID ? 'justify-end' : 'justify-start'}">
-              <div class="max-w-fit rounded-lg bg-secondary p-2">
-                <pre class="text-wrap font-sans text-sm">{chat.chat}</pre>
-              </div>
+    <div
+      bind:this={scrollAreaContent}
+      class="flex h-[70dvh] w-full flex-col gap-2.5 overflow-auto px-5"
+    >
+      {#each chats as chat}
+        <div class="flex flex-col gap-2.5">
+          <div
+            class={userRef?.id === chat.id
+              ? 'flex w-full flex-row-reverse items-center gap-1.5'
+              : 'flex items-center gap-1.5'}
+          >
+            <div class="">
+              <p
+                class="line-clamp-1 text-sm {userRef?.id === chat.id ? 'text-right' : 'text-left'}"
+              >
+                {chat.displayName}
+              </p>
+
+              <p class="text-sm text-muted-foreground">
+                {new Date(chat.timeStamp).toLocaleDateString()} @ {new Date(
+                  chat.timeStamp
+                ).toLocaleTimeString()}
+              </p>
             </div>
           </div>
 
-          <!-- <div class="flex flex-col gap-2.5">
-              <div class="flex w-full flex-row-reverse items-center gap-1.5">
-                <Avatar.Root>
-                  <Avatar.Image src="https://github.com/shadcn.png" alt="@shadcn" />
-                  <Avatar.Fallback>CN</Avatar.Fallback>
-                </Avatar.Root>
-                <div class="">
-                  <p class="line-clamp-1 text-right text-sm">Mike John</p>
-                  <p class="text-sm text-muted-foreground">
-                    {new Date().toLocaleDateString()} @ {new Date().toLocaleTimeString()}
-                  </p>
-                </div>
-              </div>
-  
-              <div class="max-w-fit rounded-lg bg-secondary p-2">
-                <pre
-                  class="text-wrap font-sans text-sm">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Pariatur cupiditate numquam voluptatum quae nesciunt voluptate id non nihil soluta. Aliquid esse quos minima itaque quisquam asperiores, laboriosam eos quaerat provident, porro incidunt, odio beatae eius. Sequi itaque nemo deleniti minus, animi earum quis eos rerum unde reiciendis rem, libero consequatur.</pre>
-              </div>
-            </div> -->
-        {/each}
-      </div>
-    </ScrollArea>
+          <div class="flex {userRef?.id === chat.id ? 'justify-end' : 'justify-start'}">
+            <div class="max-w-fit rounded-lg bg-secondary p-2">
+              <pre class="text-wrap font-sans text-sm">{chat.chat}</pre>
+            </div>
+          </div>
+        </div>
+      {/each}
+    </div>
 
-    <div class="relative flex items-center gap-1.5">
+    <div class="relative flex items-center gap-2.5">
       {#if !userRef}
         <div
           class="absolute bottom-0 left-0 right-0 top-0 z-30 flex flex-wrap items-center justify-center gap-2.5 bg-secondary p-4"
@@ -110,18 +140,22 @@
         </div>
       {/if}
 
-      <Textarea placeholder="Say something..." bind:value={chatContainer} />
-      <Button
+      <textarea
+        placeholder="Ask something..."
+        class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        bind:value={chatContainer}
+      ></textarea>
+      <button
+        class="rounded-lg bg-secondary p-2 disabled:opacity-50"
         disabled={sendingLoader || !(chatContainer.length > 3)}
         onclick={handleSubmitChat}
-        variant="secondary"
       >
         {#if sendingLoader}
           <Loader class="h-[20px] w-[20px] animate-spin " />
         {:else}
           <Send class="h-[20px] w-[20px]" />
         {/if}
-      </Button>
+      </button>
     </div>
   </AlertDialog.Content>
 </AlertDialog.Root>
