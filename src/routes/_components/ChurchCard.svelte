@@ -2,15 +2,14 @@
   import CreateReservation from './_operations/CreateReservation.svelte';
   import type { Infer, SuperValidated } from 'sveltekit-superforms';
   import type { ReservationSchema } from './_operations/schema';
-  import Button from '$lib/components/ui/button/button.svelte';
-  import type { ChurchType } from '$lib/types';
+  import type { ChurchType, UserQType } from '$lib/types';
   import * as Avatar from '$lib/components/ui/avatar';
   import { convertTo12HourFormat, publicAPIs } from '$lib';
 
   interface Props {
     reservationForm: SuperValidated<Infer<ReservationSchema>>;
     index: number;
-    church: ChurchType;
+    church: UserQType['churches'][number];
   }
 
   const { ...props }: Props = $props();

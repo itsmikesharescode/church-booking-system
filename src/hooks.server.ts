@@ -12,8 +12,10 @@ import {
   PRIVATE_SUPABASE_ADMIN_KEY,
   PRIVATE_XENDIT_KEY,
   PRIVATE_SUPABASE_JWT_KEY,
-  PRIVATE_MAILER_KEY
+  PRIVATE_MAILER_KEY,
+  PRIVATE_GEMINI_KEY
 } from '$env/static/private';
+import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
 
 const supabase: Handle = async ({ event, resolve }) => {
   /**
@@ -182,6 +184,39 @@ const workers: Handle = async ({ event, resolve }) => {
       return new File([processedBuffer], file.name, { type: file.type });
     } catch (error) {
       return null;
+    }
+  };
+
+  event.locals.gemini = async (prompt: string): Promise<{ error?: string; result?: string }> => {
+    try {
+      if (!prompt?.trim()) {
+        return { error: 'Prompt is required' };
+      }
+
+      const genAI = new GoogleGenerativeAI(PRIVATE_GEMINI_KEY);
+      const model = genAI.getGenerativeModel({
+        model: 'gemini-1.0-pro'
+      });
+
+      const generationConfig = {
+        temperature: 0.9,
+        topP: 1,
+        maxOutputTokens: 2048,
+        responseMimeType: 'text/plain'
+      };
+
+      const chatSession = model.startChat({
+        generationConfig,
+        history: []
+      });
+
+      const response = await chatSession.sendMessage(prompt);
+      const result = response.response.text();
+
+      return { result };
+    } catch (error) {
+      console.error('Gemini API error:', error);
+      return { error: 'Failed to process your request' };
     }
   };
 

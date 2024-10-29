@@ -11,6 +11,7 @@ declare global {
       user: User | null;
       avifCompress: (file: File) => Promise<File | null>;
       resizeImage: (file: File) => Promise<File | null>;
+      gemini: (prompt: string) => Promise<{ error?: string; result?: string }>;
       xenditClient: Xendit;
     }
     interface PageData {
