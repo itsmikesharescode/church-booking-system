@@ -11,10 +11,11 @@
   import Textarea from '$lib/components/ui/textarea/textarea.svelte';
   import { fromUserState } from '../../_states/fromUserState.svelte';
   import { goto } from '$app/navigation';
-  import { Loader } from 'lucide-svelte';
+  import { Loader, X } from 'lucide-svelte';
   import { toast } from 'svelte-sonner';
   import { convertTo12HourFormat } from '$lib';
   import * as Popover from '$lib/components/ui/popover';
+  import DayGridCalendar from '$lib/components/gen/DayGridCalendar.svelte';
 
   interface Props {
     church: UserQType['churches'][number];
@@ -63,6 +64,16 @@
 </Button>
 <AlertDialog.Root bind:open>
   <AlertDialog.Content class="flex max-h-screen max-w-[800px] flex-col gap-[1rem] p-0">
+    <button
+      onclick={() => {
+        open = false;
+        form.reset();
+      }}
+      class="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+    >
+      <X class="h-4 w-4" />
+      <span class="sr-only">Close</span>
+    </button>
     <AlertDialog.Header class="p-[1rem] sm:px-[2rem] sm:pt-[2rem]">
       <AlertDialog.Title>Create Reservation</AlertDialog.Title>
       <AlertDialog.Description>
@@ -141,25 +152,7 @@
             <Form.FieldErrors />
           </Form.Field>
         </div>
-
-        <Popover.Root>
-          <div class="flex justify-end">
-            <Popover.Trigger class="text-sm underline">View Schedules</Popover.Trigger>
-          </div>
-          <Popover.Content class="">
-            <p class="text-sm font-semibold">Taken Slots</p>
-            <div class="flex max-h-[200px] flex-col overflow-auto">
-              {#each props.church.bookings as book}
-                <p class="text-sm">
-                  {book.date}
-                  {convertTo12HourFormat(book.initial_time)} - {convertTo12HourFormat(
-                    book.final_time
-                  )}
-                </p>
-              {/each}
-            </div>
-          </Popover.Content>
-        </Popover.Root>
+        <DayGridCalendar />
       </div>
 
       <Form.Field {form} name="clientNote">
@@ -171,13 +164,6 @@
       </Form.Field>
 
       <AlertDialog.Footer class="flex flex-col gap-[1rem] sm:gap-0">
-        <Button
-          variant="outline"
-          onclick={() => {
-            open = false;
-            form.reset();
-          }}>Cancel</Button
-        >
         <Form.Button disabled={$submitting} class="relative">
           {#if $submitting}
             <div
