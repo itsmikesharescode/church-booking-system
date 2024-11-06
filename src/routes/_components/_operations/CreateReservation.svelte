@@ -59,7 +59,7 @@
     goto('/authenticate?error=you-must-be-logged-in');
   }}
 >
-  Reserve Now
+  Reserve Now @ ₱ {props.church.price.toLocaleString()}
 </Button>
 <AlertDialog.Root bind:open>
   <AlertDialog.Content class="flex max-h-screen max-w-[800px] flex-col gap-[1rem] p-0">

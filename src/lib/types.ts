@@ -73,6 +73,7 @@ export type ChurchType = {
   open_time: string;
   close_time: string;
   photo_path: string;
+  price: number;
 };
 
 export type PaidType = {
