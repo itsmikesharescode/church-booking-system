@@ -39,7 +39,8 @@ export const actions: Actions = {
           description: form.data.description,
           open_time: openTconvert,
           close_time: closeTconvert,
-          photo_path: uploadData.path
+          photo_path: uploadData.path,
+          price: form.data.price
         }
       ]);
 

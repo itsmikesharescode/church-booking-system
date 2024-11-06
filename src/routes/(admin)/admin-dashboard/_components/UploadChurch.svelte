@@ -87,13 +87,26 @@
         <Form.FieldErrors />
       </Form.Field>
 
+      <Form.Field {form} name="price">
+        <Form.Control let:attrs>
+          <Form.Label>Price</Form.Label>
+          <Input
+            type="number"
+            {...attrs}
+            bind:value={$formData.price}
+            placeholder="Enter reservation price"
+          />
+        </Form.Control>
+        <Form.FieldErrors />
+      </Form.Field>
+
       <Form.Field {form} name="description">
         <Form.Control let:attrs>
           <Form.Label>Church Description</Form.Label>
           <Textarea
             {...attrs}
             bind:value={$formData.description}
-            placeholder="Enter chuch description"
+            placeholder="Enter church description"
           />
         </Form.Control>
         <Form.FieldErrors />
