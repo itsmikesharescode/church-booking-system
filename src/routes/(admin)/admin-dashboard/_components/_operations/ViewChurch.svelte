@@ -48,11 +48,11 @@
 
   $effect(() => {
     if (!viewSignal) return;
-
     $formData.chName = props.church.name;
     $formData.description = props.church.description;
     $formData.openT = props.church.open_time;
     $formData.closeT = props.church.close_time;
+    $formData.price = props.church.price;
   });
 </script>
 
@@ -99,6 +99,19 @@
           <Form.Control let:attrs>
             <Form.Label>Church Name</Form.Label>
             <Input {...attrs} bind:value={$formData.chName} placeholder="Enter new church name" />
+          </Form.Control>
+          <Form.FieldErrors />
+        </Form.Field>
+
+        <Form.Field {form} name="price">
+          <Form.Control let:attrs>
+            <Form.Label>Price</Form.Label>
+            <Input
+              type="number"
+              {...attrs}
+              bind:value={$formData.price}
+              placeholder="Enter new reservation price"
+            />
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
