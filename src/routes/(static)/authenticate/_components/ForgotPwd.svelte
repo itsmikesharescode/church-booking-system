@@ -49,9 +49,11 @@
         <p class="text-center leading-7 text-muted-foreground">Recover your password using email</p>
       </div>
       <Form.Field {form} name="email">
-        <Form.Control let:attrs>
-          <Form.Label>Email</Form.Label>
-          <Input {...attrs} bind:value={$formData.email} placeholder="Enter your email" />
+        <Form.Control>
+          {#snippet children({ props })}
+            <Form.Label>Email</Form.Label>
+            <Input {...props} bind:value={$formData.email} placeholder="Enter your email" />
+          {/snippet}
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>

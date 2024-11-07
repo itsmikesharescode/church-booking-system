@@ -4,7 +4,6 @@
   import { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import { signInSchema, type SignInSchema } from '../authenticate-schema';
-  import Separator from '$lib/components/ui/separator/separator.svelte';
   import Button from '$lib/components/ui/button/button.svelte';
   import type { Result } from '$lib/types';
   import { toast } from 'svelte-sonner';
@@ -49,23 +48,32 @@
         <p class="text-center text-6xl font-bold">Sign In</p>
         <p class="text-center leading-7 text-muted-foreground">Sign in to church booking system</p>
       </div>
+
       <Form.Field {form} name="email">
-        <Form.Control let:attrs>
-          <Form.Label>Email</Form.Label>
-          <Input {...attrs} bind:value={$formData.email} placeholder="Enter your email" />
+        <Form.Control>
+          {#snippet children({ props })}
+            <Input
+              type="email"
+              {...props}
+              bind:value={$formData.email}
+              placeholder="Enter your email"
+            />
+          {/snippet}
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
 
       <Form.Field {form} name="pwd">
-        <Form.Control let:attrs>
-          <Form.Label>Password</Form.Label>
-          <Input
-            type="password"
-            {...attrs}
-            bind:value={$formData.pwd}
-            placeholder="Enter your password"
-          />
+        <Form.Control>
+          {#snippet children({ props })}
+            <Form.Label>Password</Form.Label>
+            <Input
+              type="password"
+              {...props}
+              bind:value={$formData.pwd}
+              placeholder="Enter your password"
+            />
+          {/snippet}
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
