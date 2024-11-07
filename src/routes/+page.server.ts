@@ -20,10 +20,9 @@ export const actions: Actions = {
     if (!form.valid) return fail(400, { form });
     const initialTime = convertTo24HourFormat(form.data.initialTime);
     const finalTime = convertTo24HourFormat(form.data.finalTime);
-    const churchObj = JSON.parse(form.data.churchObj) as ChurchType;
 
     const { error } = await supabase.rpc('validate_and_insert_booking', {
-      p_church_id: churchObj.id,
+      p_church_id: form.data.id,
       p_event_name: form.data.eventName,
       p_number_guest: form.data.guestCount,
       p_date: form.data.dateIn,

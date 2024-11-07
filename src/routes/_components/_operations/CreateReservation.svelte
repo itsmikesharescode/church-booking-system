@@ -12,9 +12,10 @@
   import { goto } from '$app/navigation';
   import { Loader, X } from 'lucide-svelte';
   import { toast } from 'svelte-sonner';
-  import { convertTo12HourFormat } from '$lib';
+  import { convertTo12HourFormat, timeList } from '$lib';
   import DayGridCalendar from '$lib/components/gen/DayGridCalendar.svelte';
   import DatePicker from '$lib/components/gen/DatePicker.svelte';
+  import Combobox from '$lib/components/gen/Combobox.svelte';
 
   interface Props {
     church: UserQType['churches'][number];
@@ -94,10 +95,10 @@
           <DayGridCalendar />
         </div>
         <div class="flex flex-col gap-[1rem]">
-          <Form.Field {form} name="churchObj" class="hidden">
+          <Form.Field {form} name="id" class="hidden">
             <Form.Control>
               {#snippet children({ props })}
-                <Input {...props} bind:value={restProps.church.id} />
+                <Input type="number" {...props} bind:value={restProps.church.id} />
               {/snippet}
             </Form.Control>
           </Form.Field>
@@ -141,12 +142,14 @@
           <Form.Field {form} name="initialTime">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Initial Time</Form.Label>
-                <Input
-                  {...props}
-                  bind:value={$formData.initialTime}
-                  placeholder="Enter initial time example 07:30 AM"
+                <Form.Label>Start Time</Form.Label>
+                <Combobox
+                  bind:selected={$formData.initialTime}
+                  selections={timeList}
+                  placeholder="Select time"
+                  name="Start Time"
                 />
+                <input type="hidden" name={props.name} bind:value={$formData.initialTime} />
               {/snippet}
             </Form.Control>
             <Form.FieldErrors />
@@ -156,11 +159,13 @@
             <Form.Control>
               {#snippet children({ props })}
                 <Form.Label>Final Time</Form.Label>
-                <Input
-                  {...props}
-                  bind:value={$formData.finalTime}
-                  placeholder="Enter final time example 11:30 AM"
+                <Combobox
+                  bind:selected={$formData.finalTime}
+                  selections={timeList}
+                  placeholder="Select time"
+                  name="Final Time"
                 />
+                <input type="hidden" name={props.name} bind:value={$formData.finalTime} />
               {/snippet}
             </Form.Control>
             <Form.FieldErrors />
