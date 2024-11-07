@@ -90,7 +90,7 @@
       class="flex flex-col gap-[1rem] overflow-auto p-[1rem] sm:px-[2rem] sm:pt-0"
     >
       <div class="grid gap-[1rem] md:grid-cols-[2fr_1fr]">
-        <div class="">
+        <div class="py-2">
           <DayGridCalendar />
         </div>
         <div class="flex flex-col gap-[1rem]">
