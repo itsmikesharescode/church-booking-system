@@ -3,7 +3,6 @@ import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { reservationSchema } from './_components/_operations/schema';
 import { fail } from '@sveltejs/kit';
-import type { ChurchType } from '$lib/types';
 
 import { convertTo24HourFormat } from '$lib';
 

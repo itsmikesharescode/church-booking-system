@@ -40,56 +40,54 @@
   const { form: formData, enhance, submitting } = form;
 </script>
 
-<div class="mx-auto flex max-w-[700px] flex-col justify-center p-[1rem]">
-  <div class="">
-    <form method="POST" action="?/updatePwdEvent" use:enhance class="flex flex-col gap-[1rem]">
-      <p class="text-xl font-semibold">Security Information</p>
-      <div class="grid gap-[1rem] md:grid-cols-2">
-        <Form.Field {form} name="pwd">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>New Password</Form.Label>
-              <Input
-                type="password"
-                {...props}
-                bind:value={$formData.pwd}
-                placeholder="Enter your new password"
-              />
-            {/snippet}
-          </Form.Control>
-          <Form.FieldErrors />
-        </Form.Field>
+<div class="flex max-w-[700px] flex-col p-[1rem]">
+  <form method="POST" action="?/updatePwdEvent" use:enhance class="flex flex-col gap-[1rem]">
+    <p class="text-xl font-semibold">Security Information</p>
+    <div class="grid gap-[1rem] md:grid-cols-2">
+      <Form.Field {form} name="pwd">
+        <Form.Control>
+          {#snippet children({ props })}
+            <Form.Label>New Password</Form.Label>
+            <Input
+              type="password"
+              {...props}
+              bind:value={$formData.pwd}
+              placeholder="Enter your new password"
+            />
+          {/snippet}
+        </Form.Control>
+        <Form.FieldErrors />
+      </Form.Field>
 
-        <Form.Field {form} name="confirmPwd">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Confirm New Password</Form.Label>
-              <Input
-                type="password"
-                {...props}
-                bind:value={$formData.confirmPwd}
-                placeholder="Confirm your new password"
-              />
-            {/snippet}
-          </Form.Control>
-          <Form.FieldErrors />
-        </Form.Field>
-      </div>
+      <Form.Field {form} name="confirmPwd">
+        <Form.Control>
+          {#snippet children({ props })}
+            <Form.Label>Confirm New Password</Form.Label>
+            <Input
+              type="password"
+              {...props}
+              bind:value={$formData.confirmPwd}
+              placeholder="Confirm your new password"
+            />
+          {/snippet}
+        </Form.Control>
+        <Form.FieldErrors />
+      </Form.Field>
+    </div>
 
-      <div class="flex items-center justify-center">
-        <div class="w-full max-w-[450px]">
-          <Form.Button disabled={$submitting} class="relative w-full">
-            {#if $submitting}
-              <div
-                class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm bg-primary"
-              >
-                <Loader class="h-[15px] w-[15px] animate-spin" />
-              </div>
-            {/if}
-            Update Password
-          </Form.Button>
-        </div>
+    <div class="flex items-center justify-center">
+      <div class="w-full max-w-[450px]">
+        <Form.Button disabled={$submitting} class="relative w-full">
+          {#if $submitting}
+            <div
+              class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm bg-primary"
+            >
+              <Loader class="h-[15px] w-[15px] animate-spin" />
+            </div>
+          {/if}
+          Update Password
+        </Form.Button>
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
 </div>

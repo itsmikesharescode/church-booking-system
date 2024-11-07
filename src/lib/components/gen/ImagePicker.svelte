@@ -1,21 +1,18 @@
 <script lang="ts">
   import { ImageUp } from 'lucide-svelte';
+  import { cn } from '$lib/utils';
+  import type { ClassNameValue } from 'tailwind-merge';
 
   interface Props {
     imageLink: File | null;
+    class?: ClassNameValue;
+    name?: string;
   }
 
-  let { imageLink = $bindable() }: Props = $props();
+  let { imageLink = $bindable(), class: className, name }: Props = $props();
 
   let image = $state<File | null>(null);
   let url = $state<string | null>(null);
-
-  $effect(() => {
-    // Create new object URL when image changes
-    if (image) {
-      url = URL.createObjectURL(image);
-    }
-  });
 </script>
 
 {#if imageLink}
@@ -33,11 +30,20 @@
       >
         <span class="text-sm font-bold text-white">Remove</span>
       </div>
-      <img src={url} alt="uploadedimage" class="h-[128px] w-[161.13px] rounded-lg" />
+      <img
+        src={url}
+        alt="uploadedimage"
+        class={cn('h-[128px] min-w-[161.13px] rounded-lg', className)}
+      />
     </button>
   </div>
 {:else}
-  <label class="p-10t flex max-w-fit flex-col items-center gap-2 rounded-lg bg-secondary p-10">
+  <label
+    class={cn(
+      'flex max-w-fit cursor-pointer flex-col items-center gap-2 rounded-lg bg-secondary p-10',
+      className
+    )}
+  >
     <ImageUp />
     <input
       class="hidden"
@@ -46,8 +52,9 @@
       oninput={(e) => {
         image = e.currentTarget.files?.item(0) as File;
         imageLink = e.currentTarget.files?.item(0) as File;
+        url = URL.createObjectURL(image);
       }}
     />
-    <span class="text-xs font-bold text-muted-foreground">Upload Photo</span>
+    <span class="text-xs font-bold text-muted-foreground">{name}</span>
   </label>
 {/if}

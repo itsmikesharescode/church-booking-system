@@ -11,8 +11,11 @@
   staticRoute.setRoute('/profile');
 </script>
 
-<div class="p-[1rem] sm:p-[2rem]">
-  <UpdateInfo updateInfoForm={data.updateInfoForm} />
+<div class="grid items-start pb-[5rem] lg:grid-cols-3 lg:pb-0">
+  <div class="">
+    <UpUpProfile upUpProfileForm={data.upUpProfileForm} />
+    <UpdateInfo updateInfoForm={data.updateInfoForm} />
+  </div>
   <UpdateEmail updateEmailForm={data.updateEmailForm} />
   <UpdatePwd updatePwdForm={data.updatePwdForm} />
 </div>
