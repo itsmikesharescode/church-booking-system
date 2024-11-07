@@ -3,12 +3,10 @@
   import { Input } from '$lib/components/ui/input';
   import { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
-  import * as Select from '$lib/components/ui/select/index.js';
   import type { Result } from '$lib/types';
   import { toast } from 'svelte-sonner';
   import { Loader } from 'lucide-svelte';
   import { updatePwdSchema, type UpdatePwdSchema } from '../profile-schema';
-  import CustomCalendar from '$lib/components/gen/CustomCalendar.svelte';
   import type { User } from '@supabase/supabase-js';
   import { fromUserState } from '../../../_states/fromUserState.svelte';
 
@@ -48,27 +46,31 @@
       <p class="text-xl font-semibold">Security Information</p>
       <div class="grid gap-[1rem] md:grid-cols-2">
         <Form.Field {form} name="pwd">
-          <Form.Control let:attrs>
-            <Form.Label>New Password</Form.Label>
-            <Input
-              type="password"
-              {...attrs}
-              bind:value={$formData.pwd}
-              placeholder="Enter your new password"
-            />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>New Password</Form.Label>
+              <Input
+                type="password"
+                {...props}
+                bind:value={$formData.pwd}
+                placeholder="Enter your new password"
+              />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
 
         <Form.Field {form} name="confirmPwd">
-          <Form.Control let:attrs>
-            <Form.Label>Confirm New Password</Form.Label>
-            <Input
-              type="password"
-              {...attrs}
-              bind:value={$formData.confirmPwd}
-              placeholder="Confirm your new password"
-            />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Confirm New Password</Form.Label>
+              <Input
+                type="password"
+                {...props}
+                bind:value={$formData.confirmPwd}
+                placeholder="Confirm your new password"
+              />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>

@@ -12,7 +12,6 @@
 </script>
 
 <div class="p-[1rem] sm:p-[2rem]">
-  <UpUpProfile upUpProfileForm={data.upUpProfileForm} />
   <UpdateInfo updateInfoForm={data.updateInfoForm} />
   <UpdateEmail updateEmailForm={data.updateEmailForm} />
   <UpdatePwd updatePwdForm={data.updatePwdForm} />

@@ -8,10 +8,11 @@
   import { toast } from 'svelte-sonner';
   import { Loader } from 'lucide-svelte';
   import { updateInfoSchema, type UpdateInfoShema } from '../profile-schema';
-  import CustomCalendar from '$lib/components/gen/CustomCalendar.svelte';
+  import SelectPicker from '$lib/components/gen/SelectPicker.svelte';
   import { fromUserState } from '../../../_states/fromUserState.svelte';
   import { z } from 'zod';
   import type { User } from '@supabase/supabase-js';
+  import CalendarPicker from '$lib/components/gen/CalendarPicker.svelte';
 
   interface Props {
     updateInfoForm: SuperValidated<Infer<UpdateInfoShema>>;
@@ -61,79 +62,86 @@
       <p class="text-xl font-semibold">Personal Information</p>
       <div class="grid gap-[1rem] md:grid-cols-2">
         <Form.Field {form} name="firstName">
-          <Form.Control let:attrs>
-            <Form.Label>First Name</Form.Label>
-            <Input
-              {...attrs}
-              bind:value={$formData.firstName}
-              placeholder="Enter your new first name"
-            />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>First Name</Form.Label>
+              <Input
+                {...props}
+                bind:value={$formData.firstName}
+                placeholder="Enter your new first name"
+              />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
 
         <Form.Field {form} name="middleName">
-          <Form.Control let:attrs>
-            <Form.Label>Middle Name</Form.Label>
-            <Input
-              {...attrs}
-              bind:value={$formData.middleName}
-              placeholder="Enter your new middle name"
-            />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Middle Name</Form.Label>
+              <Input
+                {...props}
+                bind:value={$formData.middleName}
+                placeholder="Enter your new middle name"
+              />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
 
         <Form.Field {form} name="lastName">
-          <Form.Control let:attrs>
-            <Form.Label>Last Name</Form.Label>
-            <Input
-              {...attrs}
-              bind:value={$formData.lastName}
-              placeholder="Enter your new last name"
-            />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Last Name</Form.Label>
+              <Input
+                {...props}
+                bind:value={$formData.lastName}
+                placeholder="Enter your new last name"
+              />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
 
         <Form.Field {form} name="birthDate">
-          <Form.Control let:attrs>
-            <Form.Label>Birth Date</Form.Label>
-            <CustomCalendar title="" {attrs} bind:dateValue={$formData.birthDate} />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Birth Date</Form.Label>
+              <CalendarPicker type="single" bind:valueString={$formData.birthDate} />
+              <input hidden bind:value={$formData.birthDate} name={props.name} />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
 
         <Form.Field {form} name="gender">
-          <Form.Control let:attrs>
-            <Form.Label>Gender</Form.Label>
-            <Select.Root
-              selected={selectedGender}
-              onSelectedChange={(v) => {
-                v && ($formData.gender = v.value);
-              }}
-            >
-              <Select.Trigger {...attrs}>
-                <Select.Value placeholder="Select a new gender" />
-              </Select.Trigger>
-              <Select.Content>
-                <Select.Item value="Male" label="Male" />
-                <Select.Item value="Female" label="Female" />
-              </Select.Content>
-            </Select.Root>
-            <input hidden bind:value={$formData.gender} name={attrs.name} />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Gender</Form.Label>
+              <SelectPicker
+                name="Select Gender"
+                selections={[
+                  { label: 'Male', value: 'Male' },
+                  { label: 'Female', value: 'Female' }
+                ]}
+                selected={$formData.gender}
+              />
+              <input hidden bind:value={$formData.gender} name={props.name} />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
 
         <Form.Field {form} name="mobileNum">
-          <Form.Control let:attrs>
-            <Form.Label>Mobile Number</Form.Label>
-            <Input
-              {...attrs}
-              bind:value={$formData.mobileNum}
-              placeholder="Enter your new mobile number"
-            />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Mobile Number</Form.Label>
+              <Input
+                {...props}
+                bind:value={$formData.mobileNum}
+                placeholder="Enter your mobile number"
+              />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>

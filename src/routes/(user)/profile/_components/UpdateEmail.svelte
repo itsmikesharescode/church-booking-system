@@ -43,21 +43,25 @@
       <p class="text-xl font-semibold">Security Information</p>
       <div class="grid gap-[1rem] md:grid-cols-2">
         <Form.Field {form} name="email">
-          <Form.Control let:attrs>
-            <Form.Label>New Email</Form.Label>
-            <Input {...attrs} bind:value={$formData.email} placeholder="Enter your new email" />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>New Email</Form.Label>
+              <Input {...props} bind:value={$formData.email} placeholder="Enter your new email" />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
 
         <Form.Field {form} name="confirmEmail">
-          <Form.Control let:attrs>
-            <Form.Label>Confirm New Email</Form.Label>
-            <Input
-              {...attrs}
-              bind:value={$formData.confirmEmail}
-              placeholder="Confirm your new email"
-            />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Confirm New Email</Form.Label>
+              <Input
+                {...props}
+                bind:value={$formData.confirmEmail}
+                placeholder="Confirm your new email"
+              />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
