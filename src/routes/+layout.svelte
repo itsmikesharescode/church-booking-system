@@ -81,7 +81,9 @@
   <NormalNav />
 {/if}
 
-{@render children()}
+<div class="container">
+  {@render children()}
+</div>
 
 <style>
   :global(html) {
