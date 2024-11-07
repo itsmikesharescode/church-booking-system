@@ -6,9 +6,9 @@
   import { fromUserState } from '../_states/fromUserState.svelte';
   import { fromStaticRouteState } from '../_states/fromStaticRouteState.svelte';
   import Logout from './Logout.svelte';
-  import { publicProfileAPI } from '$lib';
+  import { publicAPIs } from '$lib';
   import type { Snippet } from 'svelte';
-
+  import * as Avatar from '$lib/components/ui/avatar/index.js';
   interface Props {
     children: Snippet;
   }
@@ -49,6 +49,13 @@
 
     <div class="hidden items-center gap-[0.625rem] lg:flex">
       {#if user.getUser()}
+        <Avatar.Root>
+          <Avatar.Image
+            src={publicAPIs(`${user.getUser()?.id}/profile_photo`, 'Profile')}
+            alt="@profile"
+          />
+          <Avatar.Fallback>{user.getUser()?.user_metadata.firstName[0]}</Avatar.Fallback>
+        </Avatar.Root>
         <p>Hello 👋, <strong>{user.getUser()?.user_metadata.firstName}</strong></p>
         <Logout />
       {:else}
