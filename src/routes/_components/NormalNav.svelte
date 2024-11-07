@@ -24,41 +24,43 @@
 <svelte:window bind:innerWidth />
 
 <nav class="sticky top-0 z-20 flex justify-between border-b-[1px] p-[1rem] backdrop-blur-lg">
-  <div class="flex items-center gap-[0.625rem]">
+  <div class="container flex justify-between">
     <div class="flex items-center gap-[0.625rem]">
-      <DarkMode />
+      <div class="flex items-center gap-[0.625rem]">
+        <DarkMode />
+      </div>
+
+      <div class="hidden items-center gap-[0.625rem] lg:flex">
+        {#each staticRoute.getRoutes(user.getUser()) as route}
+          <a
+            onclick={() => {
+              mobileMenu = false;
+              staticRoute.setRoute(route.url);
+            }}
+            href={route.url}
+            class="{staticRoute.getRoute() === route.url ? 'bg-secondary' : ''} 
+            p-[0.625rem]"
+          >
+            {route.name}
+          </a>
+        {/each}
+      </div>
     </div>
 
     <div class="hidden items-center gap-[0.625rem] lg:flex">
-      {#each staticRoute.getRoutes(user.getUser()) as route}
-        <a
-          onclick={() => {
-            mobileMenu = false;
-            staticRoute.setRoute(route.url);
-          }}
-          href={route.url}
-          class="{staticRoute.getRoute() === route.url ? 'bg-secondary' : ''} 
-					p-[0.625rem]"
-        >
-          {route.name}
-        </a>
-      {/each}
+      {#if user.getUser()}
+        <p>Hello 👋, <strong>{user.getUser()?.user_metadata.firstName}</strong></p>
+        <Logout />
+      {:else}
+        <Button href="/authenticate">Sign In</Button>
+        <Button href="/authenticate?q=sign-up">Sign Up Free</Button>
+      {/if}
     </div>
-  </div>
 
-  <div class="hidden items-center gap-[0.625rem] lg:flex">
-    {#if user.getUser()}
-      <p>Hello 👋, <strong>{user.getUser()?.user_metadata.firstName}</strong></p>
-      <Logout />
-    {:else}
-      <Button href="/authenticate">Sign In</Button>
-      <Button href="/authenticate?q=sign-up">Sign Up Free</Button>
-    {/if}
+    <button class="lg:hidden" onclick={() => (mobileMenu = true)}>
+      <AlignJustify />
+    </button>
   </div>
-
-  <button class="lg:hidden" onclick={() => (mobileMenu = true)}>
-    <AlignJustify />
-  </button>
 </nav>
 
 <!--Mobile-->
