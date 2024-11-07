@@ -7,26 +7,25 @@
   import { Input } from '$lib/components/ui/input';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import type { ChurchType, Result, UserQType } from '$lib/types';
-  import CustomDate from '$lib/components/gen/CustomDate.svelte';
   import Textarea from '$lib/components/ui/textarea/textarea.svelte';
   import { fromUserState } from '../../_states/fromUserState.svelte';
   import { goto } from '$app/navigation';
   import { Loader, X } from 'lucide-svelte';
   import { toast } from 'svelte-sonner';
   import { convertTo12HourFormat } from '$lib';
-  import * as Popover from '$lib/components/ui/popover';
   import DayGridCalendar from '$lib/components/gen/DayGridCalendar.svelte';
+  import DatePicker from '$lib/components/gen/DatePicker.svelte';
 
   interface Props {
     church: UserQType['churches'][number];
     reservationForm: SuperValidated<Infer<ReservationSchema>>;
   }
 
-  const { ...props }: Props = $props();
+  const { ...restProps }: Props = $props();
 
   const user = fromUserState();
 
-  const form = superForm(props.reservationForm, {
+  const form = superForm(restProps.reservationForm, {
     validators: zodClient(reservationSchema),
     id: crypto.randomUUID(),
     onUpdate({ result }) {
@@ -60,7 +59,7 @@
     goto('/authenticate?error=you-must-be-logged-in');
   }}
 >
-  Reserve Now @ ₱ {props.church.price.toLocaleString()}
+  Reserve Now @ ₱ {restProps.church.price.toLocaleString()}
 </Button>
 <AlertDialog.Root bind:open>
   <AlertDialog.Content class="flex max-h-screen max-w-[800px] flex-col gap-[1rem] p-0">
@@ -78,8 +77,8 @@
       <AlertDialog.Title>Create Reservation</AlertDialog.Title>
       <AlertDialog.Description>
         You are creating reservation for <strong>Simbahang Banal</strong> from
-        <strong>{convertTo12HourFormat(props.church.open_time)}</strong> to
-        <strong>{convertTo12HourFormat(props.church.close_time)}</strong>
+        <strong>{convertTo12HourFormat(restProps.church.open_time)}</strong> to
+        <strong>{convertTo12HourFormat(restProps.church.close_time)}</strong>
       </AlertDialog.Description>
     </AlertDialog.Header>
 
@@ -90,37 +89,46 @@
       class="flex flex-col gap-[1rem] overflow-auto p-[1rem] sm:px-[2rem] sm:pt-0"
     >
       <Form.Field {form} name="churchObj" class="hidden">
-        <Form.Control let:attrs>
-          <Input {...attrs} value={JSON.stringify(props.church)} />
+        <Form.Control>
+          {#snippet children({ props })}
+            <Input {...props} bind:value={restProps.church.id} />
+          {/snippet}
         </Form.Control>
       </Form.Field>
 
       <Form.Field {form} name="eventName">
-        <Form.Control let:attrs>
-          <Form.Label>Event Name</Form.Label>
-          <Input {...attrs} bind:value={$formData.eventName} placeholder="Enter event name" />
+        <Form.Control>
+          {#snippet children({ props })}
+            <Form.Label>Event Name</Form.Label>
+            <Input {...props} bind:value={$formData.eventName} />
+          {/snippet}
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
 
       <div class="grid gap-[1rem] md:grid-cols-2">
         <Form.Field {form} name="guestCount">
-          <Form.Control let:attrs>
-            <Form.Label>Number Of Guest</Form.Label>
-            <Input
-              type="number"
-              {...attrs}
-              bind:value={$formData.guestCount}
-              placeholder="Enter number of guest"
-            />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Number Of Guest</Form.Label>
+              <Input
+                type="number"
+                {...props}
+                bind:value={$formData.guestCount}
+                placeholder="Enter number of guest"
+              />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
 
         <Form.Field {form} name="dateIn">
-          <Form.Control let:attrs>
-            <Form.Label>Enter Date In</Form.Label>
-            <CustomDate {attrs} bind:dateValue={$formData.dateIn} />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Enter Date In</Form.Label>
+              <DatePicker bind:dateValueString={$formData.dateIn} />
+              <input type="hidden" name={props.name} bind:value={$formData.dateIn} />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
@@ -129,25 +137,29 @@
       <div class="">
         <div class="grid gap-[1rem] md:grid-cols-2">
           <Form.Field {form} name="initialTime">
-            <Form.Control let:attrs>
-              <Form.Label>Initial Time</Form.Label>
-              <Input
-                {...attrs}
-                bind:value={$formData.initialTime}
-                placeholder="Enter initial time example 07:30 AM"
-              />
+            <Form.Control>
+              {#snippet children({ props })}
+                <Form.Label>Initial Time</Form.Label>
+                <Input
+                  {...props}
+                  bind:value={$formData.initialTime}
+                  placeholder="Enter initial time example 07:30 AM"
+                />
+              {/snippet}
             </Form.Control>
             <Form.FieldErrors />
           </Form.Field>
 
           <Form.Field {form} name="finalTime">
-            <Form.Control let:attrs>
-              <Form.Label>Final Time</Form.Label>
-              <Input
-                {...attrs}
-                bind:value={$formData.finalTime}
-                placeholder="Enter final time example 11:30 AM"
-              />
+            <Form.Control>
+              {#snippet children({ props })}
+                <Form.Label>Final Time</Form.Label>
+                <Input
+                  {...props}
+                  bind:value={$formData.finalTime}
+                  placeholder="Enter final time example 11:30 AM"
+                />
+              {/snippet}
             </Form.Control>
             <Form.FieldErrors />
           </Form.Field>
@@ -156,9 +168,11 @@
       </div>
 
       <Form.Field {form} name="clientNote">
-        <Form.Control let:attrs>
-          <Form.Label>Note</Form.Label>
-          <Textarea {...attrs} bind:value={$formData.clientNote} placeholder="Enter your note" />
+        <Form.Control>
+          {#snippet children({ props })}
+            <Form.Label>Final Time</Form.Label>
+            <Textarea {...props} bind:value={$formData.clientNote} placeholder="Enter your note" />
+          {/snippet}
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
