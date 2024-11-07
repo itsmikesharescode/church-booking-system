@@ -62,7 +62,7 @@
   Reserve Now @ ₱ {restProps.church.price.toLocaleString()}
 </Button>
 <AlertDialog.Root bind:open>
-  <AlertDialog.Content class="flex max-h-screen max-w-[800px] flex-col gap-[1rem] p-0">
+  <AlertDialog.Content class="flex max-h-screen max-w-[1200px] flex-col gap-[1rem] p-0">
     <button
       onclick={() => {
         open = false;
@@ -73,12 +73,13 @@
       <X class="h-4 w-4" />
       <span class="sr-only">Close</span>
     </button>
-    <AlertDialog.Header class="p-[1rem] sm:px-[2rem] sm:pt-[2rem]">
+    <AlertDialog.Header class="px-6 pt-6">
       <AlertDialog.Title>Create Reservation</AlertDialog.Title>
       <AlertDialog.Description>
         You are creating reservation for <strong>Simbahang Banal</strong> from
         <strong>{convertTo12HourFormat(restProps.church.open_time)}</strong> to
         <strong>{convertTo12HourFormat(restProps.church.close_time)}</strong>
+        Price varry on <strong> ₱ {restProps.church.price.toLocaleString()} </strong>
       </AlertDialog.Description>
     </AlertDialog.Header>
 
@@ -88,54 +89,55 @@
       use:enhance
       class="flex flex-col gap-[1rem] overflow-auto p-[1rem] sm:px-[2rem] sm:pt-0"
     >
-      <Form.Field {form} name="churchObj" class="hidden">
-        <Form.Control>
-          {#snippet children({ props })}
-            <Input {...props} bind:value={restProps.church.id} />
-          {/snippet}
-        </Form.Control>
-      </Form.Field>
+      <div class="grid gap-[1rem] md:grid-cols-[2fr_1fr]">
+        <div class="">
+          <DayGridCalendar />
+        </div>
+        <div class="flex flex-col gap-[1rem]">
+          <Form.Field {form} name="churchObj" class="hidden">
+            <Form.Control>
+              {#snippet children({ props })}
+                <Input {...props} bind:value={restProps.church.id} />
+              {/snippet}
+            </Form.Control>
+          </Form.Field>
 
-      <Form.Field {form} name="eventName">
-        <Form.Control>
-          {#snippet children({ props })}
-            <Form.Label>Event Name</Form.Label>
-            <Input {...props} bind:value={$formData.eventName} />
-          {/snippet}
-        </Form.Control>
-        <Form.FieldErrors />
-      </Form.Field>
+          <Form.Field {form} name="eventName">
+            <Form.Control>
+              {#snippet children({ props })}
+                <Form.Label>Event Name</Form.Label>
+                <Input {...props} bind:value={$formData.eventName} placeholder="Enter event name" />
+              {/snippet}
+            </Form.Control>
+            <Form.FieldErrors />
+          </Form.Field>
 
-      <div class="grid gap-[1rem] md:grid-cols-2">
-        <Form.Field {form} name="guestCount">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Number Of Guest</Form.Label>
-              <Input
-                type="number"
-                {...props}
-                bind:value={$formData.guestCount}
-                placeholder="Enter number of guest"
-              />
-            {/snippet}
-          </Form.Control>
-          <Form.FieldErrors />
-        </Form.Field>
+          <Form.Field {form} name="guestCount">
+            <Form.Control>
+              {#snippet children({ props })}
+                <Form.Label>Number Of Guest</Form.Label>
+                <Input
+                  type="number"
+                  {...props}
+                  bind:value={$formData.guestCount}
+                  placeholder="Enter number of guest"
+                />
+              {/snippet}
+            </Form.Control>
+            <Form.FieldErrors />
+          </Form.Field>
 
-        <Form.Field {form} name="dateIn">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Enter Date In</Form.Label>
-              <DatePicker bind:dateValueString={$formData.dateIn} />
-              <input type="hidden" name={props.name} bind:value={$formData.dateIn} />
-            {/snippet}
-          </Form.Control>
-          <Form.FieldErrors />
-        </Form.Field>
-      </div>
+          <Form.Field {form} name="dateIn">
+            <Form.Control>
+              {#snippet children({ props })}
+                <Form.Label>Enter Date In</Form.Label>
+                <DatePicker bind:dateValueString={$formData.dateIn} />
+                <input type="hidden" name={props.name} bind:value={$formData.dateIn} />
+              {/snippet}
+            </Form.Control>
+            <Form.FieldErrors />
+          </Form.Field>
 
-      <div class="">
-        <div class="grid gap-[1rem] md:grid-cols-2">
           <Form.Field {form} name="initialTime">
             <Form.Control>
               {#snippet children({ props })}
@@ -163,22 +165,25 @@
             </Form.Control>
             <Form.FieldErrors />
           </Form.Field>
+
+          <Form.Field {form} name="clientNote">
+            <Form.Control>
+              {#snippet children({ props })}
+                <Form.Label>Final Time</Form.Label>
+                <Textarea
+                  {...props}
+                  bind:value={$formData.clientNote}
+                  placeholder="Enter your note"
+                />
+              {/snippet}
+            </Form.Control>
+            <Form.FieldErrors />
+          </Form.Field>
         </div>
-        <DayGridCalendar />
       </div>
 
-      <Form.Field {form} name="clientNote">
-        <Form.Control>
-          {#snippet children({ props })}
-            <Form.Label>Final Time</Form.Label>
-            <Textarea {...props} bind:value={$formData.clientNote} placeholder="Enter your note" />
-          {/snippet}
-        </Form.Control>
-        <Form.FieldErrors />
-      </Form.Field>
-
-      <AlertDialog.Footer class="flex flex-col gap-[1rem] sm:gap-0">
-        <Form.Button disabled={$submitting} class="relative">
+      <div class="pointer-events-none sticky bottom-3 z-40 flex w-full justify-end">
+        <Form.Button disabled={$submitting} class="pointer-events-auto relative">
           {#if $submitting}
             <div
               class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm bg-primary"
@@ -188,7 +193,7 @@
           {/if}
           Submit Reservation
         </Form.Button>
-      </AlertDialog.Footer>
+      </div>
     </form>
   </AlertDialog.Content>
 </AlertDialog.Root>
