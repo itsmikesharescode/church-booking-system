@@ -8,25 +8,23 @@
   import { DataTableViewOptions } from './index.js';
   import Button from '$lib/components/ui/button/button.svelte';
   import { Input } from '$lib/components/ui/input/index';
-  import type { AccountPageTable } from '../data/schemas';
+  import type { ReservationPageTable } from '../data/schemas.js';
 
-  let { table }: { table: Table<AccountPageTable> } = $props();
+  let { table }: { table: Table<ReservationPageTable> } = $props();
 
   const isFiltered = $derived(table.getState().columnFilters.length > 0);
-  const statusCol = $derived(table.getColumn('status'));
-  const priorityCol = $derived(table.getColumn('priority'));
 </script>
 
 <div class="flex items-center justify-between">
   <div class="flex flex-1 items-center space-x-2">
     <Input
-      placeholder="Search by full name"
-      value={(table.getColumn('fullName')?.getFilterValue() as string) ?? ''}
+      placeholder="Search by event name"
+      value={(table.getColumn('event_name')?.getFilterValue() as string) ?? ''}
       oninput={(e) => {
-        table.getColumn('fullName')?.setFilterValue(e.currentTarget.value);
+        table.getColumn('event_name')?.setFilterValue(e.currentTarget.value);
       }}
       onchange={(e) => {
-        table.getColumn('fullName')?.setFilterValue(e.currentTarget.value);
+        table.getColumn('event_name')?.setFilterValue(e.currentTarget.value);
       }}
       class="h-8 w-[150px] lg:w-[250px]"
     />

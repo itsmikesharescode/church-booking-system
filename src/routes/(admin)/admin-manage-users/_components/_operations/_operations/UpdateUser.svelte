@@ -1,5 +1,4 @@
 <script lang="ts">
-  import CustomCalendar from '$lib/components/gen/CustomCalendar.svelte';
   import * as AlertDialog from '$lib/components/ui/alert-dialog';
   import Button from '$lib/components/ui/button/button.svelte';
   import * as Form from '$lib/components/ui/form';

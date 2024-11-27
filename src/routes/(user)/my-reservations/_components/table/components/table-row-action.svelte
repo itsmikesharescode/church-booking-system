@@ -7,12 +7,12 @@
   import FileMinus from 'lucide-svelte/icons/file-minus';
   import Pen from 'lucide-svelte/icons/pen';
   import type { Row } from '@tanstack/table-core';
-  import { type AccountPageTable } from '../data/schemas';
+  import { type ReservationPageTable } from '../data/schemas';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index';
   import Button from '$lib/components/ui/button/button.svelte';
   import { useTableState } from '../tableState.svelte';
 
-  let { row }: { row: Row<AccountPageTable> } = $props();
+  let { row }: { row: Row<ReservationPageTable> } = $props();
 
   const tableState = useTableState();
 </script>

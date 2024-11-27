@@ -18,17 +18,18 @@
     getPaginationRowModel,
     getSortedRowModel
   } from '@tanstack/table-core';
-  import DataTableToolbar from './TableToolbar.svelte';
-  import DataTablePagination from './TablePagination.svelte';
+  import DataTableToolbar from './table-toolbar.svelte';
+  import DataTablePagination from './table-pagination.svelte';
   import { createSvelteTable } from '$lib/components/ui/data-table/data-table.svelte';
   import FlexRender from '$lib/components/ui/data-table/flex-render.svelte';
   import * as Table from '$lib/components/ui/table/index';
-  import type { AccountPageTable } from '../data/schemas';
+  import type { ReservationPageTable } from '../data/schemas';
 
   let {
     columns,
     data
-  }: { columns: ColumnDef<AccountPageTable, unknown>[]; data: AccountPageTable[] } = $props();
+  }: { columns: ColumnDef<ReservationPageTable, unknown>[]; data: ReservationPageTable[] } =
+    $props();
 
   let rowSelection = $state<RowSelectionState>({});
   let columnVisibility = $state<VisibilityState>({});
@@ -118,7 +119,7 @@
                 {#if !header.isPlaceholder}
                   <FlexRender
                     content={header.column.columnDef.header as any}
-                    context={header.getContext()}
+                    context={header.getContext() as any}
                   />
                 {/if}
               </Table.Head>
@@ -133,7 +134,7 @@
               <Table.Cell>
                 <FlexRender
                   content={cell.column.columnDef.cell as any}
-                  context={cell.getContext()}
+                  context={cell.getContext() as any}
                 />
               </Table.Cell>
             {/each}

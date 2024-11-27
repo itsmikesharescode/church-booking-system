@@ -11,12 +11,12 @@
   import type { Table } from '@tanstack/table-core';
   import * as Select from '$lib/components/ui/select/index';
   import { Button } from '$lib/components/ui/button/index';
-  import type { AccountPageTable } from '../data/schemas';
+  import type { ReservationPageTable } from '../data/schemas';
   import { fly } from 'svelte/transition';
   import { cubicInOut } from 'svelte/easing';
   import { toast } from 'svelte-sonner';
 
-  let { table }: { table: Table<AccountPageTable> } = $props();
+  let { table }: { table: Table<ReservationPageTable> } = $props();
 
   let deleteLoader = $state(false);
 </script>
