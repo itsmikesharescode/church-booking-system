@@ -12,6 +12,7 @@ const routes = {
   hasAdmin: [
     { name: 'Dashboard', url: '/admin-dashboard' },
     { name: 'Event Reservations', url: '/admin-event-reservations' },
+    { name: 'Payments', url: '/admin-payments' },
     { name: 'Manage Users', url: '/admin-manage-users' }
   ]
 };
