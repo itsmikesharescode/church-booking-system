@@ -74,9 +74,9 @@
   };
 </script>
 
-<Button onclick={() => (open = true)} variant="secondary" class="gap-1.5">
+<Button onclick={() => (open = true)} variant="outline" class="gap-1.5">
   <MessageCircle />
-  Church Bot
+  <span class="hidden md:block">Church Bot</span>
 </Button>
 
 <AlertDialog.Root bind:open>

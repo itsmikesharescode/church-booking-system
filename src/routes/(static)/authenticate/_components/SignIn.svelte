@@ -17,17 +17,17 @@
 
   const form = superForm(signInForm, {
     validators: zodClient(signInSchema),
-    id: crypto.randomUUID(),
+    id: 'loginForm',
     onUpdate({ result }) {
       const { status, data } = result as Result<{ msg: string }>;
 
       switch (status) {
         case 200:
-          toast.success('', { description: data.msg });
+          toast.success(data.msg);
           break;
 
         case 401:
-          toast.error('', { description: data.msg });
+          toast.error(data.msg);
           break;
       }
     }
@@ -42,16 +42,19 @@
       method="POST"
       action="?/signInEvent"
       use:enhance
-      class="mx-auto flex max-w-[450px] flex-col gap-[1rem]"
+      class="mx-auto flex max-w-[300px] flex-col gap-[1rem]"
     >
-      <div class="mx-auto">
-        <p class="text-center text-6xl font-bold">Sign In</p>
-        <p class="text-center leading-7 text-muted-foreground">Sign in to church booking system</p>
+      <div class="flex flex-col gap-2.5">
+        <p class="text-center text-3xl font-bold">Sign In</p>
+        <p class="text-center text-sm leading-7 text-muted-foreground">
+          Sign in to church booking system
+        </p>
       </div>
 
       <Form.Field {form} name="email">
         <Form.Control>
           {#snippet children({ props })}
+            <Form.Label>Email</Form.Label>
             <Input
               type="email"
               {...props}

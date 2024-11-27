@@ -42,17 +42,25 @@
       method="POST"
       action="?/forgotPwdEvent"
       use:enhance
-      class="mx-auto flex max-w-[450px] flex-col gap-[1rem]"
+      class="mx-auto flex max-w-[300px] flex-col gap-[1rem]"
     >
-      <div class="mx-auto">
-        <p class="text-center text-6xl font-bold">Reset Password</p>
-        <p class="text-center leading-7 text-muted-foreground">Recover your password using email</p>
+      <div class="flex flex-col gap-2.5">
+        <p class="text-center text-3xl font-bold">Forgot Password</p>
+        <p class="text-center text-sm leading-7 text-muted-foreground">
+          No problem. Just enter your email and we'll send you a link to reset
+        </p>
       </div>
+
       <Form.Field {form} name="email">
         <Form.Control>
           {#snippet children({ props })}
             <Form.Label>Email</Form.Label>
-            <Input {...props} bind:value={$formData.email} placeholder="Enter your email" />
+            <Input
+              type="email"
+              {...props}
+              bind:value={$formData.email}
+              placeholder="Enter your email"
+            />
           {/snippet}
         </Form.Control>
         <Form.FieldErrors />
@@ -66,16 +74,10 @@
             <Loader class="h-[15px] w-[15px] animate-spin" />
           </div>
         {/if}
-        Send Password Reset
+        Send Reset Link
       </Form.Button>
 
-      <div class="flex items-center gap-[0.625rem]">
-        <div class="h-[1px] w-full bg-slate-400"></div>
-        <span>Or</span>
-        <div class="h-[1px] w-full bg-slate-400"></div>
-      </div>
-
-      <Button variant="secondary" href="/authenticate">Sign In Here</Button>
+      <Button href="/authenticate">Sign In Here</Button>
     </form>
   </div>
 </div>

@@ -12,11 +12,7 @@
   const { data } = $props();
 </script>
 
-<div class="grid h-screen md:grid-cols-[40%,1fr]">
-  <div class="hidden md:block">
-    <enhanced:img src={bg_photo} alt="" class="h-full w-full"></enhanced:img>
-  </div>
-
+<div class="">
   <div class="">
     {#if $page.url.searchParams.get('q') === 'sign-up'}
       <SignUp signUpForm={data.signUpForm} />

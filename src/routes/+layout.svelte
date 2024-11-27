@@ -74,9 +74,11 @@
 
 <ModeWatcher />
 <Toaster richColors={true} />
-<div class="fixed bottom-4 left-0 right-0 right-4 z-50">
-  <div class="container flex justify-end">
-    <ChurchBot />
+<div class="pointer-events-none fixed bottom-4 left-0 right-4 z-50">
+  <div class="container pointer-events-none flex justify-end">
+    <div class="pointer-events-auto">
+      <ChurchBot />
+    </div>
   </div>
 </div>
 {#if $page.url.pathname !== '/authenticate/update-password'}

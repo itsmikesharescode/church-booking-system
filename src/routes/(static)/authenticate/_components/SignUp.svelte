@@ -44,14 +44,21 @@
 </script>
 
 <div class="flex min-h-screen flex-col justify-center p-[1rem] sm:p-[2rem]">
-  <div class="">
-    <form method="POST" action="?/signUpEvent" use:enhance class="mx-auto flex flex-col gap-[1rem]">
-      <div class="mx-auto">
-        <p class="text-center text-6xl font-bold">Sign Up</p>
-        <p class="text-center leading-7 text-muted-foreground">Sign up to church booking system</p>
-      </div>
+  <form
+    method="POST"
+    action="?/signUpEvent"
+    use:enhance
+    class="mx-auto flex flex-col items-center gap-[1rem]"
+  >
+    <div class="flex flex-col gap-2.5">
+      <p class="text-center text-3xl font-bold">Sign Up</p>
+      <p class="text-center text-sm leading-7 text-muted-foreground">
+        Sign up to church booking system
+      </p>
+    </div>
 
-      <div class="grid gap-[1rem] md:grid-cols-2">
+    <section class="grid max-w-fit gap-[1rem] md:grid-cols-2">
+      <div class="min-w-[330px] max-w-[330px]">
         <Form.Field {form} name="firstName">
           <Form.Control>
             {#snippet children({ props })}
@@ -121,7 +128,9 @@
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
+      </div>
 
+      <div class="min-w-[330px] max-w-[330px]">
         <Form.Field {form} name="mobileNum">
           <Form.Control>
             {#snippet children({ props })}
@@ -176,31 +185,29 @@
           <Form.FieldErrors />
         </Form.Field>
       </div>
+    </section>
 
-      <div class="flex items-center justify-center">
-        <div class="w-full max-w-[450px]">
-          <div class="flex flex-col gap-[1rem]">
-            <Form.Button disabled={$submitting} class="relative">
-              {#if $submitting}
-                <div
-                  class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm bg-primary"
-                >
-                  <Loader class="h-[15px] w-[15px] animate-spin" />
-                </div>
-              {/if}
-              Sign Up
-            </Form.Button>
-
-            <div class="flex items-center gap-[0.625rem]">
-              <div class="h-[1px] w-full bg-slate-400"></div>
-              <span>Or</span>
-              <div class="h-[1px] w-full bg-slate-400"></div>
+    <div class="w-full max-w-[330px]">
+      <div class="flex flex-col gap-[1rem]">
+        <Form.Button disabled={$submitting} class="relative">
+          {#if $submitting}
+            <div
+              class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm bg-primary"
+            >
+              <Loader class="h-[15px] w-[15px] animate-spin" />
             </div>
+          {/if}
+          Sign Up
+        </Form.Button>
 
-            <Button variant="secondary" href="/authenticate">Sign In Here</Button>
-          </div>
+        <div class="flex items-center gap-[0.625rem]">
+          <div class="h-[1px] w-full bg-slate-400"></div>
+          <span>Or</span>
+          <div class="h-[1px] w-full bg-slate-400"></div>
         </div>
+
+        <Button variant="secondary" href="/authenticate">Sign In Here</Button>
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
 </div>
