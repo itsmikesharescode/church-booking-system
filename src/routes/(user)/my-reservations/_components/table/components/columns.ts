@@ -1,7 +1,13 @@
 import type { ColumnDef } from '@tanstack/table-core';
 import { createRawSnippet } from 'svelte';
 import type { ReservationPageTable } from '../data/schemas';
-import { DataTableColumnHeader, DataTableRowActions, TableEventDateRow } from './index.js';
+import {
+  DataTableColumnHeader,
+  DataTableRowActions,
+  TableDeleteRow,
+  TableEventDateRow,
+  TableStatusRow
+} from './index.js';
 import { renderComponent, renderSnippet } from '$lib/components/ui/data-table/render-helpers.js';
 
 export const columns: ColumnDef<ReservationPageTable, unknown>[] = [
@@ -23,6 +29,20 @@ export const columns: ColumnDef<ReservationPageTable, unknown>[] = [
 
       return renderSnippet(eventNameSnippet, row.getValue('event_name'));
     },
+    enableSorting: true,
+    enableHiding: true
+  },
+
+  {
+    accessorKey: 'price',
+    id: 'price',
+    header: ({ column }) => {
+      return renderComponent(DataTableColumnHeader<ReservationPageTable, unknown>, {
+        column,
+        title: 'Status'
+      });
+    },
+    cell: ({ row }) => renderComponent(TableStatusRow, { row }),
     enableSorting: true,
     enableHiding: true
   },
@@ -86,6 +106,6 @@ export const columns: ColumnDef<ReservationPageTable, unknown>[] = [
 
   {
     id: 'actions',
-    cell: ({ row }) => renderComponent(DataTableRowActions<ReservationPageTable>, { row })
+    cell: ({ row }) => renderComponent(TableDeleteRow, { row })
   }
 ];

@@ -6,6 +6,7 @@ const routes = {
   hasUser: [
     { name: 'Home', url: '/' },
     { name: 'My Reservations', url: '/my-reservations' },
+    { name: 'My Payments', url: '/my-payments' },
     { name: 'Profile', url: '/profile' }
   ],
   hasAdmin: [

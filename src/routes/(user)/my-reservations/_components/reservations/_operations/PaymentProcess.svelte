@@ -2,11 +2,12 @@
   import { enhance } from '$app/forms';
   import type { Result, UserQType } from '$lib/types';
   import type { SubmitFunction } from '@sveltejs/kit';
-  import { Loader, MoveUpRight } from 'lucide-svelte';
+  import Loader from 'lucide-svelte/icons/loader';
   import type { CreateInvoiceRequest, Invoice } from 'xendit-node/invoice/models';
   import { page } from '$app/stores';
   import { fromUserState } from '../../../../../_states/fromUserState.svelte';
   import { toast } from 'svelte-sonner';
+  import Badge from '$lib/components/ui/badge/badge.svelte';
 
   interface Props {
     reservation: UserQType['reservations'][number];
@@ -35,7 +36,7 @@
       customerNotificationPreference: {
         invoicePaid: ['email', 'whatsapp']
       },
-      successRedirectUrl: `${$page.url.origin}/my-reservations`,
+      successRedirectUrl: `${$page.url.origin}/my-payments`,
       failureRedirectUrl: 'example.com/failure'
     };
 
@@ -65,20 +66,14 @@
 
 <form method="post" action="?/paymentProcessEvent" use:enhance={paymentProcessEvent}>
   <input name="invoiceRef" type="hidden" value={paymentRequirements()} />
-  <button
-    disabled={paymentLoader}
-    class="relative flex items-center gap-[0.5rem] bg-yellow-500 px-[0.5rem] font-semibold text-black transition-all hover:scale-105 active:scale-95"
-  >
+  <button disabled={paymentLoader} class="relative flex items-center gap-2.5">
     {#if paymentLoader}
-      <div
-        class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center gap-[0.5rem] rounded-sm bg-yellow-500"
-      >
-        Forwarding...
+      <Badge class="flex items-center gap-2.5">
+        Please wait...
         <Loader class="h-[15px] w-[15px] animate-spin" />
-      </div>
+      </Badge>
+    {:else}
+      <Badge>Proceed Payment of ₱ {props.reservation.price.toLocaleString()}</Badge>
     {/if}
-
-    Proceed Payment
-    <MoveUpRight class="h-[15px] w-[15px]" />
   </button>
 </form>
