@@ -7,68 +7,85 @@
   import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
   import type { Row } from '@tanstack/table-core';
   import { type PaymentsPageTable } from '../data/schemas';
-  import { enhance } from '$app/forms';
-  import type { SubmitFunction } from '@sveltejs/kit';
-  import type { Result } from '$lib/types';
-  import { toast } from 'svelte-sonner';
-  import Button from '$lib/components/ui/button/button.svelte';
-  import Loader from 'lucide-svelte/icons/loader';
+  import X from 'lucide-svelte/icons/x';
+  import { convertTo12HourFormat, getBookingStatus } from '$lib';
 
   let { row }: { row: Row<PaymentsPageTable> } = $props();
 
   let open = $state(false);
-
-  let deleteLoader = $state(false);
-  const deleteReservationEvent: SubmitFunction = () => {
-    deleteLoader = true;
-    return async ({ result, update }) => {
-      const { status, data } = result as Result<{ msg: string }>;
-
-      switch (status) {
-        case 200:
-          toast.success(data.msg);
-          open = false;
-          break;
-
-        case 401:
-          toast.error(data.msg);
-          break;
-      }
-      await update();
-      deleteLoader = false;
-    };
-  };
 </script>
 
 <AlertDialog.Root bind:open>
   <AlertDialog.Trigger class=" group h-full rounded-full p-2 transition-all hover:bg-primary">
     <FileCheck class="h-4 w-4 group-hover:text-secondary" />
   </AlertDialog.Trigger>
-  <AlertDialog.Content>
+  <AlertDialog.Content class="flex max-h-screen max-w-[800px] flex-col gap-[1rem]">
+    <button
+      onclick={() => {
+        open = false;
+      }}
+      class="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+    >
+      <X class="h-4 w-4" />
+      <span class="sr-only">Close</span>
+    </button>
     <AlertDialog.Header>
-      <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
-      <AlertDialog.Description>
-        This action cannot be undone. This will permanently delete your reservation
-        <strong>asdasd</strong> from our database.
-      </AlertDialog.Description>
+      <AlertDialog.Title>Payment Details</AlertDialog.Title>
     </AlertDialog.Header>
-    <AlertDialog.Footer>
-      <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
 
-      <form method="post" action="?/deleteReservationEvent" use:enhance={deleteReservationEvent}>
-        <input name="bookingId" type="hidden" value={row.original.id} />
-        <Button type="submit" disabled={deleteLoader} class="relative w-full">
-          {#if deleteLoader}
-            <div
-              class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm bg-primary"
-            >
-              <Loader class="h-[15px] w-[15px] animate-spin" />
-            </div>
-          {/if}
+    <div class="flex flex-col gap-[0.625rem] overflow-auto">
+      <div class="flex flex-wrap gap-[0.5rem]">
+        <p class="text-sm leading-7 md:text-base">
+          <strong>Price:</strong>
+          ₱ {row.original.booking_obj.price.toLocaleString() ?? 'Not available'}
+        </p>
+      </div>
 
-          Proceed
-        </Button>
-      </form>
-    </AlertDialog.Footer>
+      <div class="flex flex-wrap gap-[0.5rem]">
+        <p class="text-sm leading-7 md:text-base">
+          <strong>Status:</strong>
+        </p>
+
+        <span class=" bg-green-600 px-[0.5rem] font-semibold text-white">Approved</span>
+      </div>
+
+      <div class="flex flex-wrap gap-[0.5rem]">
+        <p class="text-sm leading-7 md:text-base">
+          <strong>Preview:</strong>
+        </p>
+
+        {getBookingStatus(
+          `${row.original.booking_obj.date}/${row.original.booking_obj.initial_time}/${row.original.booking_obj.final_time}`
+        )}
+      </div>
+
+      <!-- <p class="text-sm leading-7 md:text-base">
+				<strong>Reference Number:</strong> WD-000002
+			</p> -->
+      <p class="text-sm leading-7 md:text-base">
+        <strong>Event Name:</strong>
+        {row.original.booking_obj.event_name}
+      </p>
+
+      <p class="text-sm leading-7 md:text-base">
+        <strong>Date and Time:</strong>
+        {row.original.booking_obj.date} /
+        {convertTo12HourFormat(row.original.booking_obj.initial_time)} - {convertTo12HourFormat(
+          row.original.booking_obj.final_time
+        )}
+      </p>
+
+      <p class="text-sm leading-7 md:text-base">
+        <strong>Number of Guests:</strong>
+        {row.original.booking_obj.number_guest}
+      </p>
+
+      <div class="">
+        <p class="text-sm font-semibold leading-7 md:text-base">Notes:</p>
+
+        <pre class="text-wrap font-sans text-sm leading-7 md:text-base">{row.original.booking_obj
+            .event_note}</pre>
+      </div>
+    </div>
   </AlertDialog.Content>
 </AlertDialog.Root>
