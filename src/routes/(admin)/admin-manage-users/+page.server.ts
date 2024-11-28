@@ -4,16 +4,18 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { fail } from '@sveltejs/kit';
 import type { PostgrestSingleResponse } from '@supabase/supabase-js';
 import type { UserType } from '$lib/types';
+import { createUserSchema } from './components/create-user/schema';
 import { updateUserSchema } from './components/update-user/schema';
 
 export const load: PageServerLoad = async () => {
   return {
+    createUserForm: await superValidate(zod(createUserSchema)),
     updateUserForm: await superValidate(zod(updateUserSchema))
   };
 };
 
 export const actions: Actions = {
-  /* createUserEvent: async ({ locals: { supabaseAdmin }, request }) => {
+  createUserEvent: async ({ locals: { supabaseAdmin }, request }) => {
     const form = await superValidate(request, zod(createUserSchema));
 
     if (!form.valid) return fail(400, { form });
@@ -32,7 +34,6 @@ export const actions: Actions = {
         middleName: form.data.middleName,
         lastName: form.data.lastName,
         gender: form.data.gender,
-        birthDate: form.data.birthDate,
         mobileNum: form.data.mobileNum
       }
     });
@@ -47,9 +48,9 @@ export const actions: Actions = {
 
       if (selectErr) return fail(401, { form, msg: selectErr.message });
 
-      return { form, msg: 'Account Created.', data };
+      return { form, msg: 'Account Created.' };
     }
-  }, */
+  },
 
   updateUserEvent: async ({ locals: { supabaseAdmin }, request }) => {
     const form = await superValidate(request, zod(updateUserSchema));
@@ -83,7 +84,7 @@ export const actions: Actions = {
 
       if (selectErr) return fail(401, { form, msg: selectErr.message });
 
-      return { form, msg: 'Account Updated.', data };
+      return { form, msg: 'Account Updated.' };
     }
   },
 
@@ -106,7 +107,7 @@ export const actions: Actions = {
 
       if (selectErr) return fail(401, { msg: selectErr.message });
 
-      return { msg: 'Account Deleted.', data };
+      return { msg: 'Account Deleted.' };
     }
   }
 };

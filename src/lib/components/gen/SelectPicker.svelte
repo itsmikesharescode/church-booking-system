@@ -11,6 +11,7 @@
     selected: string;
     class?: ClassNameValue;
     name: string;
+    placeholder?: string;
   }
 
   let { selected = $bindable(), ...props }: Props = $props();
@@ -18,7 +19,7 @@
 
 <Select.Root type="single" bind:value={selected}>
   <Select.Trigger class={cn('', props.class)}>
-    {selected ? selected : props.name}
+    {selected ? selected : props.placeholder}
   </Select.Trigger>
   <Select.Content>
     {#each props.selections as selection}

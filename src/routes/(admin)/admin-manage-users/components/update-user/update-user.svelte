@@ -119,6 +119,7 @@
               <Form.Label>Gender</Form.Label>
               <SelectPicker
                 {...props}
+                placeholder="Select a gender"
                 selections={[
                   { label: 'Male', value: 'Male' },
                   { label: 'Female', value: 'Female' }

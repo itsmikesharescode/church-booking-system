@@ -3,8 +3,8 @@
   import Table from './components/table/components/table.svelte';
   import { columns } from './components/table/components/columns';
   import { initTableState } from './components/table/tableState.svelte';
-  import RenderUsers from './_components/RenderUsers.svelte';
   import { fromManageUsersRoute } from '../_states/fromManageUsers.svelte';
+  import CreateUser from './components/create-user/create-user.svelte';
   import DeleteUser from './components/delete-user/delete-user.svelte';
   import UpdateUser from './components/update-user/update-user.svelte';
   const { data } = $props();
@@ -18,9 +18,9 @@
 
 <div class="flex flex-col gap-[2rem] p-[1rem] sm:p-[2rem]">
   <section class="flex flex-col gap-[0.625rem]">
-    <!-- <div class="flex flex-col items-center gap-[1rem] md:flex-row md:justify-between">
+    <div class="flex flex-col items-center gap-[1rem] md:flex-row md:justify-between">
       <CreateUser createUserForm={data.createUserForm} />
-    </div> -->
+    </div>
 
     <Table
       {columns}

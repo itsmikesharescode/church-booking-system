@@ -39,7 +39,7 @@
       <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
       <AlertDialog.Description>
         This action cannot be undone. This will permanently delete {tableState.getActiveRow()
-          ?.client_name}
+          ?.last_name}
         details in our database.
       </AlertDialog.Description>
     </AlertDialog.Header>
