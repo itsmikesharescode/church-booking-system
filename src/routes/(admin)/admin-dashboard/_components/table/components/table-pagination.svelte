@@ -23,9 +23,6 @@
 
 <div class="flex items-center justify-between px-2">
   <div class="flex items-center gap-2.5 text-sm text-muted-foreground">
-    {table.getFilteredSelectedRowModel().rows.length} of
-    {table.getFilteredRowModel().rows.length} row(s) selected.
-
     <div class="overflow-hidden">
       {#if table.getFilteredSelectedRowModel().rows.length > 2}
         <div transition:fly={{ x: -100, duration: 400, easing: cubicInOut }}>
