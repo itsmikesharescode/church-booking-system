@@ -4,9 +4,11 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { upChSchema, updateChInfoSchema, updateChPhotoSchema } from './admin-dashboard-schema';
 import { fail } from '@sveltejs/kit';
 import { convertTo24HourFormat } from '$lib';
+import { addChurchSchema } from './_components/add-church/schema';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
   return {
+    addChurchForm: await superValidate(zod(addChurchSchema)),
     upChForm: await superValidate(zod(upChSchema)),
     updateChInfoForm: await superValidate(zod(updateChInfoSchema)),
     updateChPhotoForm: await superValidate(zod(updateChPhotoSchema))
@@ -14,10 +16,12 @@ export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 };
 
 export const actions: Actions = {
-  upLoadChEvent: async ({ request, locals: { supabase } }) => {
-    const form = await superValidate(request, zod(upChSchema));
+  addChurchEvent: async ({ request, locals: { supabase } }) => {
+    const form = await superValidate(request, zod(addChurchSchema));
 
     if (!form.valid) return fail(400, withFiles({ form }));
+
+    console.log(form.data);
 
     const openTconvert = convertTo24HourFormat(form.data.openT);
     const closeTconvert = convertTo24HourFormat(form.data.closeT);
@@ -25,7 +29,7 @@ export const actions: Actions = {
 
     const { data: uploadData, error: uploadErr } = await supabase.storage
       .from('church_bucket')
-      .upload(uid, form.data.chPhoto, {
+      .upload(uid, form.data.photo, {
         cacheControl: '3600',
         upsert: false
       });
@@ -35,7 +39,7 @@ export const actions: Actions = {
     if (uploadData) {
       const { error } = await supabase.from('church_list_tb').insert([
         {
-          name: form.data.chName,
+          name: form.data.name,
           description: form.data.description,
           open_time: openTconvert,
           close_time: closeTconvert,

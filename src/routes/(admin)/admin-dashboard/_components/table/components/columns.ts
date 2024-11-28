@@ -11,7 +11,7 @@ import { renderComponent, renderSnippet } from '$lib/components/ui/data-table/re
 import { convertTo12HourFormat } from '$lib';
 
 export const columns: ColumnDef<DashboardPageTable, unknown>[] = [
-  {
+  /* {
     id: 'select',
     header: ({ table }) =>
       renderComponent(TableCheckbox, {
@@ -29,7 +29,7 @@ export const columns: ColumnDef<DashboardPageTable, unknown>[] = [
       }),
     enableSorting: false,
     enableHiding: false
-  },
+  }, */
   {
     accessorKey: 'name',
     id: 'name',

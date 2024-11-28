@@ -49,7 +49,7 @@
         role="combobox"
         aria-expanded={open}
       >
-        {selected || name}
+        <span class={selected ? '' : 'text-muted-foreground'}>{selected || name}</span>
         <ChevronsUpDown class="ml-2 size-4 shrink-0 opacity-50" />
       </Button>
     {/snippet}

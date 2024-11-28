@@ -9,6 +9,7 @@
   import { columns } from './_components/table/components/columns';
   import DeleteChurch from './_components/delete-church/delete-church.svelte';
   import { initTableState } from './_components/table/tableState.svelte';
+  import AddChurch from './_components/add-church/add-church.svelte';
 
   const { data } = $props();
 
@@ -66,7 +67,7 @@
 
   <div class="flex flex-col gap-[1rem]">
     <div class="flex flex-col items-center gap-[1rem] md:flex-row md:justify-between">
-      Upload here
+      <AddChurch addChurchForm={data.addChurchForm} />
     </div>
 
     <Table {columns} data={dashboardRoute.getChurches() ?? []} />
