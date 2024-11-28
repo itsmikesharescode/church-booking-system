@@ -10,7 +10,7 @@
   import DeleteChurch from './_components/delete-church/delete-church.svelte';
   import { initTableState } from './_components/table/tableState.svelte';
   import AddChurch from './_components/add-church/add-church.svelte';
-
+  import UpdateChurch from './_components/update-church/update-church.svelte';
   const { data } = $props();
 
   initTableState();
@@ -35,7 +35,7 @@
   };
 </script>
 
-<div class="flex flex-col gap-[1.25rem] p-[1rem] md:p-[2rem]">
+<div class="flex flex-col gap-[1.25rem] p-[1rem] md:p-[2rem] md:pb-[5rem]">
   <div class="grid gap-[0.625rem] md:grid-cols-2">
     <div class="max-h-[30dvh]">
       <LineChart weeklyApproved={dashboardRoute.getDashboard()?.weekly_approve ?? []} />
@@ -75,3 +75,7 @@
 </div>
 
 <DeleteChurch />
+<UpdateChurch
+  updateChurchInfoForm={data.updateChurchInfoForm}
+  updateChurchPhotoForm={data.updateChurchPhotoForm}
+/>
