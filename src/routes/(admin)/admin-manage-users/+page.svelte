@@ -5,7 +5,7 @@
   import { initTableState } from './components/table/tableState.svelte';
   import RenderUsers from './_components/RenderUsers.svelte';
   import { fromManageUsersRoute } from '../_states/fromManageUsers.svelte';
-
+  import DeleteUser from './components/delete-user/delete-user.svelte';
   const { data } = $props();
 
   const staticRoute = fromStaticRouteState();
@@ -20,7 +20,6 @@
     <!-- <div class="flex flex-col items-center gap-[1rem] md:flex-row md:justify-between">
       <CreateUser createUserForm={data.createUserForm} />
     </div> -->
-    <RenderUsers updateUserForm={data.updateUserForm} />
 
     <Table
       {columns}
@@ -36,3 +35,5 @@
     />
   </section>
 </div>
+
+<DeleteUser />
