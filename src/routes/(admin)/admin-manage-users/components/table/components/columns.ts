@@ -28,8 +28,9 @@ export const columns: ColumnDef<ManageUserPageTable, unknown>[] = [
   },
 
   {
-    accessorKey: 'client_name',
-    id: 'client_name',
+    accessorKey: 'last_name',
+    accessorFn: (row) => `${row.last_name}, ${row.first_name} ${row.middle_name}`,
+    id: 'last_name',
     header: ({ column }) => {
       return renderComponent(DataTableColumnHeader<ManageUserPageTable, unknown>, {
         column,
@@ -42,7 +43,7 @@ export const columns: ColumnDef<ManageUserPageTable, unknown>[] = [
           render: () => `<div class="w-full">${getClientName()}</div>`
         };
       });
-      return renderSnippet(clientNameSnippet, row.getValue('client_name'));
+      return renderSnippet(clientNameSnippet, row.getValue('last_name'));
     },
     enableSorting: true,
     enableHiding: true
@@ -90,7 +91,7 @@ export const columns: ColumnDef<ManageUserPageTable, unknown>[] = [
     enableHiding: true
   },
 
-  {
+  /* {
     accessorKey: 'birthdate',
     id: 'birthdate',
     header: ({ column }) => {
@@ -109,7 +110,7 @@ export const columns: ColumnDef<ManageUserPageTable, unknown>[] = [
     },
     enableSorting: true,
     enableHiding: true
-  },
+  }, */
 
   {
     accessorKey: 'created_at',

@@ -1,20 +1,19 @@
 import { superValidate } from 'sveltekit-superforms';
 import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
-import { createUserSchema, updateUserSchema } from './manage-users-schema';
 import { fail } from '@sveltejs/kit';
 import type { PostgrestSingleResponse } from '@supabase/supabase-js';
 import type { UserType } from '$lib/types';
+import { updateUserSchema } from './components/update-user/schema';
 
 export const load: PageServerLoad = async () => {
   return {
-    createUserForm: await superValidate(zod(createUserSchema)),
     updateUserForm: await superValidate(zod(updateUserSchema))
   };
 };
 
 export const actions: Actions = {
-  createUserEvent: async ({ locals: { supabaseAdmin }, request }) => {
+  /* createUserEvent: async ({ locals: { supabaseAdmin }, request }) => {
     const form = await superValidate(request, zod(createUserSchema));
 
     if (!form.valid) return fail(400, { form });
@@ -50,7 +49,7 @@ export const actions: Actions = {
 
       return { form, msg: 'Account Created.', data };
     }
-  },
+  }, */
 
   updateUserEvent: async ({ locals: { supabaseAdmin }, request }) => {
     const form = await superValidate(request, zod(updateUserSchema));
@@ -70,7 +69,6 @@ export const actions: Actions = {
         middleName: form.data.middleName,
         lastName: form.data.lastName,
         gender: form.data.gender,
-        birthDate: form.data.birthDate,
         mobileNum: form.data.mobileNum
       }
     });

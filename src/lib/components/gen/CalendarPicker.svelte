@@ -8,26 +8,14 @@
   import * as Calendar from '$lib/components/ui/calendar/index.js';
   import * as Select from '$lib/components/ui/select/index.js';
   import { cn } from '$lib/utils.js';
-  import type { DateValue } from '@internationalized/date';
-  import * as Popover from '$lib/components/ui/popover/index.js';
-  import { buttonVariants } from '$lib/components/ui/button/index.js';
-  import { CalendarIcon } from 'lucide-svelte';
-
-  interface Props {
-    valueString: string;
-  }
-
-  type CombinedProps = WithoutChildrenOrChild<CalendarRootProps> & Props;
 
   let {
-    valueString = $bindable(),
+    value = $bindable(),
     placeholder = $bindable(),
     weekdayFormat,
     class: className,
     ...restProps
-  }: CombinedProps = $props();
-
-  let value = $state<DateValue | DateValue[] | undefined>();
+  }: WithoutChildrenOrChild<CalendarRootProps> = $props();
 
   const monthOptions = [
     'January',
@@ -71,103 +59,79 @@
   );
 </script>
 
-<Popover.Root>
-  <Popover.Trigger
-    class={cn(
-      buttonVariants({
-        variant: 'outline',
-        class: 'w-full justify-start text-left font-normal'
-      }),
-      !valueString && 'text-muted-foreground'
-    )}
-  >
-    <CalendarIcon class="h-4 w-4" />
-    {valueString ? valueString : 'Pick a date'}
-  </Popover.Trigger>
-  <Popover.Content class="p-0">
-    <CalendarPrimitive.Root
-      {weekdayFormat}
-      class={cn('rounded-md border p-3', className)}
-      bind:value={value as never}
-      bind:placeholder
-      {...restProps}
-    >
-      {#snippet children({ months, weekdays })}
-        <Calendar.Header>
-          <Calendar.Heading class="flex w-full items-center justify-between gap-2">
-            <Select.Root
-              type="single"
-              value={defaultMonth?.value}
-              onValueChange={(v) => {
-                if (!placeholder) return;
-                if (v === `${placeholder.month}`) return;
-                placeholder = placeholder.set({ month: Number.parseInt(v) });
-              }}
-            >
-              <Select.Trigger aria-label="Select month" class="w-[60%]">
-                {monthLabel}
-              </Select.Trigger>
-              <Select.Content class="max-h-[200px] overflow-y-auto">
-                {#each monthOptions as { value, label }}
-                  <Select.Item {value} {label} />
+<CalendarPrimitive.Root
+  {weekdayFormat}
+  class={cn('rounded-md border p-3', className)}
+  bind:value={value as never}
+  bind:placeholder
+  {...restProps}
+>
+  {#snippet children({ months, weekdays })}
+    <Calendar.Header>
+      <Calendar.Heading class="flex w-full items-center justify-between gap-2">
+        <Select.Root
+          type="single"
+          value={defaultMonth?.value}
+          onValueChange={(v) => {
+            if (!placeholder) return;
+            if (v === `${placeholder.month}`) return;
+            placeholder = placeholder.set({ month: Number.parseInt(v) });
+          }}
+        >
+          <Select.Trigger aria-label="Select month" class="w-[60%]">
+            {monthLabel}
+          </Select.Trigger>
+          <Select.Content class="max-h-[200px] overflow-y-auto">
+            {#each monthOptions as { value, label }}
+              <Select.Item {value} {label} />
+            {/each}
+          </Select.Content>
+        </Select.Root>
+        <Select.Root
+          type="single"
+          value={defaultYear?.value}
+          onValueChange={(v) => {
+            if (!v || !placeholder) return;
+            if (v === `${placeholder?.year}`) return;
+            placeholder = placeholder.set({ year: Number.parseInt(v) });
+          }}
+        >
+          <Select.Trigger aria-label="Select year" class="w-[40%]">
+            {defaultYear?.label ?? 'Select year'}
+          </Select.Trigger>
+          <Select.Content class="max-h-[200px] overflow-y-auto">
+            {#each yearOptions as { value, label }}
+              <Select.Item {value} {label} />
+            {/each}
+          </Select.Content>
+        </Select.Root>
+      </Calendar.Heading>
+    </Calendar.Header>
+    <Calendar.Months>
+      {#each months as month}
+        <Calendar.Grid>
+          <Calendar.GridHead>
+            <Calendar.GridRow class="flex">
+              {#each weekdays as weekday}
+                <Calendar.HeadCell>
+                  {weekday.slice(0, 2)}
+                </Calendar.HeadCell>
+              {/each}
+            </Calendar.GridRow>
+          </Calendar.GridHead>
+          <Calendar.GridBody>
+            {#each month.weeks as weekDates}
+              <Calendar.GridRow class="mt-2 w-full">
+                {#each weekDates as date}
+                  <Calendar.Cell {date} month={month.value}>
+                    <Calendar.Day />
+                  </Calendar.Cell>
                 {/each}
-              </Select.Content>
-            </Select.Root>
-            <Select.Root
-              type="single"
-              value={defaultYear?.value}
-              onValueChange={(v) => {
-                if (!v || !placeholder) return;
-                if (v === `${placeholder?.year}`) return;
-                placeholder = placeholder.set({ year: Number.parseInt(v) });
-              }}
-            >
-              <Select.Trigger aria-label="Select year" class="w-[40%]">
-                {defaultYear?.label ?? 'Select year'}
-              </Select.Trigger>
-              <Select.Content class="max-h-[200px] overflow-y-auto">
-                {#each yearOptions as { value, label }}
-                  <Select.Item {value} {label} />
-                {/each}
-              </Select.Content>
-            </Select.Root>
-          </Calendar.Heading>
-        </Calendar.Header>
-        <Calendar.Months>
-          {#each months as month}
-            <Calendar.Grid>
-              <Calendar.GridHead>
-                <Calendar.GridRow class="flex">
-                  {#each weekdays as weekday}
-                    <Calendar.HeadCell class="w-full">
-                      {weekday.slice(0, 2)}
-                    </Calendar.HeadCell>
-                  {/each}
-                </Calendar.GridRow>
-              </Calendar.GridHead>
-              <Calendar.GridBody>
-                {#each month.weeks as weekDates}
-                  <Calendar.GridRow class="mt-2 w-full">
-                    {#each weekDates as date}
-                      <Calendar.Cell
-                        onclick={() => {
-                          valueString = String(date);
-                          value = date;
-                        }}
-                        {date}
-                        month={month.value}
-                        class="w-full"
-                      >
-                        <Calendar.Day />
-                      </Calendar.Cell>
-                    {/each}
-                  </Calendar.GridRow>
-                {/each}
-              </Calendar.GridBody>
-            </Calendar.Grid>
-          {/each}
-        </Calendar.Months>
-      {/snippet}
-    </CalendarPrimitive.Root>
-  </Popover.Content>
-</Popover.Root>
+              </Calendar.GridRow>
+            {/each}
+          </Calendar.GridBody>
+        </Calendar.Grid>
+      {/each}
+    </Calendar.Months>
+  {/snippet}
+</CalendarPrimitive.Root>

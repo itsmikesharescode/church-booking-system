@@ -6,6 +6,7 @@
   import RenderUsers from './_components/RenderUsers.svelte';
   import { fromManageUsersRoute } from '../_states/fromManageUsers.svelte';
   import DeleteUser from './components/delete-user/delete-user.svelte';
+  import UpdateUser from './components/update-user/update-user.svelte';
   const { data } = $props();
 
   const staticRoute = fromStaticRouteState();
@@ -27,13 +28,15 @@
         user_id: item.user_id,
         created_at: item.created_at,
         email: item.user_meta_data.email,
-        client_name: `${item.user_meta_data.lastName}, ${item.user_meta_data.firstName} ${item.user_meta_data.middleName}`,
+        first_name: item.user_meta_data.firstName,
+        middle_name: item.user_meta_data.middleName,
+        last_name: item.user_meta_data.lastName,
         mobile_number: item.user_meta_data.mobileNum,
-        gender: item.user_meta_data.gender,
-        birthdate: item.user_meta_data.birthDate
+        gender: item.user_meta_data.gender
       })) ?? []}
     />
   </section>
 </div>
 
 <DeleteUser />
+<UpdateUser updateUserForm={data.updateUserForm} />

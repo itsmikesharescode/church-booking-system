@@ -19,12 +19,12 @@
   <div class="flex flex-1 items-center space-x-2">
     <Input
       placeholder="Search by client name"
-      value={(table.getColumn('client_name')?.getFilterValue() as string) ?? ''}
+      value={(table.getColumn('last_name')?.getFilterValue() as string) ?? ''}
       oninput={(e) => {
-        table.getColumn('client_name')?.setFilterValue(e.currentTarget.value);
+        table.getColumn('last_name')?.setFilterValue(e.currentTarget.value);
       }}
       onchange={(e) => {
-        table.getColumn('client_name')?.setFilterValue(e.currentTarget.value);
+        table.getColumn('last_name')?.setFilterValue(e.currentTarget.value);
       }}
       class="h-8 w-[150px] lg:w-[250px]"
     />
