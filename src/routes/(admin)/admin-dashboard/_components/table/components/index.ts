@@ -6,3 +6,4 @@ export { default as DataTablePagination } from './table-pagination.svelte';
 export { default as DataTableViewOptions } from './table-view-options.svelte';
 export { default as TableStatusRow } from './table-status-row.svelte';
 export { default as TableCheckbox } from './table-check-box.svelte';
+export { default as TableChurchNameRow } from './table-church-name-row.svelte';

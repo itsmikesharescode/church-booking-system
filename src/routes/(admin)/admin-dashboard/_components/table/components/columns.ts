@@ -1,8 +1,14 @@
 import type { ColumnDef } from '@tanstack/table-core';
 import { createRawSnippet } from 'svelte';
 import type { DashboardPageTable } from '../data/schemas';
-import { DataTableColumnHeader, DataTableRowActions, TableCheckbox } from './index.js';
+import {
+  DataTableColumnHeader,
+  DataTableRowActions,
+  TableCheckbox,
+  TableChurchNameRow
+} from './index.js';
 import { renderComponent, renderSnippet } from '$lib/components/ui/data-table/render-helpers.js';
+import { convertTo12HourFormat } from '$lib';
 
 export const columns: ColumnDef<DashboardPageTable, unknown>[] = [
   {
@@ -33,23 +39,15 @@ export const columns: ColumnDef<DashboardPageTable, unknown>[] = [
         title: 'Church Name'
       });
     },
-    cell: ({ row }) => {
-      const nameSnippet = createRawSnippet<[string]>((getName) => {
-        return {
-          render: () =>
-            `<div class="w-[200px] line-clamp-1 cursor-help" title="${getName()}">${getName()}</div>`
-        };
-      });
-
-      return renderSnippet(nameSnippet, row.getValue('name'));
-    },
+    cell: ({ row }) => renderComponent(TableChurchNameRow, { row }),
     enableSorting: true,
     enableHiding: true
   },
 
   {
     accessorKey: 'open_time',
-    accessorFn: (row) => `${row.open_time} - ${row.close_time}`,
+    accessorFn: (row) =>
+      `${convertTo12HourFormat(row.open_time)} - ${convertTo12HourFormat(row.close_time)}`,
     id: 'open_time',
     header: ({ column }) => {
       return renderComponent(DataTableColumnHeader<DashboardPageTable, unknown>, {
@@ -103,7 +101,8 @@ export const columns: ColumnDef<DashboardPageTable, unknown>[] = [
     cell: ({ row }) => {
       const createdAtSnippet = createRawSnippet<[string]>((getCreatedAt) => {
         return {
-          render: () => `<div class="w-full">${new Date(getCreatedAt()).toLocaleDateString()}</div>`
+          render: () =>
+            `<div class="w-full">${new Date(getCreatedAt()).toLocaleDateString()} @ ${new Date(getCreatedAt()).toLocaleTimeString()}</div>`
         };
       });
 
