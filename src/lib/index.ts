@@ -1,12 +1,12 @@
 export const publicProfileAPI =
   'https://ldsuhuvtfqrflozlznho.supabase.co/storage/v1/object/public/profile_bucket/';
 
-export const userRoutes = ['/profile', '/my-reservations'];
+export const userRoutes = ['/profile', '/my-reservations', '/my-payments'];
 export const adminRoutes = [
   '/admin-dashboard',
   '/admin-dashboard/upload-church',
   '/admin-event-reservations',
-  '/admin-',
+  '/admin-payments',
   '/admin-manage-users'
 ];
 export const defaultRoutes = ['/authenticate'];
