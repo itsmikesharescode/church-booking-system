@@ -2,7 +2,7 @@ import { superValidate } from 'sveltekit-superforms';
 import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { fail } from '@sveltejs/kit';
-import { approveSchema } from './_components/bookings/_operations/_operations/event-schema';
+import { approveSchema } from './components/approve-reservation/schema';
 
 export const load: PageServerLoad = async () => {
   return {
@@ -38,14 +38,5 @@ export const actions: Actions = {
 
     if (error) return fail(401, { form, msg: error.message });
     return { form, msg: 'Booking approved.' };
-  },
-
-  deletePaymentEvent: async ({ locals: { supabase }, request }) => {
-    const formData = await request.formData();
-    const paymentId = formData.get('paymentId') as string;
-
-    const { error } = await supabase.from('paid_list_tb').delete().eq('id', paymentId);
-    if (error) return fail(401, { msg: error.message });
-    return { msg: 'Payment deleted.' };
   }
 };

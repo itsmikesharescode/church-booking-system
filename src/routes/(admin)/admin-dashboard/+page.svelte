@@ -1,16 +1,19 @@
 <script lang="ts">
-  import Button from '$lib/components/ui/button/button.svelte';
   import Separator from '$lib/components/ui/separator/separator.svelte';
   import { fromStaticRouteState } from '../../_states/fromStaticRouteState.svelte';
   import { fromDashBRouteState } from '../_states/fromDashboard.svelte';
-  import Pagination from './_components/_operations/Pagination.svelte';
-  import BarChart from './_components/BarChart.svelte';
-  import CountCard from './_components/CountCard.svelte';
-  import LineChart from './_components/LineChart.svelte';
-  import RenderChurch from './_components/RenderChurch.svelte';
-  import UploadChurch from './_components/UploadChurch.svelte';
-
+  import BarChart from './_components/charts/bar-chart.svelte';
+  import CountCard from './_components/count-card/count-card.svelte';
+  import LineChart from './_components/charts/line-chart.svelte';
+  import Table from './_components/table/components/table.svelte';
+  import { columns } from './_components/table/components/columns';
+  import DeleteChurch from './_components/delete-church/delete-church.svelte';
+  import { initTableState } from './_components/table/tableState.svelte';
+  import AddChurch from './_components/add-church/add-church.svelte';
+  import UpdateChurch from './_components/update-church/update-church.svelte';
   const { data } = $props();
+
+  initTableState();
 
   const staticRoute = fromStaticRouteState();
   const dashboardRoute = fromDashBRouteState();
@@ -32,7 +35,7 @@
   };
 </script>
 
-<div class="flex flex-col gap-[1.25rem] p-[1rem] md:p-[2rem]">
+<div class="flex flex-col gap-[1.25rem] p-[1rem] md:p-[2rem] md:pb-[5rem]">
   <div class="grid gap-[0.625rem] md:grid-cols-2">
     <div class="max-h-[30dvh]">
       <LineChart weeklyApproved={dashboardRoute.getDashboard()?.weekly_approve ?? []} />
@@ -64,15 +67,15 @@
 
   <div class="flex flex-col gap-[1rem]">
     <div class="flex flex-col items-center gap-[1rem] md:flex-row md:justify-between">
-      <UploadChurch upChForm={data.upChForm} />
-
-      <div class="">
-        <!-- <Pagination /> -->
-      </div>
+      <AddChurch addChurchForm={data.addChurchForm} />
     </div>
-    <RenderChurch
-      updateChPhotoForm={data.updateChPhotoForm}
-      updateChInfoForm={data.updateChInfoForm}
-    />
+
+    <Table {columns} data={dashboardRoute.getChurches() ?? []} />
   </div>
 </div>
+
+<DeleteChurch />
+<UpdateChurch
+  updateChurchInfoForm={data.updateChurchInfoForm}
+  updateChurchPhotoForm={data.updateChurchPhotoForm}
+/>

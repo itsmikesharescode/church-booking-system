@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { CircleUser } from 'lucide-svelte';
   import * as Form from '$lib/components/ui/form';
+  import { Input } from '$lib/components/ui/input';
   import { type SuperValidated, type Infer, superForm, fileProxy } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import type { Result } from '$lib/types';
@@ -9,8 +9,7 @@
   import { upUpProfileSchema, type UpUpProfileSchema } from '../profile-schema';
   import type { User } from '@supabase/supabase-js';
   import { fromUserState } from '../../../_states/fromUserState.svelte';
-  import { publicProfileAPI } from '$lib';
-  import { fromCachingState } from '../../../_states/fromCachingState.svelte';
+  import ImagePicker from '$lib/components/gen/ImagePicker.svelte';
 
   interface Props {
     upUpProfileForm: SuperValidated<Infer<UpUpProfileSchema>>;
@@ -19,12 +18,10 @@
   const { upUpProfileForm }: Props = $props();
 
   const user = fromUserState();
-  const caching = fromCachingState();
 
   const form = superForm(upUpProfileForm, {
     validators: zodClient(upUpProfileSchema),
     id: crypto.randomUUID(),
-    invalidateAll: false,
     onUpdate({ result }) {
       const { status, data } = result as Result<{ msg: string; user: User }>;
 
@@ -32,7 +29,6 @@
         case 200:
           toast.success('', { description: data.msg });
           user.setUser(data.user);
-          caching.setCaching(crypto.randomUUID());
           break;
 
         case 401:
@@ -44,74 +40,44 @@
 
   const { form: formData, enhance, submitting } = form;
 
-  let previewUrl: string | null = $state(null);
-
-  const readImage = () => {
-    const reader = new FileReader();
-    if ($formData.profilePhoto) {
-      reader.onload = () => {
-        previewUrl = reader.result as string;
-      };
-      reader.readAsDataURL($formData.profilePhoto);
-    }
-  };
-
-  $effect(() => {
-    if (user.getUser()?.user_metadata.avatarLink) {
-      previewUrl = `${publicProfileAPI + user.getUser()?.user_metadata.avatarLink}?${caching.getCaching()}`;
-    }
-  });
+  const file = fileProxy(form, 'profilePhoto');
 </script>
 
-<div class="">
-  {#if previewUrl}
-    <img
-      src={previewUrl}
-      alt=""
-      class="mx-auto h-[10rem] w-[10rem] rounded-full md:h-[15rem] md:w-[15rem]"
-    />
-  {:else}
-    <CircleUser class="mx-auto h-[10rem] w-[10rem] md:h-[15rem] md:w-[15rem]" />
-  {/if}
-
+<div class="flex max-w-[700px] flex-col p-[1rem]">
   <form
     method="POST"
     action="?/upUpProfileEvent"
     enctype="multipart/form-data"
     use:enhance
-    class="mx-auto flex max-w-[450px] flex-col gap-[1rem]"
+    class="flex flex-col gap-[1rem]"
   >
+    <p class="text-xl font-semibold">Profile Picture</p>
+
     <Form.Field {form} name="profilePhoto">
-      <Form.Control let:attrs>
-        <div class="flex justify-center">
-          <label>
-            <span class="cursor-pointer underline transition-all hover:text-red-500"
-              >Change Avatar</span
-            >
-            <input
-              class="hidden"
-              {...attrs}
-              type="file"
-              accept="image/png, image/jpeg, image/gif"
-              onchange={readImage}
-              oninput={(e) => ($formData.profilePhoto = e.currentTarget.files?.item(0) as File)}
-            />
-          </label>
-        </div>
+      <Form.Control>
+        {#snippet children({ props })}
+          <Form.Label>Photo</Form.Label>
+          <ImagePicker name="Upload Here" class="" bind:imageLink={$formData.profilePhoto} />
+          <input class="hidden" type="file" {...props} bind:files={$file} />
+        {/snippet}
       </Form.Control>
+      <Form.Description />
       <Form.FieldErrors />
     </Form.Field>
-    {#if previewUrl}
-      <Form.Button disabled={$submitting} class="relative">
-        {#if $submitting}
-          <div
-            class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm bg-primary"
-          >
-            <Loader class="h-[15px] w-[15px] animate-spin" />
-          </div>
-        {/if}
-        Update Avatar
-      </Form.Button>
-    {/if}
+
+    <div class="flex items-center justify-center">
+      <div class="w-full max-w-[450px]">
+        <Form.Button disabled={$submitting} class="relative w-full">
+          {#if $submitting}
+            <div
+              class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm bg-primary"
+            >
+              <Loader class="h-[15px] w-[15px] animate-spin" />
+            </div>
+          {/if}
+          Upload
+        </Form.Button>
+      </div>
+    </div>
   </form>
 </div>

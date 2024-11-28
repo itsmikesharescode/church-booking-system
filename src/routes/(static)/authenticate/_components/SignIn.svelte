@@ -4,7 +4,6 @@
   import { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import { signInSchema, type SignInSchema } from '../authenticate-schema';
-  import Separator from '$lib/components/ui/separator/separator.svelte';
   import Button from '$lib/components/ui/button/button.svelte';
   import type { Result } from '$lib/types';
   import { toast } from 'svelte-sonner';
@@ -18,17 +17,17 @@
 
   const form = superForm(signInForm, {
     validators: zodClient(signInSchema),
-    id: crypto.randomUUID(),
+    id: 'loginForm',
     onUpdate({ result }) {
       const { status, data } = result as Result<{ msg: string }>;
 
       switch (status) {
         case 200:
-          toast.success('', { description: data.msg });
+          toast.success(data.msg);
           break;
 
         case 401:
-          toast.error('', { description: data.msg });
+          toast.error(data.msg);
           break;
       }
     }
@@ -43,29 +42,41 @@
       method="POST"
       action="?/signInEvent"
       use:enhance
-      class="mx-auto flex max-w-[450px] flex-col gap-[1rem]"
+      class="mx-auto flex max-w-[300px] flex-col gap-[1rem]"
     >
-      <div class="mx-auto">
-        <p class="text-center text-6xl font-bold">Sign In</p>
-        <p class="text-center leading-7 text-muted-foreground">Sign in to church booking system</p>
+      <div class="flex flex-col gap-2.5">
+        <p class="text-center text-3xl font-bold">Sign In</p>
+        <p class="text-center text-sm leading-7 text-muted-foreground">
+          Sign in to church booking system
+        </p>
       </div>
+
       <Form.Field {form} name="email">
-        <Form.Control let:attrs>
-          <Form.Label>Email</Form.Label>
-          <Input {...attrs} bind:value={$formData.email} placeholder="Enter your email" />
+        <Form.Control>
+          {#snippet children({ props })}
+            <Form.Label>Email</Form.Label>
+            <Input
+              type="email"
+              {...props}
+              bind:value={$formData.email}
+              placeholder="Enter your email"
+            />
+          {/snippet}
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
 
       <Form.Field {form} name="pwd">
-        <Form.Control let:attrs>
-          <Form.Label>Password</Form.Label>
-          <Input
-            type="password"
-            {...attrs}
-            bind:value={$formData.pwd}
-            placeholder="Enter your password"
-          />
+        <Form.Control>
+          {#snippet children({ props })}
+            <Form.Label>Password</Form.Label>
+            <Input
+              type="password"
+              {...props}
+              bind:value={$formData.pwd}
+              placeholder="Enter your password"
+            />
+          {/snippet}
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>

@@ -4,12 +4,11 @@
   import { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import { signUpSchema, type SignUpSchema } from '../authenticate-schema';
-  import * as Select from '$lib/components/ui/select/index.js';
   import Button from '$lib/components/ui/button/button.svelte';
-  import CustomCalendar from '$lib/components/gen/CustomCalendar.svelte';
   import type { Result } from '$lib/types';
   import { toast } from 'svelte-sonner';
   import { Loader } from 'lucide-svelte';
+  import SelectPicker from '$lib/components/gen/SelectPicker.svelte';
 
   interface Props {
     signUpForm: SuperValidated<Infer<SignUpSchema>>;
@@ -43,151 +42,161 @@
 </script>
 
 <div class="flex min-h-screen flex-col justify-center p-[1rem] sm:p-[2rem]">
-  <div class="">
-    <form method="POST" action="?/signUpEvent" use:enhance class="mx-auto flex flex-col gap-[1rem]">
-      <div class="mx-auto">
-        <p class="text-center text-6xl font-bold">Sign Up</p>
-        <p class="text-center leading-7 text-muted-foreground">Sign up to church booking system</p>
-      </div>
+  <form
+    method="POST"
+    action="?/signUpEvent"
+    use:enhance
+    class="mx-auto flex flex-col items-center gap-[1rem]"
+  >
+    <div class="flex flex-col gap-2.5">
+      <p class="text-center text-3xl font-bold">Sign Up</p>
+      <p class="text-center text-sm leading-7 text-muted-foreground">
+        Sign up to church booking system
+      </p>
+    </div>
 
-      <div class="grid gap-[1rem] md:grid-cols-2">
+    <section class="grid max-w-fit gap-[1rem] md:grid-cols-2">
+      <div class="min-w-[330px] max-w-[330px]">
         <Form.Field {form} name="firstName">
-          <Form.Control let:attrs>
-            <Form.Label>First Name</Form.Label>
-            <Input
-              {...attrs}
-              bind:value={$formData.firstName}
-              placeholder="Enter your first name"
-            />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>First Name</Form.Label>
+              <Input
+                {...props}
+                bind:value={$formData.firstName}
+                placeholder="Enter your first name"
+              />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
 
         <Form.Field {form} name="middleName">
-          <Form.Control let:attrs>
-            <Form.Label>Middle Name</Form.Label>
-            <Input
-              {...attrs}
-              bind:value={$formData.middleName}
-              placeholder="Enter your middle name"
-            />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Middle Name</Form.Label>
+              <Input
+                {...props}
+                bind:value={$formData.middleName}
+                placeholder="Enter your middle name"
+              />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
 
         <Form.Field {form} name="lastName">
-          <Form.Control let:attrs>
-            <Form.Label>Last Name</Form.Label>
-            <Input {...attrs} bind:value={$formData.lastName} placeholder="Enter your last name" />
-          </Form.Control>
-          <Form.FieldErrors />
-        </Form.Field>
-
-        <Form.Field {form} name="birthDate">
-          <Form.Control let:attrs>
-            <Form.Label>Birth Date</Form.Label>
-            <CustomCalendar
-              title="Select your birth date"
-              {attrs}
-              bind:dateValue={$formData.birthDate}
-            />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Last Name</Form.Label>
+              <Input
+                {...props}
+                bind:value={$formData.lastName}
+                placeholder="Enter your last name"
+              />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
 
         <Form.Field {form} name="gender">
-          <Form.Control let:attrs>
-            <Form.Label>Gender</Form.Label>
-            <Select.Root
-              selected={selectedGender}
-              onSelectedChange={(v) => {
-                v && ($formData.gender = v.value);
-              }}
-            >
-              <Select.Trigger {...attrs}>
-                <Select.Value placeholder="Select a gender" />
-              </Select.Trigger>
-              <Select.Content>
-                <Select.Item value="Male" label="Male" />
-                <Select.Item value="Female" label="Female" />
-              </Select.Content>
-            </Select.Root>
-            <input hidden bind:value={$formData.gender} name={attrs.name} />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Gender</Form.Label>
+              <SelectPicker
+                placeholder="Select your gender"
+                selections={[
+                  { label: 'Male', value: 'Male' },
+                  { label: 'Female', value: 'Female' }
+                ]}
+                {...props}
+                bind:selected={$formData.gender}
+              />
+              <input hidden bind:value={$formData.gender} name={props.name} />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
+      </div>
 
+      <div class="min-w-[330px] max-w-[330px]">
         <Form.Field {form} name="mobileNum">
-          <Form.Control let:attrs>
-            <Form.Label>Mobile Number</Form.Label>
-            <Input
-              {...attrs}
-              bind:value={$formData.mobileNum}
-              placeholder="Enter your mobile number"
-            />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Mobile Number</Form.Label>
+              <Input
+                {...props}
+                bind:value={$formData.mobileNum}
+                placeholder="Enter your mobile number"
+              />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
 
         <Form.Field {form} name="email">
-          <Form.Control let:attrs>
-            <Form.Label>Email</Form.Label>
-            <Input {...attrs} bind:value={$formData.email} placeholder="Enter your email" />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Email</Form.Label>
+              <Input {...props} bind:value={$formData.email} placeholder="Enter your email" />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
 
         <Form.Field {form} name="pwd">
-          <Form.Control let:attrs>
-            <Form.Label>Password</Form.Label>
-            <Input
-              type="password"
-              {...attrs}
-              bind:value={$formData.pwd}
-              placeholder="Enter your password"
-            />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Password</Form.Label>
+              <Input
+                type="password"
+                {...props}
+                bind:value={$formData.pwd}
+                placeholder="Enter your password"
+              />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
 
         <Form.Field {form} name="confirmPwd">
-          <Form.Control let:attrs>
-            <Form.Label>Confirm Password</Form.Label>
-            <Input
-              type="password"
-              {...attrs}
-              bind:value={$formData.confirmPwd}
-              placeholder="Confirm your password"
-            />
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Confirm Password</Form.Label>
+              <Input
+                type="password"
+                {...props}
+                bind:value={$formData.confirmPwd}
+                placeholder="Confirm your password"
+              />
+            {/snippet}
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
       </div>
+    </section>
 
-      <div class="flex items-center justify-center">
-        <div class="w-full max-w-[450px]">
-          <div class="flex flex-col gap-[1rem]">
-            <Form.Button disabled={$submitting} class="relative">
-              {#if $submitting}
-                <div
-                  class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm bg-primary"
-                >
-                  <Loader class="h-[15px] w-[15px] animate-spin" />
-                </div>
-              {/if}
-              Sign Up
-            </Form.Button>
-
-            <div class="flex items-center gap-[0.625rem]">
-              <div class="h-[1px] w-full bg-slate-400"></div>
-              <span>Or</span>
-              <div class="h-[1px] w-full bg-slate-400"></div>
+    <div class="w-full max-w-[330px]">
+      <div class="flex flex-col gap-[1rem]">
+        <Form.Button disabled={$submitting} class="relative">
+          {#if $submitting}
+            <div
+              class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm bg-primary"
+            >
+              <Loader class="h-[15px] w-[15px] animate-spin" />
             </div>
+          {/if}
+          Sign Up
+        </Form.Button>
 
-            <Button variant="secondary" href="/authenticate">Sign In Here</Button>
-          </div>
+        <div class="flex items-center gap-[0.625rem]">
+          <div class="h-[1px] w-full bg-slate-400"></div>
+          <span>Or</span>
+          <div class="h-[1px] w-full bg-slate-400"></div>
         </div>
+
+        <Button variant="secondary" href="/authenticate">Sign In Here</Button>
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
 </div>

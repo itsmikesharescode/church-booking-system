@@ -8,7 +8,7 @@
   import { toast } from 'svelte-sonner';
   import { Loader } from 'lucide-svelte';
   import { updateInfoSchema, type UpdateInfoShema } from '../profile-schema';
-  import CustomCalendar from '$lib/components/gen/CustomCalendar.svelte';
+  import SelectPicker from '$lib/components/gen/SelectPicker.svelte';
   import { fromUserState } from '../../../_states/fromUserState.svelte';
   import { z } from 'zod';
   import type { User } from '@supabase/supabase-js';
@@ -55,104 +55,98 @@
   });
 </script>
 
-<div class="mx-auto flex max-w-[700px] flex-col justify-center p-[1rem]">
-  <div class="">
-    <form method="POST" action="?/updateInfoEvent" use:enhance class="flex flex-col gap-[1rem]">
-      <p class="text-xl font-semibold">Personal Information</p>
-      <div class="grid gap-[1rem] md:grid-cols-2">
-        <Form.Field {form} name="firstName">
-          <Form.Control let:attrs>
+<div class="flex max-w-[700px] flex-col p-[1rem]">
+  <form method="POST" action="?/updateInfoEvent" use:enhance class="flex flex-col gap-[1rem]">
+    <p class="text-xl font-semibold">Personal Information</p>
+    <div class="grid gap-[1rem] md:grid-cols-2">
+      <Form.Field {form} name="firstName">
+        <Form.Control>
+          {#snippet children({ props })}
             <Form.Label>First Name</Form.Label>
             <Input
-              {...attrs}
+              {...props}
               bind:value={$formData.firstName}
               placeholder="Enter your new first name"
             />
-          </Form.Control>
-          <Form.FieldErrors />
-        </Form.Field>
+          {/snippet}
+        </Form.Control>
+        <Form.FieldErrors />
+      </Form.Field>
 
-        <Form.Field {form} name="middleName">
-          <Form.Control let:attrs>
+      <Form.Field {form} name="middleName">
+        <Form.Control>
+          {#snippet children({ props })}
             <Form.Label>Middle Name</Form.Label>
             <Input
-              {...attrs}
+              {...props}
               bind:value={$formData.middleName}
               placeholder="Enter your new middle name"
             />
-          </Form.Control>
-          <Form.FieldErrors />
-        </Form.Field>
+          {/snippet}
+        </Form.Control>
+        <Form.FieldErrors />
+      </Form.Field>
 
-        <Form.Field {form} name="lastName">
-          <Form.Control let:attrs>
+      <Form.Field {form} name="lastName">
+        <Form.Control>
+          {#snippet children({ props })}
             <Form.Label>Last Name</Form.Label>
             <Input
-              {...attrs}
+              {...props}
               bind:value={$formData.lastName}
               placeholder="Enter your new last name"
             />
-          </Form.Control>
-          <Form.FieldErrors />
-        </Form.Field>
+          {/snippet}
+        </Form.Control>
+        <Form.FieldErrors />
+      </Form.Field>
 
-        <Form.Field {form} name="birthDate">
-          <Form.Control let:attrs>
-            <Form.Label>Birth Date</Form.Label>
-            <CustomCalendar title="" {attrs} bind:dateValue={$formData.birthDate} />
-          </Form.Control>
-          <Form.FieldErrors />
-        </Form.Field>
-
-        <Form.Field {form} name="gender">
-          <Form.Control let:attrs>
+      <Form.Field {form} name="gender">
+        <Form.Control>
+          {#snippet children({ props })}
             <Form.Label>Gender</Form.Label>
-            <Select.Root
-              selected={selectedGender}
-              onSelectedChange={(v) => {
-                v && ($formData.gender = v.value);
-              }}
-            >
-              <Select.Trigger {...attrs}>
-                <Select.Value placeholder="Select a new gender" />
-              </Select.Trigger>
-              <Select.Content>
-                <Select.Item value="Male" label="Male" />
-                <Select.Item value="Female" label="Female" />
-              </Select.Content>
-            </Select.Root>
-            <input hidden bind:value={$formData.gender} name={attrs.name} />
-          </Form.Control>
-          <Form.FieldErrors />
-        </Form.Field>
+            <SelectPicker
+              placeholder="Select your gender"
+              selections={[
+                { label: 'Male', value: 'Male' },
+                { label: 'Female', value: 'Female' }
+              ]}
+              selected={$formData.gender}
+            />
+            <input hidden bind:value={$formData.gender} name={props.name} />
+          {/snippet}
+        </Form.Control>
+        <Form.FieldErrors />
+      </Form.Field>
 
-        <Form.Field {form} name="mobileNum">
-          <Form.Control let:attrs>
+      <Form.Field {form} name="mobileNum">
+        <Form.Control>
+          {#snippet children({ props })}
             <Form.Label>Mobile Number</Form.Label>
             <Input
-              {...attrs}
+              {...props}
               bind:value={$formData.mobileNum}
-              placeholder="Enter your new mobile number"
+              placeholder="Enter your mobile number"
             />
-          </Form.Control>
-          <Form.FieldErrors />
-        </Form.Field>
-      </div>
+          {/snippet}
+        </Form.Control>
+        <Form.FieldErrors />
+      </Form.Field>
+    </div>
 
-      <div class="flex items-center justify-center">
-        <div class="w-full max-w-[450px]">
-          <Form.Button disabled={$submitting} class="relative w-full">
-            {#if $submitting}
-              <div
-                class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm bg-primary"
-              >
-                <Loader class="h-[15px] w-[15px] animate-spin" />
-              </div>
-            {/if}
-            Update Information
-          </Form.Button>
-        </div>
+    <div class="flex items-center justify-center">
+      <div class="w-full max-w-[450px]">
+        <Form.Button disabled={$submitting} class="relative w-full">
+          {#if $submitting}
+            <div
+              class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm bg-primary"
+            >
+              <Loader class="h-[15px] w-[15px] animate-spin" />
+            </div>
+          {/if}
+          Update Information
+        </Form.Button>
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
 </div>

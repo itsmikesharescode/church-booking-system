@@ -1,10 +1,11 @@
 import { superValidate } from 'sveltekit-superforms';
 import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
-import { createUserSchema, updateUserSchema } from './manage-users-schema';
 import { fail } from '@sveltejs/kit';
 import type { PostgrestSingleResponse } from '@supabase/supabase-js';
 import type { UserType } from '$lib/types';
+import { createUserSchema } from './components/create-user/schema';
+import { updateUserSchema } from './components/update-user/schema';
 
 export const load: PageServerLoad = async () => {
   return {
@@ -33,7 +34,6 @@ export const actions: Actions = {
         middleName: form.data.middleName,
         lastName: form.data.lastName,
         gender: form.data.gender,
-        birthDate: form.data.birthDate,
         mobileNum: form.data.mobileNum
       }
     });
@@ -48,7 +48,7 @@ export const actions: Actions = {
 
       if (selectErr) return fail(401, { form, msg: selectErr.message });
 
-      return { form, msg: 'Account Created.', data };
+      return { form, msg: 'Account Created.' };
     }
   },
 
@@ -70,7 +70,6 @@ export const actions: Actions = {
         middleName: form.data.middleName,
         lastName: form.data.lastName,
         gender: form.data.gender,
-        birthDate: form.data.birthDate,
         mobileNum: form.data.mobileNum
       }
     });
@@ -85,7 +84,7 @@ export const actions: Actions = {
 
       if (selectErr) return fail(401, { form, msg: selectErr.message });
 
-      return { form, msg: 'Account Updated.', data };
+      return { form, msg: 'Account Updated.' };
     }
   },
 
@@ -108,7 +107,7 @@ export const actions: Actions = {
 
       if (selectErr) return fail(401, { msg: selectErr.message });
 
-      return { msg: 'Account Deleted.', data };
+      return { msg: 'Account Deleted.' };
     }
   }
 };

@@ -18,11 +18,6 @@ import {
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
 
 const supabase: Handle = async ({ event, resolve }) => {
-  /**
-   * Creates a Supabase client specific to this server request.
-   *
-   * The Supabase client gets the Auth token from the request cookies.
-   */
   event.locals.supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
     cookies: {
       getAll: () => event.cookies.getAll(),
@@ -37,11 +32,7 @@ const supabase: Handle = async ({ event, resolve }) => {
   event.locals.supabaseAdmin = createServerClient(PUBLIC_SUPABASE_URL, PRIVATE_SUPABASE_ADMIN_KEY, {
     cookies: {
       getAll: () => event.cookies.getAll(),
-      /**
-       * SvelteKit's cookies API requires `path` to be explicitly set in
-       * the cookie options. Setting `path` to `/` replicates previous/
-       * standard behavior.
-       */
+
       setAll: (cookiesToSet) => {
         cookiesToSet.forEach(({ name, value, options }) => {
           event.cookies.set(name, value, { ...options, path: '/' });
@@ -50,49 +41,35 @@ const supabase: Handle = async ({ event, resolve }) => {
     }
   });
 
-  event.locals.getSession = async () => {
+  event.locals.safeGetSession = async () => {
     const {
       data: { session }
     } = await event.locals.supabase.auth.getSession();
-
-    if (!session) return { session: null, user: null };
-
-    try {
-      const decoded = jwt.verify(session.access_token, PRIVATE_SUPABASE_JWT_KEY) as SupabaseJwt;
-      const validated_session: Session = {
-        access_token: session.access_token,
-        refresh_token: session.refresh_token,
-        expires_at: decoded.exp,
-        expires_in: decoded.exp - Math.round(Date.now() / 1000),
-        token_type: 'bearer',
-        user: {
-          app_metadata: decoded.app_metadata ?? {},
-          aud: 'authenticated',
-          created_at: '',
-          id: decoded.sub,
-          user_metadata: decoded.user_metadata
-        }
-      };
-
-      return { session: validated_session, user: validated_session.user };
-    } catch (err) {
+    if (!session) {
       return { session: null, user: null };
     }
+
+    const {
+      data: { user },
+      error
+    } = await event.locals.supabase.auth.getUser();
+    if (error) {
+      // JWT validation has failed
+      return { session: null, user: null };
+    }
+
+    return { session, user };
   };
 
   return resolve(event, {
     filterSerializedResponseHeaders(name) {
-      /**
-       * Supabase libraries use the `content-range` and `x-supabase-api-version`
-       * headers, so we need to tell SvelteKit to pass it through.
-       */
       return name === 'content-range' || name === 'x-supabase-api-version';
     }
   });
 };
 
 const authGuard: Handle = async ({ event, resolve }) => {
-  const { session, user } = await event.locals.getSession();
+  const { session, user } = await event.locals.safeGetSession();
   event.locals.session = session;
   event.locals.user = user;
 

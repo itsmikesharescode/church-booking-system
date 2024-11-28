@@ -1,23 +1,29 @@
 import { superValidate, withFiles } from 'sveltekit-superforms';
 import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
-import { upChSchema, updateChInfoSchema, updateChPhotoSchema } from './admin-dashboard-schema';
 import { fail } from '@sveltejs/kit';
 import { convertTo24HourFormat } from '$lib';
+import { addChurchSchema } from './_components/add-church/schema';
+import {
+  updateChurchInfoSchema,
+  updateChurchPhotoSchema
+} from './_components/update-church/components/schema';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
   return {
-    upChForm: await superValidate(zod(upChSchema)),
-    updateChInfoForm: await superValidate(zod(updateChInfoSchema)),
-    updateChPhotoForm: await superValidate(zod(updateChPhotoSchema))
+    addChurchForm: await superValidate(zod(addChurchSchema)),
+    updateChurchInfoForm: await superValidate(zod(updateChurchInfoSchema)),
+    updateChurchPhotoForm: await superValidate(zod(updateChurchPhotoSchema))
   };
 };
 
 export const actions: Actions = {
-  upLoadChEvent: async ({ request, locals: { supabase } }) => {
-    const form = await superValidate(request, zod(upChSchema));
+  addChurchEvent: async ({ request, locals: { supabase } }) => {
+    const form = await superValidate(request, zod(addChurchSchema));
 
     if (!form.valid) return fail(400, withFiles({ form }));
+
+    console.log(form.data);
 
     const openTconvert = convertTo24HourFormat(form.data.openT);
     const closeTconvert = convertTo24HourFormat(form.data.closeT);
@@ -25,7 +31,7 @@ export const actions: Actions = {
 
     const { data: uploadData, error: uploadErr } = await supabase.storage
       .from('church_bucket')
-      .upload(uid, form.data.chPhoto, {
+      .upload(uid, form.data.photo, {
         cacheControl: '3600',
         upsert: false
       });
@@ -35,7 +41,7 @@ export const actions: Actions = {
     if (uploadData) {
       const { error } = await supabase.from('church_list_tb').insert([
         {
-          name: form.data.chName,
+          name: form.data.name,
           description: form.data.description,
           open_time: openTconvert,
           close_time: closeTconvert,
@@ -50,35 +56,38 @@ export const actions: Actions = {
     }
   },
 
-  updateChInfoEvent: async ({ request, locals: { supabase } }) => {
-    const form = await superValidate(request, zod(updateChInfoSchema));
+  updateChurchInfoEvent: async ({ request, locals: { supabase } }) => {
+    const form = await superValidate(request, zod(updateChurchInfoSchema));
 
     if (!form.valid) return fail(400, { form });
+
+    console.log(form.data);
 
     const { error } = await supabase
       .from('church_list_tb')
       .update([
         {
-          name: form.data.chName,
+          name: form.data.name,
           description: form.data.description,
           open_time: form.data.openT,
-          close_time: form.data.closeT
+          close_time: form.data.closeT,
+          price: form.data.price
         }
       ])
-      .eq('id', form.data.chId);
+      .eq('id', form.data.id);
 
     if (error) return fail(401, { form, msg: error.message });
     return { form, msg: 'Updated details successfully' };
   },
 
-  updateChPhotoEvent: async ({ request, locals: { supabase } }) => {
-    const form = await superValidate(request, zod(updateChPhotoSchema));
+  updateChurchPhotoEvent: async ({ request, locals: { supabase } }) => {
+    const form = await superValidate(request, zod(updateChurchPhotoSchema));
 
     if (!form.valid) return fail(400, { form });
 
     const { data, error } = await supabase.storage
       .from('church_bucket')
-      .update(form.data.chPhotoPath, form.data.chPhoto);
+      .update(form.data.photoPath, form.data.photo);
 
     if (error) return fail(401, withFiles({ form, msg: error.message }));
 
@@ -89,7 +98,7 @@ export const actions: Actions = {
           photo_path: data.path
         }
       ])
-      .eq('id', form.data.chId);
+      .eq('id', form.data.id);
 
     if (updateErr) return fail(401, withFiles({ form, msg: updateErr.message }));
     return withFiles({ form, msg: 'Updated photo successfully.' });

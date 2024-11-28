@@ -45,7 +45,6 @@ export const actions: Actions = {
           middleName: form.data.middleName,
           lastName: form.data.lastName,
           gender: form.data.gender,
-          birthDate: form.data.birthDate,
           mobileNum: form.data.mobileNum
         }
       }

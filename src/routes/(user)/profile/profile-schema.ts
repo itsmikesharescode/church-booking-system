@@ -4,14 +4,7 @@ const MAX_FILE_SIZE = 1024 * 1024; // 1MB in bytes
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
 
 export const upUpProfileSchema = z.object({
-  profilePhoto: z
-    .instanceof(File) // Ensures that the value is a File instance
-    .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file.type), {
-      message: 'Only .jpeg, .png, and .gif files are accepted'
-    })
-    .refine((file) => file.size <= MAX_FILE_SIZE, {
-      message: 'File size should be less than or equal to 1MB'
-    })
+  profilePhoto: z.instanceof(File)
 });
 
 export const updateInfoSchema = z.object({
@@ -23,8 +16,7 @@ export const updateInfoSchema = z.object({
   }),
   gender: z
     .string()
-    .refine((v) => ['Male', 'Female'].includes(v), { message: 'Must choose your new gender.' }),
-  birthDate: z.string().min(1, { message: 'Must enter your new birth date.' })
+    .refine((v) => ['Male', 'Female'].includes(v), { message: 'Must choose your new gender.' })
 });
 
 export const updateEmailSchema = z

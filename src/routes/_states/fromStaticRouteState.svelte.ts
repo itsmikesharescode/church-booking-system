@@ -6,11 +6,13 @@ const routes = {
   hasUser: [
     { name: 'Home', url: '/' },
     { name: 'My Reservations', url: '/my-reservations' },
+    { name: 'My Payments', url: '/my-payments' },
     { name: 'Profile', url: '/profile' }
   ],
   hasAdmin: [
     { name: 'Dashboard', url: '/admin-dashboard' },
     { name: 'Event Reservations', url: '/admin-event-reservations' },
+    { name: 'Payments', url: '/admin-payments' },
     { name: 'Manage Users', url: '/admin-manage-users' }
   ]
 };

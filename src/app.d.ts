@@ -6,7 +6,7 @@ declare global {
     interface Locals {
       supabase: SupabaseClient;
       supabaseAdmin: SupabaseClient;
-      getSession(): Promise<{ session: Session | null; user: User | null }>;
+      safeGetSession(): Promise<{ session: Session | null; user: User | null }>;
       session: Session | null;
       user: User | null;
       avifCompress: (file: File) => Promise<File | null>;
@@ -16,6 +16,8 @@ declare global {
     }
     interface PageData {
       session: Session | null;
+      supabase?: SupabaseClient;
+      user?: User | null;
     }
     // interface PageState {}
     // interface Platform {}

@@ -1,39 +1,12 @@
-import sample1 from '$lib/assets/sample_1.avif';
-import sample2 from '$lib/assets/sample_2.avif';
-import sample3 from '$lib/assets/sample_3.avif';
-
-export const mockChuchDatas = [
-  {
-    title: 'Elegant',
-    description:
-      'A nurturing spiritual home dedicated to cultivating a deep relationship with God and empowering individuals to reach their full potential.',
-    img: sample1
-  },
-
-  {
-    title: 'Fantastic',
-    description:
-      'A sanctuary of faith and fellowship, where hearts find solace, minds discover truth, and lives are transformed together.',
-    img: sample2
-  },
-
-  {
-    title: 'Enjoy',
-    description:
-      'A vibrant community committed to serving others, making a positive impact, and inspiring hope in the world.',
-    img: sample3
-  }
-];
-
 export const publicProfileAPI =
   'https://ldsuhuvtfqrflozlznho.supabase.co/storage/v1/object/public/profile_bucket/';
 
-export const userRoutes = ['/profile', '/my-reservations'];
+export const userRoutes = ['/profile', '/my-reservations', '/my-payments'];
 export const adminRoutes = [
   '/admin-dashboard',
   '/admin-dashboard/upload-church',
   '/admin-event-reservations',
-  '/admin-',
+  '/admin-payments',
   '/admin-manage-users'
 ];
 export const defaultRoutes = ['/authenticate'];
@@ -99,3 +72,54 @@ export const getBookingStatus = (input: string) => {
     return 'Done';
   }
 };
+
+export const timeList = [
+  { value: '00:00:00', label: '12:00 AM' },
+  { value: '00:30:00', label: '12:30 AM' },
+  { value: '01:00:00', label: '01:00 AM' },
+  { value: '01:30:00', label: '01:30 AM' },
+  { value: '02:00:00', label: '02:00 AM' },
+  { value: '02:30:00', label: '02:30 AM' },
+  { value: '03:00:00', label: '03:00 AM' },
+  { value: '03:30:00', label: '03:30 AM' },
+  { value: '04:00:00', label: '04:00 AM' },
+  { value: '04:30:00', label: '04:30 AM' },
+  { value: '05:00:00', label: '05:00 AM' },
+  { value: '05:30:00', label: '05:30 AM' },
+  { value: '06:00:00', label: '06:00 AM' },
+  { value: '06:30:00', label: '06:30 AM' },
+  { value: '07:00:00', label: '07:00 AM' },
+  { value: '07:30:00', label: '07:30 AM' },
+  { value: '08:00:00', label: '08:00 AM' },
+  { value: '08:30:00', label: '08:30 AM' },
+  { value: '09:00:00', label: '09:00 AM' },
+  { value: '09:30:00', label: '09:30 AM' },
+  { value: '10:00:00', label: '10:00 AM' },
+  { value: '10:30:00', label: '10:30 AM' },
+  { value: '11:00:00', label: '11:00 AM' },
+  { value: '11:30:00', label: '11:30 AM' },
+  { value: '12:00:00', label: '12:00 PM' },
+  { value: '12:30:00', label: '12:30 PM' },
+  { value: '13:00:00', label: '01:00 PM' },
+  { value: '13:30:00', label: '01:30 PM' },
+  { value: '14:00:00', label: '02:00 PM' },
+  { value: '14:30:00', label: '02:30 PM' },
+  { value: '15:00:00', label: '03:00 PM' },
+  { value: '15:30:00', label: '03:30 PM' },
+  { value: '16:00:00', label: '04:00 PM' },
+  { value: '16:30:00', label: '04:30 PM' },
+  { value: '17:00:00', label: '05:00 PM' },
+  { value: '17:30:00', label: '05:30 PM' },
+  { value: '18:00:00', label: '06:00 PM' },
+  { value: '18:30:00', label: '06:30 PM' },
+  { value: '19:00:00', label: '07:00 PM' },
+  { value: '19:30:00', label: '07:30 PM' },
+  { value: '20:00:00', label: '08:00 PM' },
+  { value: '20:30:00', label: '08:30 PM' },
+  { value: '21:00:00', label: '09:00 PM' },
+  { value: '21:30:00', label: '09:30 PM' },
+  { value: '22:00:00', label: '10:00 PM' },
+  { value: '22:30:00', label: '10:30 PM' },
+  { value: '23:00:00', label: '11:00 PM' },
+  { value: '23:30:00', label: '11:30 PM' }
+];
