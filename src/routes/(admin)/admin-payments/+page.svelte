@@ -4,6 +4,7 @@
   import Table from './components/table/components/table.svelte';
   import { columns } from './components/table/components/columns';
   import DeletePayment from './components/delete-payment/delete-payment.svelte';
+  import ViewPayment from './components/view-payment/view-payment.svelte';
   import { initTableState } from './components/table/tableState.svelte';
 
   const staticRoute = fromStaticRouteState();
@@ -35,3 +36,4 @@
 </div>
 
 <DeletePayment />
+<ViewPayment />
