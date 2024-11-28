@@ -12,7 +12,6 @@
   import { fromUserState } from '../../../_states/fromUserState.svelte';
   import { z } from 'zod';
   import type { User } from '@supabase/supabase-js';
-  import CalendarPicker from '$lib/components/gen/CalendarPicker.svelte';
 
   interface Props {
     updateInfoForm: SuperValidated<Infer<UpdateInfoShema>>;
@@ -102,23 +101,12 @@
         <Form.FieldErrors />
       </Form.Field>
 
-      <Form.Field {form} name="birthDate">
-        <Form.Control>
-          {#snippet children({ props })}
-            <Form.Label>Birth Date</Form.Label>
-            <CalendarPicker type="single" bind:valueString={$formData.birthDate} />
-            <input type="hidden" bind:value={$formData.birthDate} name={props.name} />
-          {/snippet}
-        </Form.Control>
-        <Form.FieldErrors />
-      </Form.Field>
-
       <Form.Field {form} name="gender">
         <Form.Control>
           {#snippet children({ props })}
             <Form.Label>Gender</Form.Label>
             <SelectPicker
-              name="Select Gender"
+              placeholder="Select your gender"
               selections={[
                 { label: 'Male', value: 'Male' },
                 { label: 'Female', value: 'Female' }

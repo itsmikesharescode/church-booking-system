@@ -4,12 +4,10 @@
   import { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import { signUpSchema, type SignUpSchema } from '../authenticate-schema';
-  import * as Select from '$lib/components/ui/select/index.js';
   import Button from '$lib/components/ui/button/button.svelte';
   import type { Result } from '$lib/types';
   import { toast } from 'svelte-sonner';
   import { Loader } from 'lucide-svelte';
-  import CalendarPicker from '$lib/components/gen/CalendarPicker.svelte';
   import SelectPicker from '$lib/components/gen/SelectPicker.svelte';
 
   interface Props {
@@ -101,21 +99,12 @@
           <Form.FieldErrors />
         </Form.Field>
 
-        <Form.Field {form} name="birthDate">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Birth Date</Form.Label>
-              <CalendarPicker type="single" bind:valueString={$formData.birthDate} />
-            {/snippet}
-          </Form.Control>
-          <Form.FieldErrors />
-        </Form.Field>
-
         <Form.Field {form} name="gender">
           <Form.Control>
             {#snippet children({ props })}
               <Form.Label>Gender</Form.Label>
               <SelectPicker
+                placeholder="Select your gender"
                 selections={[
                   { label: 'Male', value: 'Male' },
                   { label: 'Female', value: 'Female' }

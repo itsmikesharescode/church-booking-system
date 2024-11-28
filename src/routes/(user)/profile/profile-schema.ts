@@ -16,8 +16,7 @@ export const updateInfoSchema = z.object({
   }),
   gender: z
     .string()
-    .refine((v) => ['Male', 'Female'].includes(v), { message: 'Must choose your new gender.' }),
-  birthDate: z.string().min(1, { message: 'Must enter your new birth date.' })
+    .refine((v) => ['Male', 'Female'].includes(v), { message: 'Must choose your new gender.' })
 });
 
 export const updateEmailSchema = z
