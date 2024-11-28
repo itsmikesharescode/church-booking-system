@@ -13,37 +13,37 @@
 </script>
 
 {#if imageLink || hasLink}
-  <div class="">
-    <button
-      onclick={(e) => {
-        imageLink = null;
-        image = null;
-        hasLink = undefined;
-      }}
-      type="button"
-      class="group relative"
+  <button
+    onclick={(e) => {
+      imageLink = null;
+      image = null;
+      hasLink = undefined;
+    }}
+    type="button"
+    class="group relative w-full"
+  >
+    <div
+      class="bottom-0 left-0 right-0 top-0 hidden items-center justify-center rounded-lg bg-black/50 group-hover:absolute group-hover:flex"
     >
-      <div
-        class="bottom-0 left-0 right-0 top-0 hidden items-center justify-center rounded-lg bg-black/50 group-hover:absolute group-hover:flex"
-      >
-        <span class="text-sm font-bold text-white">Remove</span>
-      </div>
-      <img src={url || hasLink} alt="uploadedimage" class="h-[128px] w-[161.13px] rounded-lg" />
-    </button>
-  </div>
+      <span class="text-sm font-bold text-white">Remove</span>
+    </div>
+    <img src={url || hasLink} alt="uploadedimage" class="h-[128px] w-full rounded-lg" />
+  </button>
 {:else}
-  <label class="p-10t flex max-w-fit flex-col items-center gap-2 rounded-lg bg-secondary p-10">
-    <ImageUp />
-    <input
-      class="hidden"
-      type="file"
-      accept="image/png, image/jpeg"
-      oninput={(e) => {
-        image = e.currentTarget.files?.item(0) as File;
-        imageLink = e.currentTarget.files?.item(0) as File;
-        url = URL.createObjectURL(image);
-      }}
-    />
-    <span class="text-xs font-bold text-muted-foreground">Upload Church Photo</span>
-  </label>
+  <section class="w-full">
+    <label class="p-10t flex w-full flex-col items-center gap-2 rounded-lg bg-secondary p-10">
+      <ImageUp />
+      <input
+        class="hidden"
+        type="file"
+        accept="image/png, image/jpeg"
+        oninput={(e) => {
+          image = e.currentTarget.files?.item(0) as File;
+          imageLink = e.currentTarget.files?.item(0) as File;
+          url = URL.createObjectURL(image);
+        }}
+      />
+      <span class="text-xs font-bold text-muted-foreground">Upload Church Photo</span>
+    </label>
+  </section>
 {/if}

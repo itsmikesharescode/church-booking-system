@@ -1,17 +1,20 @@
 <script lang="ts">
   import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
   import Button from '$lib/components/ui/button/button.svelte';
-  import { fileProxy, superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
   import { type AddChurchSchema, addChurchSchema } from './schema';
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
-  import { zodClient } from 'sveltekit-superforms/adapters';
   import type { Result } from '$lib/types';
   import { toast } from 'svelte-sonner';
   import ImgPicker from '$lib/components/gen/ImgPicker.svelte';
   import Combobox from '$lib/components/gen/Combobox.svelte';
   import { timeList } from '$lib';
   import X from 'lucide-svelte/icons/x';
+  import { Textarea } from '$lib/components/ui/textarea/index.js';
+  import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
+  import { zodClient } from 'sveltekit-superforms/adapters';
+  import { fileProxy } from 'sveltekit-superforms';
+  import Loader from 'lucide-svelte/icons/loader';
 
   interface Props {
     addChurchForm: SuperValidated<Infer<AddChurchSchema>>;
@@ -28,6 +31,8 @@
       switch (status) {
         case 200:
           toast.success(data.msg);
+          form.reset();
+          open = false;
           break;
 
         case 401:
@@ -66,7 +71,7 @@
       </AlertDialog.Description>
     </AlertDialog.Header>
 
-    <form method="POST" action="?/addChurchEvent" use:enhance>
+    <form method="POST" enctype="multipart/form-data" action="?/addChurchEvent" use:enhance>
       <Form.Field {form} name="photo">
         <Form.Control>
           {#snippet children({ props })}
@@ -129,8 +134,27 @@
         <Form.FieldErrors />
       </Form.Field>
 
+      <Form.Field {form} name="description">
+        <Form.Control>
+          {#snippet children({ props })}
+            <Form.Label>Description</Form.Label>
+            <Textarea {...props} bind:value={$formData.description} placeholder="Description" />
+          {/snippet}
+        </Form.Control>
+        <Form.FieldErrors />
+      </Form.Field>
+
       <AlertDialog.Footer>
-        <Form.Button size="sm" type="submit">Creates</Form.Button>
+        <Form.Button size="sm" disabled={$submitting} class="relative">
+          {#if $submitting}
+            <div
+              class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-sm bg-primary"
+            >
+              <Loader class="h-[15px] w-[15px] animate-spin" />
+            </div>
+          {/if}
+          Creates
+        </Form.Button>
       </AlertDialog.Footer>
     </form>
   </AlertDialog.Content>
