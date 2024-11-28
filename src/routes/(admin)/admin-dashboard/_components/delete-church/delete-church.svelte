@@ -6,13 +6,9 @@
   import type { SubmitFunction } from '@sveltejs/kit';
   import { Loader } from 'lucide-svelte';
   import { toast } from 'svelte-sonner';
+  import { useTableState } from '../table/tableState.svelte';
 
-  interface Props {
-    deleteSignal: boolean;
-    church: ChurchType;
-  }
-
-  let { deleteSignal = $bindable(), ...props }: Props = $props();
+  const tableState = useTableState();
 
   let deleteLoader = $state(false);
   const deleteChEvent: SubmitFunction = () => {
@@ -22,12 +18,13 @@
 
       switch (status) {
         case 200:
-          toast.success('', { description: data.msg });
-          deleteSignal = false;
+          toast.success(data.msg);
+          tableState.setShowDelete(false);
+          tableState.setActiveRow(null);
           break;
 
         case 401:
-          toast.error('', { description: data.msg });
+          toast.error(data.msg);
           break;
       }
       await update();
@@ -36,21 +33,29 @@
   };
 </script>
 
-<AlertDialog.Root bind:open={deleteSignal}>
+<AlertDialog.Root open={tableState.getShowDelete()}>
   <AlertDialog.Content>
     <AlertDialog.Header>
       <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
       <AlertDialog.Description>
         This action cannot be undone. This will permanently delete <strong
-          >{props.church.name}</strong
+          >{tableState.getActiveRow()?.name}</strong
         > and remove data from our database.
       </AlertDialog.Description>
     </AlertDialog.Header>
     <AlertDialog.Footer class=" gap-[0.625rem] sm:gap-0">
-      <Button onclick={() => (deleteSignal = false)} variant="secondary">Cancel</Button>
+      <Button
+        onclick={() => {
+          tableState.setShowDelete(false);
+          tableState.setActiveRow(null);
+        }}
+        variant="secondary"
+      >
+        Cancel
+      </Button>
       <form method="post" action="?/deleteChEvent" use:enhance={deleteChEvent}>
-        <input name="chId" type="hidden" value={props.church.id} />
-        <input name="chPhotoPath" type="hidden" value={props.church.photo_path} />
+        <input name="chId" type="hidden" value={tableState.getActiveRow()?.id} />
+        <input name="chPhotoPath" type="hidden" value={tableState.getActiveRow()?.photo_path} />
         <Button type="submit" disabled={deleteLoader} class="relative w-full">
           {#if deleteLoader}
             <div

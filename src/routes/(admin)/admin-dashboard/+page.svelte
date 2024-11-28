@@ -1,16 +1,18 @@
 <script lang="ts">
-  import Button from '$lib/components/ui/button/button.svelte';
   import Separator from '$lib/components/ui/separator/separator.svelte';
   import { fromStaticRouteState } from '../../_states/fromStaticRouteState.svelte';
   import { fromDashBRouteState } from '../_states/fromDashboard.svelte';
-  import BarChart from './_components/BarChart.svelte';
-  import CountCard from './_components/CountCard.svelte';
-  import LineChart from './_components/LineChart.svelte';
-  import UploadChurch from './_components/UploadChurch.svelte';
+  import BarChart from './_components/charts/bar-chart.svelte';
+  import CountCard from './_components/count-card/count-card.svelte';
+  import LineChart from './_components/charts/line-chart.svelte';
   import Table from './_components/table/components/table.svelte';
   import { columns } from './_components/table/components/columns';
+  import DeleteChurch from './_components/delete-church/delete-church.svelte';
+  import { initTableState } from './_components/table/tableState.svelte';
 
   const { data } = $props();
+
+  initTableState();
 
   const staticRoute = fromStaticRouteState();
   const dashboardRoute = fromDashBRouteState();
@@ -64,13 +66,11 @@
 
   <div class="flex flex-col gap-[1rem]">
     <div class="flex flex-col items-center gap-[1rem] md:flex-row md:justify-between">
-      <UploadChurch upChForm={data.upChForm} />
+      Upload here
     </div>
-    <!--  <RenderChurch
-      updateChPhotoForm={data.updateChPhotoForm}
-      updateChInfoForm={data.updateChInfoForm}
-    /> -->
 
     <Table {columns} data={dashboardRoute.getChurches() ?? []} />
   </div>
 </div>
+
+<DeleteChurch />
