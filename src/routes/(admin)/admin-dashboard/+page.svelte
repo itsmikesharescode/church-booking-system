@@ -3,12 +3,12 @@
   import Separator from '$lib/components/ui/separator/separator.svelte';
   import { fromStaticRouteState } from '../../_states/fromStaticRouteState.svelte';
   import { fromDashBRouteState } from '../_states/fromDashboard.svelte';
-  import Pagination from './_components/_operations/Pagination.svelte';
   import BarChart from './_components/BarChart.svelte';
   import CountCard from './_components/CountCard.svelte';
   import LineChart from './_components/LineChart.svelte';
-  import RenderChurch from './_components/RenderChurch.svelte';
   import UploadChurch from './_components/UploadChurch.svelte';
+  import Table from './_components/table/components/table.svelte';
+  import { columns } from './_components/table/components/columns';
 
   const { data } = $props();
 
@@ -65,14 +65,12 @@
   <div class="flex flex-col gap-[1rem]">
     <div class="flex flex-col items-center gap-[1rem] md:flex-row md:justify-between">
       <UploadChurch upChForm={data.upChForm} />
-
-      <div class="">
-        <!-- <Pagination /> -->
-      </div>
     </div>
-    <RenderChurch
+    <!--  <RenderChurch
       updateChPhotoForm={data.updateChPhotoForm}
       updateChInfoForm={data.updateChInfoForm}
-    />
+    /> -->
+
+    <Table {columns} data={dashboardRoute.getChurches() ?? []} />
   </div>
 </div>
