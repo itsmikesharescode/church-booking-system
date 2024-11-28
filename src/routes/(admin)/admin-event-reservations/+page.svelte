@@ -7,6 +7,7 @@
   import { columns } from './components/table/components/columns';
   import { convertTo12HourFormat, getBookingStatus } from '$lib';
   import ViewReservation from './components/view-reservation/view-reservation.svelte';
+  import DeleteReservation from './components/delete-reservation/delete-reservation.svelte';
   import { initTableState } from './components/table/tableState.svelte';
   const { data } = $props();
 
@@ -16,8 +17,6 @@
   const reservationRoute = fromReservationRouteState();
 
   initTableState();
-
-  console.log(reservationRoute.getBookings(), 'WEW');
 </script>
 
 <div class="flex flex-col gap-[2rem] p-[1rem] sm:p-[3rem]">
@@ -56,3 +55,4 @@
 </div>
 
 <ViewReservation />
+<DeleteReservation />
