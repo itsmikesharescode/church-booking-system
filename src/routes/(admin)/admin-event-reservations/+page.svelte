@@ -8,6 +8,7 @@
   import { convertTo12HourFormat, getBookingStatus } from '$lib';
   import ViewReservation from './components/view-reservation/view-reservation.svelte';
   import DeleteReservation from './components/delete-reservation/delete-reservation.svelte';
+  import ApproveReservation from './components/approve-reservation/approve-reservation.svelte';
   import { initTableState } from './components/table/tableState.svelte';
   const { data } = $props();
 
@@ -22,7 +23,6 @@
 <div class="flex flex-col gap-[2rem] p-[1rem] sm:p-[3rem]">
   <section class="flex flex-col gap-[0.625rem]">
     <p class="text-3xl font-semibold">Requests</p>
-    <AdminRenderEvents bookings={reservationRoute.getBookings()} approveForm={data.approveForm} />
 
     <Table
       {columns}
@@ -54,5 +54,6 @@
   </section>
 </div>
 
+<ApproveReservation approveForm={data.approveForm} />
 <ViewReservation />
 <DeleteReservation />

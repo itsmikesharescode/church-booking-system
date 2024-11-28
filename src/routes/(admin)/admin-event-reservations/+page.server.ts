@@ -2,7 +2,7 @@ import { superValidate } from 'sveltekit-superforms';
 import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { fail } from '@sveltejs/kit';
-import { approveSchema } from './_components/bookings/_operations/_operations/event-schema';
+import { approveSchema } from './components/approve-reservation/schema';
 
 export const load: PageServerLoad = async () => {
   return {
