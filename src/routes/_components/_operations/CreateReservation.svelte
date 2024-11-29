@@ -174,7 +174,7 @@
           <Form.Field {form} name="clientNote">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Final Time</Form.Label>
+                <Form.Label>Note</Form.Label>
                 <Textarea
                   {...props}
                   bind:value={$formData.clientNote}

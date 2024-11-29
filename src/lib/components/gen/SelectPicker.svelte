@@ -10,7 +10,6 @@
     }[];
     selected: string;
     class?: ClassNameValue;
-    name: string;
     placeholder?: string;
   }
 
