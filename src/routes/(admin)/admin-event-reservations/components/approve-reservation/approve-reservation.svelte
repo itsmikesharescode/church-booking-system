@@ -46,6 +46,7 @@
     if (tableState.getActiveRow()) {
       $formData.bookId = tableState.getActiveRow()?.id ?? 0;
       $formData.price = tableState.getActiveRow()?.price ?? 0;
+      $formData.email = tableState.getActiveRow()?.user_meta_data.email ?? '';
     }
   });
 </script>
@@ -69,6 +70,7 @@
     </AlertDialog.Header>
 
     <form method="POST" action="?/approveBookingEvent" use:enhance class="flex flex-col gap-[1rem]">
+      <input name="email" type="hidden" bind:value={$formData.email} />
       <input name="bookId" type="hidden" bind:value={$formData.bookId} />
       <Form.Field {form} name="price">
         <Form.Control>

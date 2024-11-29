@@ -22,10 +22,18 @@ export const actions: Actions = {
     return { msg: 'Deleted successfully.' };
   },
 
-  approveBookingEvent: async ({ locals: { supabase }, request }) => {
+  approveBookingEvent: async ({ locals: { supabase, sendEmail }, request }) => {
     const form = await superValidate(request, zod(approveSchema));
 
     if (!form.valid) return fail(400, { form });
+
+    const { success } = await sendEmail({
+      to: form.data.email,
+      subject: 'Booking Approved',
+      html: `<p>Your booking has been approved. The price is ₱ ${form.data.price.toLocaleString()}. kindly visit <a href="https://church-booking-system.vercel.app">church-booking-system.vercel.app</a> to view your booking.</p>`
+    });
+
+    if (!success) return fail(401, { form, msg: 'There is something wrong with mailer.' });
 
     const { error } = await supabase
       .from('booking_list_tb')
