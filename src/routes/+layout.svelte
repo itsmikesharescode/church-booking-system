@@ -20,6 +20,7 @@
     initReservationRoute
   } from './_states/fromReservationState.svelte';
   import ChurchBot from '$lib/components/gen/ChurchBot/ChurchBot.svelte';
+  import EventSelector from '$lib/components/gen/EventSelector.svelte';
 
   const { data, children } = $props();
 

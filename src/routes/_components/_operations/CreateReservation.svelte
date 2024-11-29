@@ -16,6 +16,7 @@
   import DayGridCalendar from '$lib/components/gen/DayGridCalendar.svelte';
   import DatePicker from '$lib/components/gen/DatePicker.svelte';
   import Combobox from '$lib/components/gen/Combobox.svelte';
+  import EventSelector from '$lib/components/gen/EventSelector.svelte';
 
   interface Props {
     church: UserQType['churches'][number];
@@ -49,6 +50,21 @@
   const { form: formData, enhance, submitting } = form;
 
   let open = $state(false);
+
+  let selectedEvent = $state<{
+    value: {
+      price: number;
+      description: string;
+    };
+    label: string;
+  } | null>(null);
+
+  $effect(() => {
+    if (selectedEvent) {
+      $formData.eventName = selectedEvent.label;
+      $formData.clientNote = `${selectedEvent.value.description} - ₱ ${selectedEvent.value.price.toLocaleString()}`;
+    }
+  });
 </script>
 
 <Button
@@ -90,24 +106,27 @@
       use:enhance
       class="flex flex-col gap-[1rem] overflow-auto p-[1rem] sm:px-[2rem] sm:pt-0"
     >
+      <input type="hidden" name="id" bind:value={restProps.church.id} />
+
       <div class="grid gap-[1rem] md:grid-cols-[2fr_1fr]">
         <div class="py-2">
           <DayGridCalendar />
         </div>
         <div class="flex flex-col gap-[1rem]">
-          <Form.Field {form} name="id" class="hidden">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Input type="number" {...props} bind:value={restProps.church.id} />
-              {/snippet}
-            </Form.Control>
-          </Form.Field>
-
+          <EventSelector bind:selectedEvent />
           <Form.Field {form} name="eventName">
             <Form.Control>
               {#snippet children({ props })}
                 <Form.Label>Event Name</Form.Label>
-                <Input {...props} bind:value={$formData.eventName} placeholder="Enter event name" />
+                <Input
+                  onchange={() => {
+                    selectedEvent = null;
+                    $formData.clientNote = '';
+                  }}
+                  {...props}
+                  bind:value={$formData.eventName}
+                  placeholder="Enter event name"
+                />
               {/snippet}
             </Form.Control>
             <Form.FieldErrors />
@@ -176,6 +195,7 @@
               {#snippet children({ props })}
                 <Form.Label>Note</Form.Label>
                 <Textarea
+                  rows={5}
                   {...props}
                   bind:value={$formData.clientNote}
                   placeholder="Enter your note"
