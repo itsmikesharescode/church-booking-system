@@ -12,6 +12,11 @@
 
 <div class="flex flex-col gap-[1.25rem] p-[0.625rem] md:p-[2rem]">
   {#each homeRoute.getChurches() ?? [] as church, index}
-    <ChurchCard {church} {index} reservationForm={data.reservationForm} />
+    <ChurchCard
+      {church}
+      {index}
+      reservationForm={data.reservationForm}
+      requestCertificateForm={data.requestCertificateForm}
+    />
   {/each}
 </div>

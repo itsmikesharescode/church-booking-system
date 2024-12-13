@@ -19,7 +19,7 @@ declare global {
         to: string;
         subject: string;
         html: string;
-      }) => Promise<{ success: boolean; error?: any }>;
+      }) => Promise<{ success: boolean; error?: string }>;
     }
     interface PageData {
       session: Session | null;

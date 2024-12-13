@@ -4,10 +4,15 @@
   import type { ReservationSchema } from './_operations/schema';
   import type { ChurchType, UserQType } from '$lib/types';
   import * as Avatar from '$lib/components/ui/avatar';
+  import RequestCertificate from './_operations/RequestCertificate/request-certificate.svelte';
   import { convertTo12HourFormat, publicAPIs } from '$lib';
-
+  import {
+    requestCertificateSchema,
+    type RequestCertificateSchema
+  } from './_operations/RequestCertificate/schema';
   interface Props {
     reservationForm: SuperValidated<Infer<ReservationSchema>>;
+    requestCertificateForm: SuperValidated<Infer<RequestCertificateSchema>>;
     index: number;
     church: UserQType['churches'][number];
   }
@@ -29,8 +34,12 @@
       <Avatar.Image src={publicAPIs(props.church.photo_path, 'Church')} alt="@shadcn" class="" />
       <Avatar.Fallback class="rounded-none">Loading ...</Avatar.Fallback>
     </Avatar.Root>
-    <div class="flex">
+    <div class="flex gap-2.5">
       <CreateReservation church={props.church} reservationForm={props.reservationForm} />
+      <RequestCertificate
+        church={props.church}
+        requestCertificateForm={props.requestCertificateForm}
+      />
     </div>
   </div>
 {/snippet}

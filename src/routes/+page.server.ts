@@ -2,18 +2,20 @@ import { superValidate } from 'sveltekit-superforms';
 import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { reservationSchema } from './_components/_operations/schema';
+import { requestCertificateSchema } from './_components/_operations/RequestCertificate/schema';
 import { fail } from '@sveltejs/kit';
 
 import { convertTo24HourFormat } from '$lib';
 
-export const load: PageServerLoad = async ({ locals: { supabase } }) => {
+export const load: PageServerLoad = async () => {
   return {
-    reservationForm: await superValidate(zod(reservationSchema))
+    reservationForm: await superValidate(zod(reservationSchema)),
+    requestCertificateForm: await superValidate(zod(requestCertificateSchema))
   };
 };
 
 export const actions: Actions = {
-  reservationEvent: async ({ locals: { supabase, user }, request }) => {
+  reservationEvent: async ({ locals: { supabase }, request }) => {
     const form = await superValidate(request, zod(reservationSchema));
 
     if (!form.valid) return fail(400, { form });
@@ -33,5 +35,15 @@ export const actions: Actions = {
     if (error) return fail(401, { form, msg: error.message });
 
     return { form, msg: 'Successfully booked.' };
+  },
+
+  requestCertEvent: async ({ request }) => {
+    const form = await superValidate(request, zod(requestCertificateSchema));
+
+    if (!form.valid) return fail(400, { form });
+
+    console.log(form.data);
+
+    return { form, msg: 'Successfully requested a certificate.' };
   }
 };
