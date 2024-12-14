@@ -4,7 +4,6 @@ export const publicProfileAPI =
 export const userRoutes = ['/profile', '/my-reservations', '/my-payments'];
 export const adminRoutes = [
   '/admin-dashboard',
-  '/admin-dashboard/upload-church',
   '/admin-event-reservations',
   '/admin-payments',
   '/admin-manage-users'

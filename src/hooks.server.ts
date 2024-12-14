@@ -1,7 +1,5 @@
 import { adminRoutes, userRoutes } from '$lib';
-import type { SupabaseJwt } from '$lib/types';
 import { createServerClient } from '@supabase/ssr';
-import type { Session } from '@supabase/supabase-js';
 import { type Handle, redirect } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import sharp from 'sharp';
@@ -14,7 +12,7 @@ import {
   PRIVATE_MAILER_USER,
   PRIVATE_GEMINI_KEY
 } from '$env/static/private';
-import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import nodemailer from 'nodemailer';
 
 const supabase: Handle = async ({ event, resolve }) => {
@@ -71,7 +69,7 @@ const authGuard: Handle = async ({ event, resolve }) => {
   const { session, user } = await event.locals.safeGetSession();
   event.locals.session = session;
   event.locals.user = user;
-
+  console.log(user?.user_metadata.role);
   const path = event.url.pathname;
   // redirect user by roles if has auth
   if (user && path === '/authenticate') {
@@ -84,12 +82,6 @@ const authGuard: Handle = async ({ event, resolve }) => {
   if (user && adminRoutes.includes(path)) {
     const { role } = user.user_metadata;
     if (role !== 'admin') redirect(303, '/?error=not-authorize');
-  }
-
-  // if has auth and visiting user site but is admin
-  if (user && userRoutes.includes(path)) {
-    const { role } = user.user_metadata;
-    if (role !== 'user') redirect(303, '/admin-dashboard');
   }
 
   // if admin visiting landing
